@@ -1,0 +1,15 @@
+export const CONSTANTS = {
+  AVATAR_ALT: "User Avatar",
+  USER_NAME: "Chul Su",
+  USER_ROLE: "User",
+  USER_EMAIL: "samantha@email.com",
+  SUMMARY: "Summary",
+  ATTENDANCE: "Attendance",
+  EVENTS: "Events",
+  ASSIGNMENTS: "Assignments",
+  MEMBERS: "Members",
+  SETTINGS: "Settings(TBD)",
+  SETTINGS_DISABLED: "block text-lg text-muted-foreground opacity-50 cursor-not-allowed",
+  LINK_ACTIVE: "block text-lg font-bold text-white",
+  LINK_INACTIVE: "block text-lg font-bold text-gray-500",
+};
