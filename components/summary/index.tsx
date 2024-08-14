@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CONSTANTS } from "@/text/summary"; 
 import { useEffect, useState } from "react";
 import { SummaryTable } from "./summaryTable";
+import {Assignments} from "./assignments"
 
 export const Summary = () => {
   const [date, setDate] = useState<Date | undefined>(new Date())
@@ -26,39 +27,7 @@ export const Summary = () => {
          <SummaryTable />
         </div>
         <div className="mt-6">
-          <h2 className="text-lg font-bold">{CONSTANTS.ASSIGNMENTS_TITLE}</h2>
-          <div className="space-y-4 mt-4">
-            <Card className="flex justify-between items-center p-4">
-              <div>
-                <h3 className="text-sm font-semibold">
-                  {CONSTANTS.ASSIGNMENT_1}
-                </h3>
-              </div>
-              <Button variant="outline" size="sm">
-                Link
-              </Button>
-            </Card>
-            <Card className="flex justify-between items-center p-4">
-              <div>
-                <h3 className="text-sm font-semibold">
-                  {CONSTANTS.ASSIGNMENT_1}
-                </h3>
-              </div>
-              <Button variant="outline" size="sm">
-                Link
-              </Button>
-            </Card>
-            <Card className="flex justify-between items-center p-4">
-              <div>
-                <h3 className="text-sm font-semibold">
-                  {CONSTANTS.ASSIGNMENT_2}
-                </h3>
-              </div>
-              <Button variant="outline" size="sm">
-                Link
-              </Button>
-            </Card>
-          </div>
+         <Assignments /> 
         </div>
       </main>
       <aside className="basis-1/4 w-1/2 xl:w-80 bg-slate-50 p-6 rounded-xl">
