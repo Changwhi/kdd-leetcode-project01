@@ -28,33 +28,33 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
       {admin && (
         <nav className="mt-8 space-y-8">
           <a
-            href="/dashboard/summary"
+            href="/dashboard/admin/summary"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/summary") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/admin/summary") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.SUMMARY}
           </a>
           <a
-            href="/dashboard/attendance"
+            href="/dashboard/admin/attendance"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/attendance") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/admin/attendance") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.ATTENDANCE}
           </a>
           <a
-            href="/dashboard/events"
+            href="/dashboard/admin/events"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/events") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/admin/events") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.EVENTS}
           </a>
           <a
-            href="/dashboard/assignments"
+            href="/dashboard/admin/assignments"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/assignments")
+              isActive("/dashboard/admin/assignments")
                 ? "text-white"
                 : "text-gray-500"
             }`}
@@ -62,17 +62,17 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
             {CONSTANTS.ASSIGNMENTS}
           </a>
           <a
-            href="/dashboard/members"
+            href="/dashboard/admin/members"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/members") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/admin/members") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.MEMBERS}
           </a>
           <a
-            href="/dashboard/settings"
+            href="/dashboard/admin/settings"
             className={`block text-lg text-muted-foreground ${
-              isActive("/dashboard/settings")
+              isActive("/dashboard/admin/settings")
                 ? "text-white"
                 : "opacity-50 cursor-not-allowed"
             }`}
@@ -84,25 +84,25 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
       {!admin && (
         <nav className="mt-8 space-y-8">
           <a
-            href="/dashboard/summary"
+            href="/dashboard/user/summary"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/summary") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/user/summary") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.SUMMARY}
           </a>
           <a
-            href="/dashboard/events"
+            href="/dashboard/user/events"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/events") ? "text-white" : "text-gray-500"
+              isActive("/dashboard/user/events") ? "text-white" : "text-gray-500"
             }`}
           >
             {CONSTANTS.EVENTS}
           </a>
           <a
-            href="/dashboard/assignments"
+            href="/dashboard/user/assignments"
             className={`block text-lg font-bold ${
-              isActive("/dashboard/assignments")
+              isActive("/dashboard/user/assignments")
                 ? "text-white"
                 : "text-gray-500"
             }`}
@@ -110,9 +110,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
             {CONSTANTS.ASSIGNMENTS}
           </a>
           <a
-            href="/dashboard/settings"
+            href="/dashboard/user/settings"
             className={`block text-lg text-muted-foreground ${
-              isActive("/dashboard/settings")
+              isActive("/dashboard/user/settings")
                 ? "text-white"
                 : "opacity-50 cursor-not-allowed"
             }`}
