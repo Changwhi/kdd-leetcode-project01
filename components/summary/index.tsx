@@ -1,10 +1,14 @@
+"use client"
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
 import Link from "next/link";
 import { CONSTANTS } from "@/text/summary"; 
+import { useEffect, useState } from "react";
 
 export const Summary = () => {
+  const [date, setDate] = useState<Date | undefined>(new Date())
+
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
       <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
@@ -77,7 +81,7 @@ export const Summary = () => {
       </main>
       <aside className="basis-1/4 w-1/2 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6 w-full">
-          <Calendar mode="single" className="border rounded-md" />
+          <Calendar mode="single" className="border rounded-md" selected={date} onSelect={setDate} />
         </div>
         <div className="mb-6">
           <h2 className="text-lg font-bold">{CONSTANTS.UPCOMING_EVENTS_TITLE}</h2>
