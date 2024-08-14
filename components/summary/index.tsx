@@ -5,6 +5,7 @@ import { Calendar } from "@/components/ui/calendar";
 import Link from "next/link";
 import { CONSTANTS } from "@/text/summary"; 
 import { useEffect, useState } from "react";
+import { SummaryTable } from "./summaryTable";
 
 export const Summary = () => {
   const [date, setDate] = useState<Date | undefined>(new Date())
@@ -22,26 +23,7 @@ export const Summary = () => {
           </Button>
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 text-left">{CONSTANTS.NAME}</th>
-                <th className="px-4 py-2 text-left">{CONSTANTS.EMAIL}</th>
-                <th className="px-4 py-2 text-left">{CONSTANTS.LEVEL}</th>
-                <th className="px-4 py-2 text-left">{CONSTANTS.DEPOSIT}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="px-4 py-2">{CONSTANTS.STUDENT_NAME}</td>
-                <td className="px-4 py-2">{CONSTANTS.STUDENT_EMAIL}</td>
-                <td className="px-4 py-2">{CONSTANTS.STUDENT_LEVEL}</td>
-                <td className="px-4 py-2">
-                  <div className="w-24 h-2 bg-blue-500 rounded-full" />
-                </td>
-              </tr>
-            </tbody>
-          </table>
+         <SummaryTable />
         </div>
         <div className="mt-6">
           <h2 className="text-lg font-bold">{CONSTANTS.ASSIGNMENTS_TITLE}</h2>
