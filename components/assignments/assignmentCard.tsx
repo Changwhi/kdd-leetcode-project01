@@ -34,7 +34,7 @@ export const AssignmentCard: React.FC<Props> = ({
       </Col>
       <Col>
         <Button className="bg-violet-900 m-2 w-20" variant="default" size="sm">
-          View
+          <a href="#">View</a>
         </Button>
       </Col>
     </Card>
