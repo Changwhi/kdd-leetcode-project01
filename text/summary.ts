@@ -15,6 +15,11 @@ export const CONSTANTS = {
   ASSIGNMENTS_TITLE: "Assignments",
   ASSIGNMENT_1: "417. Pacific Atlantic Water Flow",
   ASSIGNMENT_2: "Individual",
+  ASSIGNMENT_SUBMISSION_TITLE: "Assignment Submission",
+  ASSIGNMENT_TITLE: "Title",
+  ASSIGNMENT_TITLE_DESCRIPTION: "Enter the title of question",
+  ASSIGNMENT_CONTENT: "Content",
+  ASSIGNMENT_CONTENT_DESCRIPTION: "Enter the answer",
   SELECT_EVENT_TITLE: "Select Event",
   UPCOMING_EVENTS_TITLE: "Upcoming Events",
   EVENT_1_TITLE: "Week 2 – Online Mock Interview",
@@ -25,4 +30,5 @@ export const CONSTANTS = {
   CHOOSE_DATE_DESCRIPTION: "You can see all details based on a date",
   VIEW_TIPS_BUTTON: "View Tips",
   SEE_PROJECT_DETAILS: "See project details",
+  BUTTON_SUBMIT:"Submit",
 };

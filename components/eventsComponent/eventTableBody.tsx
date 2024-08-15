@@ -3,6 +3,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import { Dispatch, SetStateAction } from "react";
 
 //TODO: Fetch event data
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
   date: Date;
   topic: String;
   zoomLink: String;
+  setOpenModal: Dispatch<SetStateAction<boolean>>
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -18,6 +20,7 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 export const EventTableBody: React.FC<Props> = ({
+  setOpenModal,
   name,
   date,
   topic,
@@ -49,7 +52,7 @@ export const EventTableBody: React.FC<Props> = ({
         <Button
           className="bg-violet-900 w-20"
           disabled={past}
-          onClick={() => console.log("Submit")}
+          onClick={() => setOpenModal(true)}
         >
           Submit
         </Button>

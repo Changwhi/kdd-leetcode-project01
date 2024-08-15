@@ -8,6 +8,7 @@ import {
   } from "@/components/ui/table";
 import { CONSTANTS } from "@/text/summary";
 import { EventTableBody } from "./eventTableBody";
+import { Dispatch, SetStateAction } from "react";
 
 // TODO: Fetch events list
 const tempEvents = [
@@ -41,7 +42,11 @@ const tempEvents = [
     },
   ];
 
-export const EventTable = () => {
+  interface EventTableProps {
+    setOpenModal: Dispatch<SetStateAction<boolean>>
+}
+
+export const EventTable: React.FC<EventTableProps> = ({setOpenModal}) => {
     return (
         <Table>
         <TableHeader>
@@ -55,7 +60,7 @@ export const EventTable = () => {
         </TableHeader>
         <TableBody>
           {tempEvents.map((eachEvent) => (
-            <EventTableBody key={eachEvent.eventId} name={eachEvent.name} date={eachEvent.date} topic={eachEvent.topic} zoomLink={eachEvent.zoomLink}></EventTableBody>
+            <EventTableBody key={eachEvent.eventId} setOpenModal={setOpenModal} name={eachEvent.name} date={eachEvent.date} topic={eachEvent.topic} zoomLink={eachEvent.zoomLink}></EventTableBody>
           ))}
         </TableBody>
       </Table>
