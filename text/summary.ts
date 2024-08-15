@@ -15,6 +15,7 @@ export const CONSTANTS = {
   ASSIGNMENTS_TITLE: "Assignments",
   ASSIGNMENT_1: "417. Pacific Atlantic Water Flow",
   ASSIGNMENT_2: "Individual",
+  SELECT_EVENT_TITLE: "Select Event",
   UPCOMING_EVENTS_TITLE: "Upcoming Events",
   EVENT_1_TITLE: "Week 2 – Online Mock Interview",
   EVENT_1_DATE: "April 04, 2024",
