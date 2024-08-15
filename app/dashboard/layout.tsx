@@ -7,7 +7,7 @@ export default function MainLayout({
 }) {
   return (
     <section className="bg-black">
-        <Dashboard admin={true}>{children}</Dashboard>
+        <Dashboard admin={false}>{children}</Dashboard>
     </section>
   );
 }
