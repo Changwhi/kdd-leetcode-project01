@@ -92,7 +92,7 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
             {CONSTANTS.SUMMARY}
           </a>
           <a
-            href="/dashboard/user/events"
+            href="/dashboard/user/eventsPage"
             className={`block text-lg font-bold ${
               isActive("/dashboard/user/events") ? "text-white" : "text-gray-500"
             }`}
