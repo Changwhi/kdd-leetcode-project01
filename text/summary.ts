@@ -22,6 +22,7 @@ export const CONSTANTS = {
   ASSIGNMENT_CONTENT_DESCRIPTION: "Enter the answer",
   SELECT_EVENT_TITLE: "Select Event",
   UPCOMING_EVENTS_TITLE: "Upcoming Events",
+  PROJECT_DETAILS: "See Project Details",
   EVENT_1_TITLE: "Week 2 – Online Mock Interview",
   EVENT_1_DATE: "April 04, 2024",
   EVENT_2_TITLE: "Week 3 – Online Mock Interview",
@@ -31,4 +32,7 @@ export const CONSTANTS = {
   VIEW_TIPS_BUTTON: "View Tips",
   SEE_PROJECT_DETAILS: "See project details",
   BUTTON_SUBMIT:"Submit",
+  BUTTON_CHECK: "Check",
+  BUTTON_JOIN: "Join",
+  BUTTON_VIEW: "View",
 };
