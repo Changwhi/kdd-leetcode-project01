@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/admin/events/event-card";
-import { CONSTANTS } from "@/text/attendance";
 import { EventModal } from "@/components/admin/events/create-event-modal";
-import {EVENTS} from "@/text/events"
+import { EVENTS } from "@/text/events";
 import { BoxIcon } from "@/components/admin/events/icons/boxIcon";
+
 const mockeventsData = [
   {
     title: "Week 1 – Online Mock Interview",
@@ -34,14 +34,14 @@ const mockeventsData = [
 ];
 
 export default function Events() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [eventsData, setEventsData] = useState(mockeventsData);
 
   const handleSubmit = ({ title, date, description, link }: any) => {
     // Handle form submission
     console.log({ title, date, description, link });
     setEventsData([...eventsData, { title, date, description, link }]);
-    setIsModalOpen(false);
+    setIsCreateModalOpen(false);
   };
 
   return (
@@ -86,7 +86,7 @@ export default function Events() {
             <Button
               variant="default"
               className="mt-4"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsCreateModalOpen(true)}
             >
               {EVENTS.CREATENEWEVENT}
             </Button>
@@ -94,8 +94,8 @@ export default function Events() {
         </div>
       </aside>
       <EventModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
         submitFunction={handleSubmit}
       />
     </div>
