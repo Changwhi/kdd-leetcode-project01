@@ -32,26 +32,25 @@ export default function Home() {
           >
             {CONSTANTS.ABOUT_US}
           </Link>
-          <Link
-            href="/dashboard/admin"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            {CONSTANTS.FOR_HOSTS}
-          </Link>
-          <Link
-            href="/dashboard/user"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            {CONSTANTS.FOR_PARTICIPANTS}
-          </Link>
-          {user && <button className="text-sm font-medium hover:underline underline-offset-4">
-            <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
-          </button>}
-          {!user && <button className="text-sm font-medium hover:underline underline-offset-4">
-            <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
-          </button>}
+          {!user && (
+            <button className="text-sm font-medium hover:underline underline-offset-4">
+              <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
+            </button>
+          )}
+          {user && (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium hover:underline underline-offset-4"
+                prefetch={false}
+              >
+                {CONSTANTS.DASHBOARD}
+              </Link>
+              <button className="text-sm font-medium hover:underline underline-offset-4">
+                <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
+              </button>
+            </>
+          )}
         </nav>
       </header>
       <main className="flex-1">
