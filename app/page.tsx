@@ -1,10 +1,18 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import {CONSTANTS} from "@/text/landing";
+import { CONSTANTS } from "@/text/landing";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Home() {
+  const { user, error } = useUser();
+  
+  if (error) return <div>{error.message}</div>;
+  console.log(user)
+
   return (
     <div className="flex flex-col min-h-[100dvh]">
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -18,26 +26,31 @@ export default function Home() {
         </Link>
         <nav className="ml-auto flex gap-4 sm:gap-6">
           <Link
-            href="/dashboard/admin"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            {CONSTANTS.FOR_HOSTS}
-          </Link>
-          <Link
-            href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            {CONSTANTS.FOR_PARTICIPANTS}
-          </Link>
-          <Link
             href="#"
             className="text-sm font-medium hover:underline underline-offset-4"
             prefetch={false}
           >
             {CONSTANTS.ABOUT_US}
           </Link>
+          {!user && (
+            <button className="text-sm font-medium hover:underline underline-offset-4">
+              <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
+            </button>
+          )}
+          {user && (
+            <>
+              <Link
+                href="/dashboard"
+                className="text-sm font-medium hover:underline underline-offset-4"
+                prefetch={false}
+              >
+                {CONSTANTS.DASHBOARD}
+              </Link>
+              <button className="text-sm font-medium hover:underline underline-offset-4">
+                <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
+              </button>
+            </>
+          )}
         </nav>
       </header>
       <main className="flex-1">
@@ -53,7 +66,7 @@ export default function Home() {
                 </p>
                 <div className="space-x-4 mt-6">
                   <Link
-                    href="/dashboard/admin"
+                    href="#"
                     className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
@@ -96,19 +109,25 @@ export default function Home() {
             </div>
             <div className="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
               <div className="grid gap-1">
-                <h3 className="text-lg font-bold">{CONSTANTS.FEATURE_CREATE}</h3>
+                <h3 className="text-lg font-bold">
+                  {CONSTANTS.FEATURE_CREATE}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {CONSTANTS.FEATURE_CREATE_DESC}
                 </p>
               </div>
               <div className="grid gap-1">
-                <h3 className="text-lg font-bold">{CONSTANTS.FEATURE_MANAGE}</h3>
+                <h3 className="text-lg font-bold">
+                  {CONSTANTS.FEATURE_MANAGE}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {CONSTANTS.FEATURE_MANAGE_DESC}
                 </p>
               </div>
               <div className="grid gap-1">
-                <h3 className="text-lg font-bold">{CONSTANTS.FEATURE_DEPOSIT}</h3>
+                <h3 className="text-lg font-bold">
+                  {CONSTANTS.FEATURE_DEPOSIT}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {CONSTANTS.FEATURE_DEPOSIT_DESC}
                 </p>
@@ -122,7 +141,9 @@ export default function Home() {
                 </p>
               </div>
               <div className="grid gap-1">
-                <h3 className="text-lg font-bold">{CONSTANTS.FEATURE_REPORTING}</h3>
+                <h3 className="text-lg font-bold">
+                  {CONSTANTS.FEATURE_REPORTING}
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   {CONSTANTS.FEATURE_REPORTING_DESC}
                 </p>
@@ -180,13 +201,14 @@ export default function Home() {
               {CONSTANTS.FOOTER_PRIVACY}
             </Link>
           </nav>
-          <div className="text-center text-sm">{CONSTANTS.FOOTER_COPYRIGHT}</div>
+          <div className="text-center text-sm">
+            {CONSTANTS.FOOTER_COPYRIGHT}
+          </div>
         </div>
       </footer>
     </div>
   );
 }
-
 
 function BookOpenIcon(props: any) {
   return (
@@ -207,5 +229,3 @@ function BookOpenIcon(props: any) {
     </svg>
   );
 }
-
-
