@@ -1,48 +1,38 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/admin/events/event-card";
 import { EventModal } from "@/components/admin/events/create-event-modal";
 import { EVENTS } from "@/text/events";
 import { BoxIcon } from "@/components/admin/events/icons/boxIcon";
-
-const mockeventsData = [
-  {
-    title: "Week 1 – Online Mock Interview",
-    date: "April 04, 2024",
-    description: "Description for Week 1 event.",
-    link: "#",
-  },
-  {
-    title: "Week 2 – Online Mock Interview",
-    date: "April 11, 2024",
-    description: "Description for Week 2 event.",
-    link: "#",
-  },
-  {
-    title: "Week 3 – Online Mock Interview",
-    date: "April 18, 2024",
-    description: "Description for Week 3 event.",
-    link: "#",
-  },
-  {
-    title: "Week 3 – Online Mock Interview",
-    date: "April 18, 2024",
-    description: "Description for Week 3 event.",
-    link: "#",
-  },
-];
+import { retrieveEvents } from "@/lib/actions/event";
+import { EventType } from "@/types/event";
+import { toast } from "@/components/ui/use-toast";
+import moment from "moment";
 
 export default function Events() {
+  const [events, setEvents] = useState<EventType[]>([]);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [eventsData, setEventsData] = useState(mockeventsData);
 
   const handleSubmit = ({ title, date, description, link }: any) => {
     // Handle form submission
     console.log({ title, date, description, link });
-    setEventsData([...eventsData, { title, date, description, link }]);
+    // setEventsData([...eventsData, { title, date, description, link }]);
     setIsCreateModalOpen(false);
   };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventsData = await retrieveEvents();
+        setEvents(eventsData);
+      } catch (error) {
+        toast({ title: 'Error fetching events', variant: 'destructive' });
+      }
+    };
+
+    fetchEvents();
+  }, []); 
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
@@ -51,13 +41,15 @@ export default function Events() {
           <h2 className="text-2xl font-bold">{EVENTS.UPCOMMINGEVENTS}</h2>
           <hr className="w-full border-gray-300" />
           <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-5 ">
-            {eventsData.map((event, index) => (
+            {events.map((event, index) => (
               <EventCard
-                key={index}
-                title={event.title}
-                date={event.date}
-                description={event.description}
-                link={event.link}
+                key={event.event_id}
+                event_id={event.event_id}
+                name={event.name}
+                date={moment(event.date).format("MMMM Do YYYY, h:mm:ss a")}
+                topic={event.topic}
+                zoomlink={event.zoomlink}
+                group_id={1}
               />
             ))}
           </div>
@@ -65,7 +57,7 @@ export default function Events() {
           <hr className="w-full border-gray-300" />
 
           <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6">
-            {eventsData.map((event, index) => (
+            {/* {eventsData.map((event, index) => (
               <EventCard
                 key={index}
                 title={event.title}
@@ -73,7 +65,7 @@ export default function Events() {
                 description={event.description}
                 link={event.link}
               />
-            ))}
+            ))} */}
           </div>
         </div>
       </main>
