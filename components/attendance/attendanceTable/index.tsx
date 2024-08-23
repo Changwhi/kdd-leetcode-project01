@@ -30,14 +30,17 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
             ) : "Absent"}</TableCell>
             <TableCell>{info.submission_id != null ? "Yes" : "No"}</TableCell>
             <TableCell>
-              {/* {info.pr ? (
-                <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
-              ) : (
-                <Button className="px-2 py-1 text-sm w-24" variant="outline">
-                  Check
-                </Button>
-              )} */}
-                <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
+              {
+                info.submitted ? (
+                  <Button className="px-2 py-1 text-sm w-24" variant="secondary">
+                    Submitted
+                  </Button>
+                ) : (
+                  <Button className="px-2 py-1 text-sm w-24" variant="default">
+                    Check
+                  </Button>
+                )
+              }
             </TableCell>
             <TableCell>
               {info.attended != null ? (
