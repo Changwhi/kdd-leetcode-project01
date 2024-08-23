@@ -8,7 +8,7 @@ export const retrieveAttendance = async ({
   event_id: number;
 }) => {
   try {
-    const response = await sql`
+    const response: AttendanceType[] = await sql`
 SELECT user_group_id, user_type, init_amount, curr_amout, user_group.user_id, "user".name, "user".email, attendance.attended,  submission_id, pr.submitted
 FROM user_group
 LEFT JOIN "user" ON "user".user_id = user_group.user_id
