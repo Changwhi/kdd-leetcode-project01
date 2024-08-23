@@ -25,7 +25,9 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
         {members.map((info) => (
           <TableRow key={info.id}>
             <TableCell className="font-medium">{info.name}</TableCell>
-            <TableCell>{"TBD(self_checkin"}</TableCell>
+            <TableCell>{info.attended != null ? (
+              info.attended == 0 ? "I'm here" : "Attended"
+            ) : "Absent"}</TableCell>
             <TableCell>{"TBD(individual_question)"}</TableCell>
             <TableCell>
               {/* {info.pr ? (
@@ -38,7 +40,7 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
                 <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
             </TableCell>
             <TableCell>
-              {info.attended? (
+              {info.attended != null ? (
                 info.attended == 1 ?
                   <Button className="px-2 py-1 text-sm w-24" variant="secondary">
                     Withdraw
