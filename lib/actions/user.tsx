@@ -44,8 +44,8 @@ export const retrieveUser = async (email: string) => {
 /**
  * Create new user in user table in database
  *
- *  @param name - User's name as a string
- *  @param email - User's email as a string
+ * @param name - User's name as a string
+ * @param email - User's email as a string
  * @returns a response object
  */
 export const createUser = async (name: string, email: string) => {
@@ -61,7 +61,7 @@ export const createUser = async (name: string, email: string) => {
 };
 
 /**
- * Create new user in user table in database
+ * Delete the user in user table in database
  *
  * @param email - User's email as a string
  * @returns a response object
