@@ -28,7 +28,7 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
             <TableCell>{info.attended != null ? (
               info.attended == 0 ? "I'm here" : "Attended"
             ) : "Absent"}</TableCell>
-            <TableCell>{"TBD(individual_question)"}</TableCell>
+            <TableCell>{info.submission_id != null ? "Yes" : "No"}</TableCell>
             <TableCell>
               {/* {info.pr ? (
                 <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
