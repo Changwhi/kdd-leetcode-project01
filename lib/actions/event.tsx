@@ -1,6 +1,7 @@
 "use server";
 import { sql } from "@/utils/db";
 import { EventCardProps, EventType } from "@/types/event";
+import { revalidatePath } from "next/cache";
 
 export const retrieveEvents = async () => {
   try {
@@ -31,6 +32,7 @@ export const addEvent = async (formData: EventCardProps) => {
       INSERT INTO event (name, date, topic, zoomlink, group_id)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id})
     `;
+    revalidatePath("/dashboard/admin/events");
   } catch (error) {
     console.log(error);
   }
