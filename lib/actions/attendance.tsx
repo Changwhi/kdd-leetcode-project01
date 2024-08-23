@@ -13,6 +13,7 @@ SELECT *
 FROM user_group
 LEFT JOIN "user" ON "user".user_id = user_group.user_id
 left join attendance on "user".user_id = attendance.user_id and attendance.event_id = ${event_id}
+left join submission on submission.user_id = "user".user_id
 WHERE user_group.group_id = 1;
     `;
 
