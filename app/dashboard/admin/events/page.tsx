@@ -8,16 +8,23 @@ import { revalidatePath } from "next/cache";
 import { CreateEventModal } from "@/components/admin/events/create-event-modal";
 
 export default async function Events() {
+  const currentDate = moment();
   const events = await retrieveEvents();
+  const upcommingEvents = events.filter((event) =>
+    moment(event.date).isAfter(currentDate)
+  );
+  const pastEvents = events.filter((event) =>
+    moment(event.date).isBefore(currentDate)
+  );
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
       <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
-        <div className="flex flex-col gap-4 justify-start items-start">
-          <h2 className="text-2xl font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <h2 className="self-start text-2xl font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
           <hr className="w-full border-gray-300" />
-          <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-5 ">
-            {events.map((event, index) => (
+          <div className="grid grid-cols-2 2xl:grid-cols-4 mb-6 gap-5 ">
+            {upcommingEvents.map((event, index) => (
               <EventCard
                 key={event.event_id}
                 event_id={event.event_id}
@@ -29,8 +36,21 @@ export default async function Events() {
               />
             ))}
           </div>
-          <h2 className="text-2xl font-bold">{EVENTS.PASEDEVENTS}</h2>
+          <h2 className="self-start text-2xl font-bold">{EVENTS.PASEDEVENTS}</h2>
           <hr className="w-full border-gray-300" />
+          <div className="grid grid-cols-2 2xl:grid-cols-4  mb-6 gap-5 ">
+            {pastEvents.map((event, index) => (
+              <EventCard
+                key={event.event_id}
+                event_id={event.event_id}
+                name={event.name}
+                date={moment(event.date).format("MMMM Do YYYY, h:mm a")}
+                topic={event.topic}
+                zoomlink={event.zoomlink}
+                group_id={1}
+              />
+            ))}
+          </div>
           <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6"></div>
         </div>
       </main>
