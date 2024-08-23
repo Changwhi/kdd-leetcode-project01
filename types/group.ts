@@ -13,5 +13,5 @@ export interface UserGroup {
   init_amount: number;
   curr_amout: number;
   group_id: number;
-  user_id: string;
+  user_id: number;
 }
