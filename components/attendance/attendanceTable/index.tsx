@@ -9,42 +9,7 @@ import {
 } from "@/components/ui/table";
 import { CONSTANTS } from "@/text/attendance";
 
-const attendance = [
-  {
-    id: 1,
-    name: "Chul Su",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 2,
-    name: "Jjan gu",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 3,
-    name: "Mang Gu",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 4,
-    name: "Yu ri",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: false,
-  },
-];
-
-export const AttendanceTable = () => {
+export const AttendanceTable = ({members}: {members: any[]}) => {
   return (
     <Table>
       <TableHeader>
@@ -57,27 +22,32 @@ export const AttendanceTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {attendance.map((info) => (
+        {members.map((info) => (
           <TableRow key={info.id}>
             <TableCell className="font-medium">{info.name}</TableCell>
-            <TableCell>{info.selfCheckIn}</TableCell>
-            <TableCell>{info.individualQuestion}</TableCell>
+            <TableCell>{"TBD(self_checkin"}</TableCell>
+            <TableCell>{"TBD(individual_question)"}</TableCell>
             <TableCell>
-              {info.pr ? (
+              {/* {info.pr ? (
                 <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
               ) : (
                 <Button className="px-2 py-1 text-sm w-24" variant="outline">
                   Check
                 </Button>
-              )}
+              )} */}
+                <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
             </TableCell>
             <TableCell>
-              {info.attend ? (
-                <Button className="px-2 py-1 text-sm w-24" variant="destructive">
-                  Withdraw
-                </Button>
+              {info.attended? (
+                info.attended == 1 ?
+                  <Button className="px-2 py-1 text-sm w-24" variant="secondary">
+                    Withdraw
+                  </Button>
+                  :
+                  <Button className="px-2 py-1 text-sm w-24">Attended</Button>
+                
               ) : (
-                <Button className="px-2 py-1 text-sm w-24">Attend</Button>
+                <Button variant="outline" type="button" disabled className="px-2 py-1 text-sm w-24">Absent</Button>
               )}
             </TableCell>
           </TableRow>
