@@ -1,30 +1,14 @@
 "use server";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/admin/events/event-card";
 import { EVENTS } from "@/text/events";
 import { BoxIcon } from "@/components/admin/events/icons/boxIcon";
-import { addEvent, retrieveEvents } from "@/lib/actions/event";
-import { EventType } from "@/types/event";
-import { toast } from "@/components/ui/use-toast";
+import { retrieveEvents } from "@/lib/actions/event";
 import moment from "moment";
 import { revalidatePath } from "next/cache";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { CreateEventModal } from "@/components/admin/events/create-event-modal";
 
 export default async function Events() {
   const events = await retrieveEvents();
-  const handleUpdate = () => revalidatePath("/dashboard/admin/events");
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
@@ -47,18 +31,7 @@ export default async function Events() {
           </div>
           <h2 className="text-2xl font-bold">{EVENTS.PASEDEVENTS}</h2>
           <hr className="w-full border-gray-300" />
-
-          <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6">
-            {/* {eventsData.map((event, index) => (
-              <EventCard
-                key={index}
-                title={event.title}
-                date={event.date}
-                description={event.description}
-                link={event.link}
-              />
-            ))} */}
-          </div>
+          <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6"></div>
         </div>
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
@@ -69,31 +42,10 @@ export default async function Events() {
               <h2 className="pt-5 text-lg font-bold">{EVENTS.ADDNEWEVENT}</h2>
               <p className="text-sm">{EVENTS.ADDNEWEVENT_DECRIPTION}</p>
             </div>
-
             <CreateEventModal />
           </div>
         </div>
-
-        {/* <div className="mb-6">
-          <div className="p-4 bg-gray-100 rounded-md">
-            <BoxIcon />
-            <h2 className="pt-5 text-lg font-bold">{EVENTS.ADDNEWEVENT}</h2>
-            <p className="text-sm">{EVENTS.ADDNEWEVENT_DECRIPTION}</p>
-            <Button
-              variant="default"
-              className="mt-4"
-              onClick={() => setIsCreateModalOpen(true)}
-            >
-              {EVENTS.CREATENEWEVENT}
-            </Button>
-          </div>
-        </div> */}
       </aside>
-      {/* <EventModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        submitFunction={handleCloseCreateModal}
-      /> */}
     </div>
   );
 }
