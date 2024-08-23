@@ -10,6 +10,8 @@ import { useToast } from "@/components/ui/use-toast";
 import { retrieveEvents } from "@/lib/actions/event";
 import { EventType } from "@/types/event";
 import moment from "moment";
+import { retrieveAttendance } from "@/lib/actions/attendance";
+import { AttendanceType } from "@/types/attendance";
 
 const eventsData = [
   {
@@ -45,10 +47,26 @@ export default function Attendance() {
   const { toast } = useToast();
   const [selectedEvent, setSelectedEvent] = useState<EventType>();
   const [events, setEvents] = useState<EventType[]>([]);
-
+  const [attendance, setAttendance] = useState<any[]>([]);
   const handleEvent = (event: EventType) => {
     setSelectedEvent(event);
   };
+
+  useEffect(() => {
+    const fetchData = async ({event_id} : {event_id: number}) => {
+         try {
+           const response = await retrieveAttendance( {event_id});
+           setAttendance(response);
+   
+       } catch (error) {
+         toast({ title: "Error", description: "Fail to load data" });
+       }
+     };
+
+     if (selectedEvent){
+     fetchData({event_id:selectedEvent?.event_id})
+     }
+  }, [selectedEvent]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -105,7 +123,7 @@ export default function Attendance() {
           </div>
         </div>
         <div className="overflow-x-auto">{selectedEvent?.topic}</div>
-        <AttendanceTable />
+        <AttendanceTable members={attendance}/>
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6">
@@ -117,8 +135,8 @@ export default function Attendance() {
                 className="p-4 hover:bg-slate-300 hover:cursor-pointer"
                 onClick={() => handleEvent(event)}
               >
-                <h3 className="text-lg font-semibold">{event.name}</h3>
-                <p className="text-base">{event.topic}</p>
+                <h1 className="text-lg font-semibold">{event.name}</h1>
+                <p className="text-sm">{event.topic}</p>
                 <p className="text-xs text-gray-400 text-muted-foreground">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
               </Card>
             ))}
