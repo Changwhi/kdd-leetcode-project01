@@ -1,8 +1,16 @@
-import React, { useState } from "react";
+"use server";
 import { Button } from "@/components/ui/button";
-import { DetailEventModal } from "./detail-event-modal";
 import { EventCardProps } from "@/types/event";
 import { EVENTS } from "@/text/events";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -11,7 +19,6 @@ export const EventCard: React.FC<EventCardProps> = ({
   topic,
   zoomlink,
 }) => {
-  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col rounded-lg overflow-hidden shadow-lg min-w-full max-w-xs mx-auto hover:shadow-xl transition-all duration-200">
@@ -41,25 +48,45 @@ export const EventCard: React.FC<EventCardProps> = ({
           </div>
         </div>
         <div className="flex flex-col items-center mt-2 space-x-2">
-          <Button
-            onClick={() => setIsDetailModalOpen(true)}
-            className="w-full hover:bg-gray-700 hover:text-white transition-all duration-200"
-            size="sm"
-          >
-            Edit( Coming Soon )
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Edit Profile</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit profile</DialogTitle>
+                <DialogDescription>
+                  Make changes to your profile here. Click save whenre
+                  done.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <h2 className="mr-4 font-bold">Event Name : </h2>
+                    <p>{name}</p>
+                  </div>
+                  <div className="flex flex-row">
+                    <h2 className="mr-4 font-bold">Date : </h2>
+                    <p>{date}</p>
+                  </div>
+                  <div className="flex flex-row">
+                    <h2 className="mr-4 font-bold">Description : </h2>
+                    <p>{topic}</p>
+                  </div>
+                  <div className="flex flex-row">
+                    <h2 className="mr-4 font-bold">Link : </h2>
+                    <p>{zoomlink}</p>
+                  </div>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button type="submit">Save changes</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
-      <DetailEventModal
-        isOpen={isDetailModalOpen}
-        onClose={() => setIsDetailModalOpen(false)}
-        info={{
-          title: name,
-          date: date,
-          description: topic,
-          link: zoomlink,
-        }}
-      />
     </div>
   );
 };
