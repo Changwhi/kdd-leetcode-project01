@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { CONSTANTS } from "@/text/attendance";
+import { ATTENDANCE} from "@/text/attendance";
 import { useEffect, useState } from "react";
 import { AttendanceTable } from "@/components/attendance/attendanceTable";
 import { ParticipantsIcon } from "@/components/attendance/icons/participantsIcon";
@@ -13,59 +13,34 @@ import moment from "moment";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { AttendanceType } from "@/types/attendance";
 
-const eventsData = [
-  {
-    title: "Week 1 – Online Mock Interview",
-    date: "April 04, 2024",
-    description: "Description for Week 1 event.",
-    link: "#",
-    totalParticipants: 30,
-    totalPresent: 20,
-    totalAbsent: 10,
-  },
-  {
-    title: "Week 2 – Online Mock Interview",
-    date: "April 11, 2024",
-    description: "Description for Week 2 event.",
-    link: "#",
-    totalParticipants: 30,
-    totalPresent: 20,
-    totalAbsent: 10,
-  },
-  {
-    title: "Week 3 – Online Mock Interview",
-    date: "April 18, 2024",
-    description: "Description for Week 3 event.",
-    link: "#",
-    totalParticipants: 30,
-    totalPresent: 20,
-    totalAbsent: 10,
-  },
-];
-
 export default function Attendance() {
   const { toast } = useToast();
   const [selectedEvent, setSelectedEvent] = useState<EventType>();
   const [events, setEvents] = useState<EventType[]>([]);
-  const [attendance, setAttendance] = useState<any[]>([]);
+  const [attendance, setAttendance] = useState<AttendanceType[]>([]);
   const handleEvent = (event: EventType) => {
     setSelectedEvent(event);
   };
 
   useEffect(() => {
-    const fetchData = async ({event_id} : {event_id: number}) => {
-         try {
-           const response = await retrieveAttendance( {event_id});
-           setAttendance(response);
-   
-       } catch (error) {
-         toast({ title: "Error", description: "Fail to load data" });
-       }
-     };
+    const fetchData = async ({ event_id }: { event_id: number }) => {
+      try {
+        const response = await retrieveAttendance({ event_id });
 
-     if (selectedEvent){
-     fetchData({event_id:selectedEvent?.event_id})
-     }
+        if (!response) {
+          setAttendance([]);
+          return;
+        }
+
+        setAttendance(response);
+      } catch (error) {
+        toast({ title: "Error", description: "Fail to load data" });
+      }
+    };
+
+    if (selectedEvent) {
+      fetchData({ event_id: selectedEvent?.event_id });
+    }
   }, [selectedEvent]);
 
   useEffect(() => {
@@ -88,47 +63,52 @@ export default function Attendance() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-xl font-bold">{selectedEvent?.name}</h1>
-            <p className="text-muted-foreground">{moment(selectedEvent?.date).format("MMMM Do YYYY, h:mm a")}</p>
+            <p className="text-muted-foreground">
+              {moment(selectedEvent?.date).format("MMMM Do YYYY, h:mm a")}
+            </p>
             <div className="flex gap-4 p-5">
               <Card className="w-40 p-4 ">
                 <div className="flex gap-2 items-center">
                   <ParticipantsIcon />
                   <h3 className="text-xs text-muted-foreground">
-                    Total Participants
+                    {ATTENDANCE.TOTAL_PARTICIPANTS}
                   </h3>
                 </div>
                 <p className="pt-3 text-center text-base font-semibold">
-                  {5} people
+                  {attendance.length}{ATTENDANCE.PEOPLE}
                 </p>
               </Card>
               <Card className="w-40 p-4 ">
                 <div className="flex gap-2 items-center">
                   <AttendedIcon />
-                  <h3 className="text-xs text-muted-foreground">Attended</h3>
+                  <h3 className="text-xs text-muted-foreground">{ATTENDANCE.ATTEND}</h3>
                 </div>
                 <p className="pt-3 text-center text-base font-semibold">
-                  {3} people
+                  {attendance.filter((member) => member.attended === 1).length}{" "}
+                  {ATTENDANCE.PEOPLE}
                 </p>
               </Card>
               <Card className="w-40 p-4 ">
                 <div className="flex gap-2 items-center">
                   <AbsentIcon />
-                  <h3 className="text-xs text-muted-foreground">Absent</h3>
+                  <h3 className="text-xs text-muted-foreground">{ATTENDANCE.ABSENT}</h3>
                 </div>
                 <p className="pt-3 text-left text-base font-semibold">
-                  {2} people
+                  {attendance.length -
+                    attendance.filter((member) => member.attended === 1)
+                      .length}{" "}
+                  {ATTENDANCE.PEOPLE}
                 </p>
               </Card>
             </div>
           </div>
         </div>
-        <div className="overflow-x-auto">{selectedEvent?.topic}</div>
-        <AttendanceTable members={attendance}/>
+        <AttendanceTable members={attendance} />
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6">
           <div className="space-y-4 mt-4">
-            <h2 className="text-lg font-bold">{CONSTANTS.SELECT_EVENTS}</h2>
+            <h2 className="text-lg font-bold">{ATTENDANCE.SELECT_EVENTS}</h2>
             {events.map((event, index) => (
               <Card
                 key={index}
@@ -137,7 +117,9 @@ export default function Attendance() {
               >
                 <h1 className="text-lg font-semibold">{event.name}</h1>
                 <p className="text-sm">{event.topic}</p>
-                <p className="text-xs text-gray-400 text-muted-foreground">{moment(event.date).format("MMMM Do YYYY, h:mm a")}</p>
+                <p className="text-xs text-gray-400 text-muted-foreground">
+                  {moment(event.date).format("MMMM Do YYYY, h:mm a")}
+                </p>
               </Card>
             ))}
           </div>
