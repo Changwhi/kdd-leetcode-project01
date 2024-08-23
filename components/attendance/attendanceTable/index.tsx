@@ -7,18 +7,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CONSTANTS } from "@/text/attendance";
+import { ATTENDANCE } from "@/text/attendance";
 
 export const AttendanceTable = ({members}: {members: any[]}) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{CONSTANTS.NAME}</TableHead>
-          <TableHead>{CONSTANTS.SELF_CHECK_IN}</TableHead>
-          <TableHead>{CONSTANTS.INDIVIDUAL_QUESTION}</TableHead>
-          <TableHead>{CONSTANTS.PULL_REQUEST}</TableHead>
-          <TableHead>{CONSTANTS.CHECK}</TableHead>
+          <TableHead>{ATTENDANCE.NAME}</TableHead>
+          <TableHead>{ATTENDANCE.SELF_CHECK_IN}</TableHead>
+          <TableHead>{ATTENDANCE.INDIVIDUAL_QUESTION}</TableHead>
+          <TableHead>{ATTENDANCE.PULL_REQUEST}</TableHead>
+          <TableHead>{ATTENDANCE.CHECK}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,7 +36,7 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
                     Submitted
                   </Button>
                 ) : (
-                  <Button className="px-2 py-1 text-sm w-24" variant="default">
+                  <Button className="px-2 py-1 text-sm w-24" variant="outline">
                     Check
                   </Button>
                 )
@@ -49,10 +49,10 @@ export const AttendanceTable = ({members}: {members: any[]}) => {
                     Withdraw
                   </Button>
                   :
-                  <Button className="px-2 py-1 text-sm w-24">Attended</Button>
+                  <Button variant="outline" className="px-2 py-1 text-sm w-24">Check</Button>
                 
               ) : (
-                <Button variant="outline" type="button" disabled className="px-2 py-1 text-sm w-24">Absent</Button>
+                <Button variant="destructive" type="button" disabled className="px-2 py-1 text-sm w-24">Absent</Button>
               )}
             </TableCell>
           </TableRow>
