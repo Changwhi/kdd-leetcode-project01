@@ -1,38 +1,30 @@
-"use client";
+"use server";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { EventCard } from "@/components/admin/events/event-card";
-import { EventModal } from "@/components/admin/events/create-event-modal";
 import { EVENTS } from "@/text/events";
 import { BoxIcon } from "@/components/admin/events/icons/boxIcon";
-import { retrieveEvents } from "@/lib/actions/event";
+import { addEvent, retrieveEvents } from "@/lib/actions/event";
 import { EventType } from "@/types/event";
 import { toast } from "@/components/ui/use-toast";
 import moment from "moment";
+import { revalidatePath } from "next/cache";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { CreateEventModal } from "@/components/admin/events/create-event-modal";
 
-export default function Events() {
-  const [events, setEvents] = useState<EventType[]>([]);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  const handleSubmit = ({ title, date, description, link }: any) => {
-    // Handle form submission
-    console.log({ title, date, description, link });
-    // setEventsData([...eventsData, { title, date, description, link }]);
-    setIsCreateModalOpen(false);
-  };
-
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const eventsData = await retrieveEvents();
-        setEvents(eventsData);
-      } catch (error) {
-        toast({ title: 'Error fetching events', variant: 'destructive' });
-      }
-    };
-
-    fetchEvents();
-  }, []); 
+export default async function Events() {
+  const events = await retrieveEvents();
+  const handleUpdate = () => revalidatePath("/dashboard/admin/events");
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
@@ -72,6 +64,18 @@ export default function Events() {
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6">
           <div className="p-4 bg-gray-100 rounded-md">
+            <div className="pb-10">
+              <BoxIcon />
+              <h2 className="pt-5 text-lg font-bold">{EVENTS.ADDNEWEVENT}</h2>
+              <p className="text-sm">{EVENTS.ADDNEWEVENT_DECRIPTION}</p>
+            </div>
+
+            <CreateEventModal />
+          </div>
+        </div>
+
+        {/* <div className="mb-6">
+          <div className="p-4 bg-gray-100 rounded-md">
             <BoxIcon />
             <h2 className="pt-5 text-lg font-bold">{EVENTS.ADDNEWEVENT}</h2>
             <p className="text-sm">{EVENTS.ADDNEWEVENT_DECRIPTION}</p>
@@ -83,13 +87,13 @@ export default function Events() {
               {EVENTS.CREATENEWEVENT}
             </Button>
           </div>
-        </div>
+        </div> */}
       </aside>
-      <EventModal
+      {/* <EventModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        submitFunction={handleSubmit}
-      />
+        submitFunction={handleCloseCreateModal}
+      /> */}
     </div>
   );
 }
