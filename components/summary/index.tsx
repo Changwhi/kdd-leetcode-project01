@@ -8,10 +8,44 @@ import { useEffect, useState } from "react";
 import { SummaryTable } from "./summaryTable";
 import { Assignments } from "./assignments";
 import { UpcommingEvents } from "./upcommingEvents";
-
+import { DayModifiers } from "react-day-picker";
+import moment from "moment";
+import { retrieveEvents } from "@/lib/actions/event";
+import { useToast } from "../ui/use-toast";
 export const Summary = () => {
+  const { toast } = useToast();
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [markedEvents, setMarkedEvents] = useState<Date[]>([]);
+  
 
+  useEffect(() => {
+    const getAllEvents= async () => {
+      try {
+        const response = await retrieveEvents();
+        if (!response) {
+          return;
+        }
+        setMarkedEvents(response.map((event) => new Date(event.date)));
+      } catch (error) {
+        toast({ title: "Error", description: "Fail to load data" });
+      }
+    };
+
+    getAllEvents();
+  }, []);
+
+   
+  // Create a modifiers object where each date in the dummy array is marked
+  const modifiers: DayModifiers = {
+    highlighted: markedEvents as any,
+  };
+
+  // Style for highlighted dates
+  const modifiersStyles = {
+    highlighted: {
+      color: "blue",
+    },
+  };
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
       <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
@@ -35,9 +69,11 @@ export const Summary = () => {
         <div className="mb-6 w-full">
           <Calendar
             mode="single"
-            className="border rounded-md"
             selected={date}
             onSelect={setDate}
+            modifiers={modifiers}
+            modifiersStyles={modifiersStyles}
+            className="border rounded-md"
           />
         </div>
         <div className="mb-6">
