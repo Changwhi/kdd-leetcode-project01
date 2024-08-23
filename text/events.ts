@@ -1,5 +1,5 @@
 export const EVENTS = {
-    UPCOMMINGEVENTS: "Upcomming events",
+    UPCOMINGEVENTS: "Upcoming events",
     PASEDEVENTS: "Past events",
     ADDNEWEVENT: "Add a new event",
     CREATENEWEVENT: "Create a new event",
