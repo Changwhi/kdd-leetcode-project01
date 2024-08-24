@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { CONSTANTS } from "@/text/summary";
+import { SUMMARY } from "@/text/summary";
 
 interface Props {
   userName: String;
@@ -35,7 +35,7 @@ export const AssignmentCard: React.FC<Props> = ({
       </Col>
       <Col>
         <Button className="bg-violet-900 m-2 w-20" variant="default" size="sm">
-          <a href="#">{CONSTANTS.BUTTON_VIEW}</a>
+          <a href="#">{SUMMARY.BUTTON_VIEW}</a>
         </Button>
       </Col>
     </Card>
