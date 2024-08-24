@@ -10,4 +10,7 @@ export const EVENTS = {
     LINK: "Link",
     ADD: "Add",
     CANCEL: "Cancel",
+    DIALOG_DESCRIPTION: "Let's create a new event.",
+    DIALOG_TITLE: "Create new event",
+    CREATE: "Create",
 }

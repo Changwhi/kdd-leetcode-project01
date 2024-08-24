@@ -1,6 +1,7 @@
-export const CONSTANTS = {
-  TITLE: "Week 8 – Online Mock Interview",
-  DATE: "April 11, 2024",
+export const SUMMARY= {
+  NO_UPCOMING_EVENTS: "No upcoming events, Let's create a new one.",
+  TITLE: "Summary",
+  TABLE_TITLE: "All users",
   NAME: "Name",
   EMAIL: "Email",
   LEVEL: "Level",
@@ -35,4 +36,7 @@ export const CONSTANTS = {
   BUTTON_CHECK: "Check",
   BUTTON_JOIN: "Join",
   BUTTON_VIEW: "View",
+  EVENT_TITLE: "Event",
+  NO_EVENT: "No event",
+
 };

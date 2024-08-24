@@ -7,77 +7,52 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CONSTANTS } from "@/text/attendance";
+import { ATTENDANCE } from "@/text/attendance";
 
-const attendance = [
-  {
-    id: 1,
-    name: "Chul Su",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 2,
-    name: "Jjan gu",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 3,
-    name: "Mang Gu",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: true,
-  },
-  {
-    id: 4,
-    name: "Yu ri",
-    selfCheckIn: "Approved",
-    individualQuestion: "Submitted",
-    pr: true,
-    attend: false,
-  },
-];
-
-export const AttendanceTable = () => {
+export const AttendanceTable = ({members}: {members: any[]}) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{CONSTANTS.NAME}</TableHead>
-          <TableHead>{CONSTANTS.SELF_CHECK_IN}</TableHead>
-          <TableHead>{CONSTANTS.INDIVIDUAL_QUESTION}</TableHead>
-          <TableHead>{CONSTANTS.PULL_REQUEST}</TableHead>
-          <TableHead>{CONSTANTS.CHECK}</TableHead>
+          <TableHead>{ATTENDANCE.NAME}</TableHead>
+          <TableHead>{ATTENDANCE.SELF_CHECK_IN}</TableHead>
+          <TableHead>{ATTENDANCE.INDIVIDUAL_QUESTION}</TableHead>
+          <TableHead>{ATTENDANCE.PULL_REQUEST}</TableHead>
+          <TableHead>{ATTENDANCE.CHECK}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {attendance.map((info) => (
+        {members.map((info) => (
           <TableRow key={info.id}>
             <TableCell className="font-medium">{info.name}</TableCell>
-            <TableCell>{info.selfCheckIn}</TableCell>
-            <TableCell>{info.individualQuestion}</TableCell>
+            <TableCell>{info.attended != null ? (
+              info.attended == 0 ? "I'm here" : "Attended"
+            ) : "Absent"}</TableCell>
+            <TableCell>{info.submission_id != null ? "Yes" : "No"}</TableCell>
             <TableCell>
-              {info.pr ? (
-                <Button className="px-2 py-1 text-sm w-24">Submitted</Button>
-              ) : (
-                <Button className="px-2 py-1 text-sm w-24" variant="outline">
-                  Check
-                </Button>
-              )}
+              {
+                info.submitted ? (
+                  <Button className="px-2 py-1 text-sm w-24" variant="secondary">
+                    Submitted
+                  </Button>
+                ) : (
+                  <Button className="px-2 py-1 text-sm w-24" variant="outline">
+                    Check
+                  </Button>
+                )
+              }
             </TableCell>
             <TableCell>
-              {info.attend ? (
-                <Button className="px-2 py-1 text-sm w-24" variant="destructive">
-                  Withdraw
-                </Button>
+              {info.attended != null ? (
+                info.attended == 1 ?
+                  <Button className="px-2 py-1 text-sm w-24" variant="secondary">
+                    Withdraw
+                  </Button>
+                  :
+                  <Button variant="outline" className="px-2 py-1 text-sm w-24">Check</Button>
+                
               ) : (
-                <Button className="px-2 py-1 text-sm w-24">Attend</Button>
+                <Button variant="destructive" type="button" disabled className="px-2 py-1 text-sm w-24">Absent</Button>
               )}
             </TableCell>
           </TableRow>

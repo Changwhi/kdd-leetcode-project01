@@ -1,3 +1,4 @@
+"use server";
 import {
   Table,
   TableBody,
@@ -8,51 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CONSTANTS } from "@/text/summary";
+import { SUMMARY } from "@/text/summary";
+import { AttendanceType } from "@/types/attendance";
 
-const usersInfo = [
-  {
-    id: 1,
-    name: "Chul Su",
-    email: "ChulSu@abc.com",
-    level: "Novice",
-    deposit: "30",
-  },
-  {
-    id: 2,
-    name: "Jjan gu",
-    email: "Jjang Gu@abc.com",
-    level: "Intermeidate",
-    deposit: "25",
-  },
-  {
-    id: 3,
-    name: "Mang Gu",
-    email: "Mang Gu@abc.com",
-    level: "Advanced",
-    deposit: "20",
-  },
-  { id: 4, name: "Yu ri", email: "Yu ri", level: "Master", deposit: "30" },
-];
-
-export const SummaryTable = () => {
+export const SummaryTable = ({users}: {users: AttendanceType[]}) => {
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>{CONSTANTS.NAME}</TableHead>
-          <TableHead>{CONSTANTS.EMAIL}</TableHead>
-          <TableHead>{CONSTANTS.LEVEL}</TableHead>
-          <TableHead>{CONSTANTS.DEPOSIT}</TableHead>
+          <TableHead>{SUMMARY.NAME}</TableHead>
+          <TableHead>{SUMMARY.EMAIL}</TableHead>
+          <TableHead>{SUMMARY.LEVEL}</TableHead>
+          <TableHead>{SUMMARY.DEPOSIT}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {usersInfo.map((user) => (
-          <TableRow key={user.id}>
+        {users.map((user) => (
+          <TableRow key={user.user_group_id}>
             <TableCell className="font-medium">{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
-            <TableCell>{user.level}</TableCell>
-            <TableCell>{user.deposit}</TableCell>
+            <TableCell>{user.user_type == 1 ? "User" : "Admin"}</TableCell>
+            <TableCell>{user.curr_amout}</TableCell>
           </TableRow>
         ))}
       </TableBody>

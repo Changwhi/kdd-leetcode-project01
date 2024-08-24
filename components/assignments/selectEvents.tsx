@@ -1,5 +1,5 @@
 "use client";
-import { CONSTANTS } from "@/text/summary";
+import { SUMMARY } from "@/text/summary";
 import { Card } from "@/components/ui/card";
 import Row from "react-bootstrap/Row";
 
@@ -40,7 +40,7 @@ const options: Intl.DateTimeFormatOptions = {
 export const SelectEvent = () => {
   return (
     <div className="bg-slate-50 md:p-2 md:mt-4 lg:p-4 rounded-xl lg:h-[83vh] md:w-full md:h-[40vh]">
-      <Row className="text-m font-bold md:m-2 lg:m-4">{CONSTANTS.SELECT_EVENT_TITLE}</Row>
+      <Row className="text-m font-bold md:m-2 lg:m-4">{SUMMARY.SELECT_EVENT_TITLE}</Row>
       <Row className="md:h-[80%] lg:h-[70vh] overflow-y-auto">
         {tempEvents.map((event) => (
           <Card className="items-center p-4 m-3 shadow-md hover:bg-gray-100 hover:shadow-lg transition-all duration-300 cursor-pointer" key={event.eventId} onClick={()=>{console.log(event.eventId
