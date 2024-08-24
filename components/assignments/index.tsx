@@ -1,11 +1,11 @@
-import { CONSTANTS } from "@/text/summary";
+import { SUMMARY } from "@/text/summary";
 import { Assignment } from "./assignment";
 import { SelectEvent } from "./selectEvents";
 
 export const Assignments = () => {
   return (
     <>
-      <h2 className="text-lg font-bold">{CONSTANTS.ASSIGNMENTS_TITLE}</h2>
+      <h2 className="text-lg font-bold">{SUMMARY.ASSIGNMENTS_TITLE}</h2>
       <div className="flex flex-col lg:flex-row">
       <aside className="block lg:hidden basis-1/3 lg:w-1/2">
             <SelectEvent></SelectEvent>
