@@ -1,6 +1,6 @@
 "use client";
 
-import { CONSTANTS } from "@/text/summary";
+import { EVENTS } from "@/text/events";
 import { EventTable } from "./eventTable";
 import { SubmitPopup } from "./submitPopUp";
 import { useState } from "react";
@@ -10,7 +10,7 @@ export const EventsComponent = () => {
 
   return (
     <>
-      <h2 className="text-lg font-bold">{CONSTANTS.UPCOMING_EVENTS_TITLE}</h2>
+      <h2 className="text-lg font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
       <div className="space-y-4 mt-4">
         <EventTable setOpenModal={setOpenModal}></EventTable>
         <SubmitPopup openModal={openModal} setOpenModal={setOpenModal}></SubmitPopup>
