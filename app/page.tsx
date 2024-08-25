@@ -1,17 +1,16 @@
-"use client";
+"use server";
 
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/text/landing";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { getSession, withPageAuthRequired } from '@auth0/nextjs-auth0';
+import { createUser, retrieveUser } from "@/lib/actions/user";
 
-export default function Home() {
-  const { user, error } = useUser();
-  
-  if (error) return <div>{error.message}</div>;
-  console.log(user)
+export default async function Home() {
+  const session = await getSession();
+  const user = session?.user;
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
