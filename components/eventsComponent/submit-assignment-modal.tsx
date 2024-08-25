@@ -1,10 +1,12 @@
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogDescription,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -13,15 +15,12 @@ import { EVENTS_USER } from "@/text/events";
 import { BUTTONS } from "@/text/buttons";
 import { Dispatch, SetStateAction } from "react";
 
-interface SubmitPopupProps {
-  openModal: boolean;
-  setOpenModal: Dispatch<SetStateAction<boolean>>;
-}
-
-export const SubmitPopup: React.FC<SubmitPopupProps> = ({openModal, setOpenModal}) => {
-
+export const SubmitAssignmentModal = () => {
   return (
-    <Dialog open={openModal} onOpenChange={setOpenModal}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button className="bg-violet-900 w-20">{BUTTONS.BUTTON_SUBMIT}</Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-[90vh] h-[70vh]">
         <div className="relative">
           <DialogHeader className="text-center">
@@ -49,9 +48,13 @@ export const SubmitPopup: React.FC<SubmitPopupProps> = ({openModal, setOpenModal
             />
           </div>
         </div>
-        <DialogFooter>
-          <Button type="submit" onClick={()=>setOpenModal(false)} className="">{BUTTONS.BUTTON_SUBMIT}</Button>
-        </DialogFooter>
+        <DialogClose asChild>
+          <DialogFooter>
+            <Button type="submit">
+              {BUTTONS.BUTTON_SUBMIT}
+            </Button>
+          </DialogFooter>
+        </DialogClose>
       </DialogContent>
     </Dialog>
   );

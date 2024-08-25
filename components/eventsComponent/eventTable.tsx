@@ -1,4 +1,4 @@
-"use client";
+"use server";
 import {
   Table,
   TableBody,
@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/table";
 import { EVENTS_USER } from "@/text/events";
 import { EventTableBody } from "./eventTableBody";
-import { Dispatch, SetStateAction } from "react";
 
 // TODO: Fetch events list
 const tempEvents = [
@@ -17,36 +16,32 @@ const tempEvents = [
     name: "Week4",
     date: new Date(2024, 8, 22),
     topic: "Binary Tree",
-    zoomLink: "#",
+    zoomLink: "https://soopark.netlify.app/",
   },
   {
     eventId: "113",
     name: "Week3",
     date: new Date(2024, 7, 15),
     topic: "Bitwise",
-    zoomLink: "#",
+    zoomLink: "https://soopark.netlify.app/",
   },
   {
     eventId: "112",
     name: "Week2",
     date: new Date(2024, 7, 11),
     topic: "Heap",
-    zoomLink: "#",
+    zoomLink: "https://soopark.netlify.app/",
   },
   {
     eventId: "111",
     name: "Week1",
     date: new Date(2024, 7, 1),
     topic: "Graph",
-    zoomLink: "#",
+    zoomLink: "https://soopark.netlify.app/",
   },
 ];
 
-interface EventTableProps {
-  setOpenModal: Dispatch<SetStateAction<boolean>>;
-}
-
-export const EventTable: React.FC<EventTableProps> = ({ setOpenModal }) => {
+export const EventTable= () => {
   return (
     <Table>
       <TableHeader>
@@ -62,7 +57,6 @@ export const EventTable: React.FC<EventTableProps> = ({ setOpenModal }) => {
         {tempEvents.map((eachEvent) => (
           <EventTableBody
             key={eachEvent.eventId}
-            setOpenModal={setOpenModal}
             name={eachEvent.name}
             date={eachEvent.date}
             topic={eachEvent.topic}

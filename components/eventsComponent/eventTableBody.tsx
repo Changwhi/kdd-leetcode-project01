@@ -1,9 +1,12 @@
-"use client";
+"use server";
+
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Dispatch, SetStateAction } from "react";
+import { SubmitAssignmentModal } from "./submit-assignment-modal";
+import Link from "next/link";
+import { Url } from "next/dist/shared/lib/router/router";
 
 //TODO: Fetch event data
 interface Props {
@@ -11,7 +14,6 @@ interface Props {
   date: Date;
   topic: String;
   zoomLink: String;
-  setOpenModal: Dispatch<SetStateAction<boolean>>
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -20,7 +22,6 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 export const EventTableBody: React.FC<Props> = ({
-  setOpenModal,
   name,
   date,
   topic,
@@ -48,34 +49,29 @@ export const EventTableBody: React.FC<Props> = ({
         <CheckIcon></CheckIcon>
       </TableCell>
       <TableCell>
-        {" "}
-        <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => setOpenModal(true)}
-        >
-          Submit
-        </Button>
+        <SubmitAssignmentModal></SubmitAssignmentModal>
       </TableCell>
       <TableCell>
         {" "}
         <Button
           className="bg-violet-900 w-20"
           disabled={past}
-          onClick={() => console.log("Check")}
+          // onClick={console.log("Check")}
         >
           Check
         </Button>
       </TableCell>
       <TableCell>
         {" "}
-        <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => console.log("ZoomLink")}
+        <Link
+          href={zoomLink as Url}
+          target="_blank"
+          className={past ? "pointer-events-none" : ""}
         >
-          Join
-        </Button>
+          <Button className="bg-violet-900 w-20" disabled={past}>
+            Link
+          </Button>
+        </Link>
       </TableCell>
     </TableRow>
   );
