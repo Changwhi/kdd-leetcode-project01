@@ -50,11 +50,12 @@ export const createUser = async (
   email: string
 ): Promise<string> => {
   try {
+    // Prevent make duplicate
     const existingUser = await retrieveUser(email);
-
     if (existingUser.length > 0) {
       return "User already exists.";
     }
+    
     const user_name = name.length <= 20 ? name : name.slice(0, 20);
     await sql`
       INSERT INTO "user" (name, email)
@@ -82,6 +83,6 @@ export const deleteUser = async (email: string): Promise<string>  => {
     return "User deleted successfully.";
   } catch (error) {
     console.log(error);
-    return "User deleted successfully.";
+    return "Failed to delete user.";
   }
 };
