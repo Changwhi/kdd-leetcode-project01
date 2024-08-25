@@ -8,6 +8,36 @@ This creates the following routes:
 /api/auth/me: The route to fetch the user profile from.
 
  */
-import { handleAuth } from '@auth0/nextjs-auth0';
+import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
+import { NextResponse } from "next/server";
+import { createUser } from "@/lib/actions/user";
 
-export const GET = handleAuth();
+interface UserProfile {
+  name: string;
+  nickname: string;
+  email: string;
+  [key: string]: any;
+}
+
+const afterCallback = async (req: any, session: any) => {
+  const user = session.user as UserProfile;
+
+  const username = user["username"] as string | undefined;
+  console.log(user);
+  if (user) {
+    try {
+      console.log(await createUser(user.nickname, user.email));
+      
+    } catch (error) {
+      console.error("Error creating user:", error);
+    }
+    return session;
+  } else {
+    console.log("not logged in");
+    return NextResponse.redirect("http://localhost:3000");
+  }
+};
+
+export const GET = handleAuth({
+  callback: handleCallback({ afterCallback }),
+});
