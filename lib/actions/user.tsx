@@ -4,11 +4,11 @@ import { UserType } from "@/types/user";
 import { ResponseType } from "@/types/response";
 
 /**
- * Returns all users data in database
+ * Retrieve all users data in database
  *
- * @returns An array of users if users exist, otherwise empty array
+ * @returns An array of users data if users exist, otherwise an empty array
  */
-export const retrieveAllUsers = async () => {
+export const retrieveAllUsers = async (): Promise<UserType[]> => {
   try {
     const response: UserType[] = await sql`SELECT * FROM "user"`;
     if (response.length > 0) {
@@ -22,41 +22,49 @@ export const retrieveAllUsers = async () => {
 };
 
 /**
- * Returns user data with given email in database
+ * Retrieve a user from the database by email
  *
  * @param email - User's email as a string
- * @returns A user object if user exists, otherwise null
+ * @returns An array of user data if user exists, otherwise an empty array
  */
-export const retrieveUser = async (email: string) => {
+export const retrieveUser = async (email: string): Promise<UserType[]> => {
   try {
     const response: UserType[] =
-      await sql`SELECT * FROM "user" WHERE email=${email}`;
-    if (response.length > 0) {
-      return response[0];
-    }
-    return null;
+      await sql`SELECT * FROM "user" WHERE email = ${email}`;
+    return response.length > 0 ? response : [];
   } catch (error) {
     console.error("Error retrieving user:", error);
-    return null;
+    return [];
   }
 };
 
 /**
- * Create new user in user table in database
+ * Create a new user in the "user" table in the database
  *
  * @param name - User's name as a string
  * @param email - User's email as a string
- * @returns a response object
+ * @returns a success message or an error message
  */
-export const createUser = async (name: string, email: string) => {
+export const createUser = async (
+  name: string,
+  email: string
+): Promise<string> => {
   try {
-    const response: ResponseType[] = await sql`
+    const existingUser = await retrieveUser(email);
+
+    if (existingUser.length > 0) {
+      return "User already exists.";
+    }
+    const user_name = name.length <= 20 ? name : name.slice(0, 20);
+    await sql`
       INSERT INTO "user" (name, email)
-      VALUES (${name}, ${email})
+      VALUES (${user_name}, ${email})
     `;
-    return response;
+
+    return "User created successfully.";
   } catch (error) {
-    console.log(error);
+    console.error("Error creating user:", error);
+    return "Failed to create user.";
   }
 };
 
@@ -64,15 +72,16 @@ export const createUser = async (name: string, email: string) => {
  * Delete the user in user table in database
  *
  * @param email - User's email as a string
- * @returns a response object
+ * @returns a success message or an error message
  */
-export const deleteUser = async (email: string) => {
+export const deleteUser = async (email: string): Promise<string>  => {
   try {
     const response: ResponseType[] = await sql`
     DELETE FROM "user" WHERE email =  ${email}
     `;
-    return response;
+    return "User deleted successfully.";
   } catch (error) {
     console.log(error);
+    return "User deleted successfully.";
   }
 };
