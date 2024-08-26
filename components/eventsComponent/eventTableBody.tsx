@@ -31,9 +31,10 @@ export const EventTableBody: React.FC<Props> = ({
   attendance_attended,
   pr_submitted,
 }) => {
-  const past = date <= new Date() ? true : false;
-  const attendanceColour = attendance_attended || !past ? "bg-violet-900" : "bg-orange-500";
-  
+  const isPast: boolean = date <= new Date() ? true : false;
+  const attendanceColour: string =
+    attendance_attended || !isPast ? "bg-violet-900" : "bg-orange-500";
+
   return (
     <TableRow>
       <TableCell>
@@ -53,25 +54,25 @@ export const EventTableBody: React.FC<Props> = ({
       </TableCell>
       <TableCell>{pr_submitted ? <CheckIcon /> : <XIcon />}</TableCell>
       <TableCell>
-        <SubmitAssignmentModal></SubmitAssignmentModal>
+        <SubmitAssignmentModal isPast={isPast} eventID={event_id}></SubmitAssignmentModal>
       </TableCell>
       <TableCell>
         {" "}
         <Button
           className={`${attendanceColour} w-20`}
-          disabled={past}
+          disabled={isPast}
           onClick={() => {
             console.log("Check");
           }}
         >
-          {!attendance_attended && past ? "Absent": "Attend"}
+          {!attendance_attended && isPast ? "Absent" : "Attend"}
         </Button>
       </TableCell>
       <TableCell>
         {" "}
         <Button
           className="bg-violet-900 w-20"
-          disabled={past}
+          disabled={isPast}
           onClick={() => {
             window.open(zoomLink as string, "_blank");
           }}
