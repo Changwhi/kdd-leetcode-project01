@@ -13,7 +13,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { EVENTS_USER } from "@/text/events";
 import { BUTTONS } from "@/text/buttons";
-import { createSubmission } from "@/lib/actions/submission";
+import {
+  createSubmission,
+  updateSubmission,
+  retrieveSubmissionsByUserIdEventId,
+} from "@/lib/actions/submission";
+import { useEffect, useState } from "react";
+import { SubmissionType } from "@/types/submission";
+import { useToast } from "@/components/ui/use-toast";
 
 interface SubmitAssignmentModalProps {
   isPast: boolean;
@@ -29,8 +36,62 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
   eventID,
   submitted,
 }) => {
+  const { toast } = useToast();
   const assignmentColour: string =
     submitted || !isPast ? "bg-violet-900" : "bg-orange-500";
+
+  const [originalSubmission, setOriginalSubmission] = useState<
+    SubmissionType | undefined
+  >(undefined);
+
+  useEffect(() => {
+    if (submitted && !isPast) {
+      const fetchData = async () => {
+        try {
+          const response = await retrieveSubmissionsByUserIdEventId(
+            USER_ID,
+            eventID
+          );
+          setOriginalSubmission(response[0]);
+        } catch (error) {
+          toast({ title: "Error", description: "Failed to load data" });
+        }
+      };
+
+      fetchData();
+    }
+  }, [submitted, eventID, isPast, toast]);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      if (submitted) {
+        await updateSubmission({
+          title: formData.get("title") as string,
+          content: formData.get("content") as string,
+          event_id: eventID,
+          user_id: USER_ID,
+        });
+      } else {
+        await createSubmission({
+          title: formData.get("title") as string,
+          content: formData.get("content") as string,
+          event_id: eventID,
+          user_id: USER_ID,
+        });
+      }
+
+      toast({
+        title: "Success",
+        description: "Submission created successfully",
+      });
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to create submission" });
+    }
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -46,18 +107,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
             </DialogTitle>
           </DialogHeader>
         </div>
-        <form
-          className="space-y-4"
-          method="POST"
-          action={async (formData: FormData) => {
-            await createSubmission({
-              title: formData.get("title") as string,
-              content: formData.get("content") as string,
-              event_id: eventID,
-              user_id: USER_ID,
-            });
-          }}
-        >
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="grid gap-4 py-6">
             <div className="grid gap-1.5">
               <Label htmlFor="question">{EVENTS_USER.ASSIGNMENT_TITLE}</Label>
@@ -65,6 +115,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
                 id="question"
                 name="title"
                 placeholder={EVENTS_USER.ASSIGNMENT_TITLE_DESCRIPTION}
+                defaultValue={originalSubmission?.title || ""}
                 className="w-full my-2"
               />
             </div>
@@ -75,13 +126,18 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
                 id="answer"
                 name="content"
                 placeholder={EVENTS_USER.ASSIGNMENT_CONTENT_DESCRIPTION}
+                defaultValue={originalSubmission?.content || ""}
                 className="w-full h-56 px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-black resize-none"
               />
             </div>
           </div>
           <DialogClose asChild>
             <DialogFooter>
-              <Button type="submit">{BUTTONS.BUTTON_SUBMIT}</Button>
+              <Button type="submit">
+                {originalSubmission
+                  ? BUTTONS.BUTTON_UPDATE
+                  : BUTTONS.BUTTON_SUBMIT}
+              </Button>
             </DialogFooter>
           </DialogClose>
         </form>
