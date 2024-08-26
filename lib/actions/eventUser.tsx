@@ -43,6 +43,10 @@ export const retrieveEventsbyEventAndUser = async (
     e.topic,
     e.zoomlink,
     CASE
+        WHEN s.event_id IS NOT NULL THEN TRUE
+        ELSE FALSE
+    END AS assignment_submitted,
+    CASE
         WHEN at.attended=1 THEN TRUE
         ELSE FALSE
     END AS attendance_attended,
@@ -51,6 +55,8 @@ export const retrieveEventsbyEventAndUser = async (
         ELSE FALSE
     END AS pr_submitted
     FROM event e
+    LEFT JOIN
+        Submission s ON s.user_id= ${userID} AND e.event_id = s.event_id
     LEFT JOIN
         Attendance at ON at.user_id = ${userID} AND e.event_id = at.event_id
     LEFT JOIN

@@ -18,6 +18,7 @@ import { createSubmission } from "@/lib/actions/submission";
 interface SubmitAssignmentModalProps {
   isPast: boolean;
   eventID: number;
+  submitted: boolean;
 }
 
 //TODO: hardcoded, need to make it dynamically
@@ -26,12 +27,15 @@ const USER_ID: number = 2;
 export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
   isPast,
   eventID,
+  submitted,
 }) => {
+  const assignmentColour: string =
+    submitted || !isPast ? "bg-violet-900" : "bg-orange-500";
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button disabled={isPast} className="bg-violet-900 w-20">
-          {BUTTONS.BUTTON_SUBMIT}
+        <Button disabled={isPast} className={`${assignmentColour} w-20`}>
+          {!submitted ? BUTTONS.BUTTON_SUBMIT : BUTTONS.BUTTON_SUBMITTED}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[90vh] h-[70vh]">

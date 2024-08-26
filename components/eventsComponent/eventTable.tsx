@@ -39,6 +39,7 @@ export const EventTable= async () => {
             date={eachEvent.date}
             topic={eachEvent.topic}
             zoomLink={eachEvent.zoomlink}
+            assignment_submitted={eachEvent.assignment_submitted}
             attendance_attended={eachEvent.attendance_attended}
             pr_submitted={eachEvent.pr_submitted}
           ></EventTableBody>

@@ -13,6 +13,7 @@ interface Props {
   date: Date;
   topic: String;
   zoomLink: String;
+  assignment_submitted: boolean;
   attendance_attended: boolean;
   pr_submitted: boolean;
 }
@@ -28,6 +29,7 @@ export const EventTableBody: React.FC<Props> = ({
   date,
   topic,
   zoomLink,
+  assignment_submitted,
   attendance_attended,
   pr_submitted,
 }) => {
@@ -54,7 +56,11 @@ export const EventTableBody: React.FC<Props> = ({
       </TableCell>
       <TableCell>{pr_submitted ? <CheckIcon /> : <XIcon />}</TableCell>
       <TableCell>
-        <SubmitAssignmentModal isPast={isPast} eventID={event_id}></SubmitAssignmentModal>
+        <SubmitAssignmentModal
+          isPast={isPast}
+          eventID={event_id}
+          submitted={assignment_submitted}
+        ></SubmitAssignmentModal>
       </TableCell>
       <TableCell>
         {" "}
