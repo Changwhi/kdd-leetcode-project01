@@ -1,4 +1,4 @@
-"use server";
+"use client";
 
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -56,22 +56,24 @@ export const EventTableBody: React.FC<Props> = ({
         <Button
           className="bg-violet-900 w-20"
           disabled={past}
-          // onClick={console.log("Check")}
+          onClick={() => {
+            console.log("Check");
+          }}
         >
           Check
         </Button>
       </TableCell>
       <TableCell>
         {" "}
-        <Link
-          href={zoomLink as Url}
-          target="_blank"
-          className={past ? "pointer-events-none" : ""}
+        <Button
+          className="bg-violet-900 w-20"
+          disabled={past}
+          onClick={() => {
+            window.open(zoomLink as string, "_blank");
+          }}
         >
-          <Button className="bg-violet-900 w-20" disabled={past}>
-            Link
-          </Button>
-        </Link>
+          Link
+        </Button>
       </TableCell>
     </TableRow>
   );
