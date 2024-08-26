@@ -8,40 +8,16 @@ import {
 } from "@/components/ui/table";
 import { EVENTS_USER } from "@/text/events";
 import { EventTableBody } from "./eventTableBody";
+import { retrieveAllEventsIdByGroup, retrieveEventsbyEventAndUser } from "@/lib/actions/eventUser";
 
-// TODO: Fetch events list
-const tempEvents = [
-  {
-    eventId: "114",
-    name: "Week4",
-    date: new Date(2024, 8, 22),
-    topic: "Binary Tree",
-    zoomLink: "https://soopark.netlify.app/",
-  },
-  {
-    eventId: "113",
-    name: "Week3",
-    date: new Date(2024, 7, 15),
-    topic: "Bitwise",
-    zoomLink: "https://soopark.netlify.app/",
-  },
-  {
-    eventId: "112",
-    name: "Week2",
-    date: new Date(2024, 7, 11),
-    topic: "Heap",
-    zoomLink: "https://soopark.netlify.app/",
-  },
-  {
-    eventId: "111",
-    name: "Week1",
-    date: new Date(2024, 7, 1),
-    topic: "Graph",
-    zoomLink: "https://soopark.netlify.app/",
-  },
-];
 
-export const EventTable= () => {
+// TODO: Change group ID, not it is hardcoded
+const GROUP_ID = 1;
+
+export const EventTable= async () => {
+  const allEventID = await retrieveAllEventsIdByGroup(GROUP_ID);
+  const allEvents = await retrieveEventsbyEventAndUser(allEventID, 2);
+
   return (
     <Table>
       <TableHeader>
@@ -54,13 +30,16 @@ export const EventTable= () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tempEvents.map((eachEvent) => (
+        {allEvents.map((eachEvent) => (
           <EventTableBody
-            key={eachEvent.eventId}
+            key={eachEvent.event_id}
+            event_id={eachEvent.event_id}
             name={eachEvent.name}
             date={eachEvent.date}
             topic={eachEvent.topic}
-            zoomLink={eachEvent.zoomLink}
+            zoomLink={eachEvent.zoomlink}
+            attendance_exists={eachEvent.attendance_exists}
+            pr_exists={eachEvent.pr_exists}
           ></EventTableBody>
         ))}
       </TableBody>

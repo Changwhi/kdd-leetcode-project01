@@ -5,15 +5,16 @@ import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
-import Link from "next/link";
-import { Url } from "next/dist/shared/lib/router/router";
 
 //TODO: Fetch event data
 interface Props {
+  event_id: number;
   name: String;
   date: Date;
   topic: String;
   zoomLink: String;
+  attendance_exists: number;
+  pr_exists: number;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -22,10 +23,13 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 export const EventTableBody: React.FC<Props> = ({
+  event_id,
   name,
   date,
   topic,
   zoomLink,
+  attendance_exists,
+  pr_exists
 }) => {
   const past = date <= new Date() ? true : false;
   return (
