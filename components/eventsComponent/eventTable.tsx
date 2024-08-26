@@ -1,68 +1,50 @@
-"use client";
+"use server";
 import {
-    Table,
-    TableBody,
-    TableHead,
-    TableHeader,
-    TableRow,
-  } from "@/components/ui/table";
-import { CONSTANTS } from "@/text/summary";
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { EVENTS_USER } from "@/text/events";
 import { EventTableBody } from "./eventTableBody";
-import { Dispatch, SetStateAction } from "react";
+import { retrieveAllEventsIdByGroup, retrieveEventsbyEventAndUser } from "@/lib/actions/eventUser";
 
-// TODO: Fetch events list
-const tempEvents = [
-    {
-        eventId: "114",
-        name: "Week4",
-        date: new Date(2024, 7, 22),
-        topic: "Binary Tree",
-        zoomLink: "#",
-      },
-    {
-      eventId: "113",
-      name: "Week3",
-      date: new Date(2024, 7, 15),
-      topic: "Bitwise",
-      zoomLink: "#",
-    },
-    {
-      eventId: "112",
-      name: "Week2",
-      date: new Date(2024, 7, 11),
-      topic: "Heap",
-      zoomLink: "#",
-    },
-    {
-      eventId: "111",
-      name: "Week1",
-      date: new Date(2024, 7, 1),
-      topic: "Graph",
-      zoomLink: "#",
-    },
-  ];
 
-  interface EventTableProps {
-    setOpenModal: Dispatch<SetStateAction<boolean>>
-}
+// TODO: Change group ID, user ID, it is now hardcoded
+const GROUP_ID = 1;
+const USER_ID = 2;
 
-export const EventTable: React.FC<EventTableProps> = ({setOpenModal}) => {
-    return (
-        <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-1/2"></TableHead>
-            <TableHead className="w-1/12">{CONSTANTS.PR}</TableHead>
-            <TableHead className="w-1/12">{CONSTANTS.ASSIGNMENT}</TableHead>
-            <TableHead className="w-1/12">{CONSTANTS.ATTENDANCE}</TableHead>
-            <TableHead className="w-1/12">{CONSTANTS.ZOOM_LINK}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {tempEvents.map((eachEvent) => (
-            <EventTableBody key={eachEvent.eventId} setOpenModal={setOpenModal} name={eachEvent.name} date={eachEvent.date} topic={eachEvent.topic} zoomLink={eachEvent.zoomLink}></EventTableBody>
-          ))}
-        </TableBody>
-      </Table>
-    )
-}
+export const EventTable= async () => {
+  const allEventID = await retrieveAllEventsIdByGroup(GROUP_ID);
+  const allEvents = await retrieveEventsbyEventAndUser(allEventID, USER_ID);
+
+  return (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-1/2"></TableHead>
+          <TableHead className="w-1/12">{EVENTS_USER.PR}</TableHead>
+          <TableHead className="w-1/12">{EVENTS_USER.ASSIGNMENT}</TableHead>
+          <TableHead className="w-1/12">{EVENTS_USER.ATTENDANCE}</TableHead>
+          <TableHead className="w-1/12">{EVENTS_USER.ZOOM_LINK}</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {allEvents.map((eachEvent) => (
+          <EventTableBody
+            key={eachEvent.event_id}
+            event_id={eachEvent.event_id}
+            name={eachEvent.name}
+            date={eachEvent.date}
+            topic={eachEvent.topic}
+            zoomLink={eachEvent.zoomlink}
+            assignment_submitted={eachEvent.assignment_submitted}
+            attendance_attended={eachEvent.attendance_attended}
+            pr_submitted={eachEvent.pr_submitted}
+          ></EventTableBody>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};

@@ -14,3 +14,18 @@ export interface EventCardProps {
   zoomlink: string;
   group_id: number;
 }
+
+export interface EventIdType {
+  event_id: number;
+}
+
+export interface EventAttendacePrType {
+  event_id: number;
+  name: string;
+  date: Date;
+  topic: string;
+  zoomlink: string;
+  assignment_submitted: boolean;
+  attendance_attended: boolean;
+  pr_submitted: boolean;
+}

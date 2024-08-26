@@ -1,17 +1,21 @@
 "use client";
+
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Dispatch, SetStateAction } from "react";
+import { SubmitAssignmentModal } from "./submit-assignment-modal";
 
 //TODO: Fetch event data
 interface Props {
+  event_id: number;
   name: String;
   date: Date;
   topic: String;
   zoomLink: String;
-  setOpenModal: Dispatch<SetStateAction<boolean>>
+  assignment_submitted: boolean;
+  attendance_attended: boolean;
+  pr_submitted: boolean;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -20,13 +24,19 @@ const options: Intl.DateTimeFormatOptions = {
 };
 
 export const EventTableBody: React.FC<Props> = ({
-  setOpenModal,
+  event_id,
   name,
   date,
   topic,
   zoomLink,
+  assignment_submitted,
+  attendance_attended,
+  pr_submitted,
 }) => {
-  const past = date <= new Date() ? true : false;
+  const isPast: boolean = date <= new Date() ? true : false;
+  const attendanceColour: string =
+    attendance_attended || !isPast ? "bg-violet-900" : "bg-orange-500";
+
   return (
     <TableRow>
       <TableCell>
@@ -44,37 +54,36 @@ export const EventTableBody: React.FC<Props> = ({
           </Row>
         </Col>
       </TableCell>
+      <TableCell>{pr_submitted ? <CheckIcon /> : <XIcon />}</TableCell>
       <TableCell>
-        <CheckIcon></CheckIcon>
+        <SubmitAssignmentModal
+          isPast={isPast}
+          eventID={event_id}
+          submitted={assignment_submitted}
+        ></SubmitAssignmentModal>
       </TableCell>
       <TableCell>
         {" "}
         <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => setOpenModal(true)}
+          className={`${attendanceColour} w-20`}
+          disabled={isPast}
+          onClick={() => {
+            console.log("Check");
+          }}
         >
-          Submit
+          {!attendance_attended && isPast ? "Absent" : "Attend"}
         </Button>
       </TableCell>
       <TableCell>
         {" "}
         <Button
           className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => console.log("Check")}
+          disabled={isPast}
+          onClick={() => {
+            window.open(zoomLink as string, "_blank");
+          }}
         >
-          Check
-        </Button>
-      </TableCell>
-      <TableCell>
-        {" "}
-        <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => console.log("ZoomLink")}
-        >
-          Join
+          Link
         </Button>
       </TableCell>
     </TableRow>
