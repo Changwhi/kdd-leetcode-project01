@@ -25,6 +25,6 @@ export interface EventAttendacePrType {
   date: Date;
   topic: string;
   zoomlink: string;
-  attendance_exists: number;
-  pr_exists: number;
+  attendance_attended: boolean;
+  pr_submitted: boolean;
 }
