@@ -1,7 +1,12 @@
 "use server";
 import { AttendanceType } from "@/types/attendance";
 import { sql } from "@/utils/db";
-
+/**
+ * Retrieves attendance information for a specific group.
+ *
+ * @param {number} event_id - The ID of the event for which to retrieve attendance information.
+ * @return {AttendanceType[]} An array of attendance information for the specified event.
+ */
 export const retrieveAttendance = async ({
   event_id,
 }: {
@@ -9,7 +14,7 @@ export const retrieveAttendance = async ({
 }) => {
   try {
     const response: AttendanceType[] = await sql`
-SELECT user_group_id, user_type, init_amount, curr_amout, user_group.user_id, "user".name, "user".email, attendance.attended,  submission_id, pr.submitted
+SELECT user_group_id, user_type, init_amount, curr_amount, user_group.user_id, "user".name, "user".email, attendance.attended,  submission_id, pr.submitted
 FROM user_group
 LEFT JOIN "user" ON "user".user_id = user_group.user_id
 left join attendance on "user".user_id = attendance.user_id and attendance.event_id = ${event_id}

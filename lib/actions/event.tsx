@@ -2,7 +2,11 @@
 import { sql } from "@/utils/db";
 import { EventCardProps, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
-
+/**
+ * Retrieves a list of events from the database.
+ *
+ * @return {EventType[]} An array of events if the query is successful, otherwise an empty array.
+ */
 export const retrieveEvents = async () => {
   try {
     const response: EventType[] = await sql`SELECT * FROM event`;
@@ -16,6 +20,12 @@ export const retrieveEvents = async () => {
   }
 };
 
+/**
+ * Adds a new event to the database.
+ *
+ * @param {EventCardProps} formData - The data for the new event.
+ * @return {Promise<void>} A promise that resolves when the event is successfully added, or rejects with an error if there is an issue.
+ */
 export const addEvent = async (formData: EventCardProps) => {
   try {
     if (!formData) {
