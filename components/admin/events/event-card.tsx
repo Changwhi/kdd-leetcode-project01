@@ -1,9 +1,17 @@
-"use server";
+"use client";
 import { Button } from "@/components/ui/button";
 import { EventCardProps } from "@/types/event";
-import { EVENTS } from "@/text/events";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import Link from "next/link";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -11,6 +19,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { EVENTS } from "@/text/events";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { updateEvent } from "@/lib/actions/event";
+import { useState } from "react";
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -18,69 +31,197 @@ export const EventCard: React.FC<EventCardProps> = ({
   date,
   topic,
   zoomlink,
+  assign1,
+  assign2,
+  assign3,
 }) => {
+  const formattedDate = date.toISOString().split("T")[0];
+
+  const [eventName, setEventName] = useState(name);
+  const [eventDate, setEventDate] = useState(formattedDate);
+
+  const [eventTopic, setEventTopic] = useState(topic);
+  const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
+  const [eventAssign1, setEventAssign1] = useState(assign1);
+  const [eventAssign2, setEventAssign2] = useState(assign2);
+  const [eventAssign3, setEventAssign3] = useState(assign3);
+
   return (
-    <div className="flex flex-col rounded-lg overflow-hidden shadow-lg min-w-full max-w-xs mx-auto hover:shadow-xl transition-all duration-200">
-      <div className="flex flex-col p-4 flex-grow">
-        <div className="flex flex-col flex-grow p-4">
-          <h2 className="h-6 overflow-y-hidden text-base font-semibold hover:text-gray-700 duration-200">
-            {name}
-          </h2>
-          <hr className="w-full border-gray-300" />
-          <h3 className="text-xs text-gray-400 hover:text-gray-600 transition-all duration-200">
-            {date.toString()}
-          </h3>
-          <p className="h-16 text-sm mt-2 text-gray-600 hover:text-gray-700 transition-all duration-200 flex-grow">
-            {topic}
-          </p>
+    <Card className="w-full max-w-md">
+      <CardHeader>
+        <CardTitle>{name}</CardTitle>
+        <div className="text-sm text-muted-foreground">{date.toString()}</div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-muted-foreground">{topic}</p>
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center gap-2">
+            <CheckIcon className="h-5 w-5 text-primary" />
+            <span>{assign1}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckIcon className="h-5 w-5 text-primary" />
+            <span>{assign2}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckIcon className="h-5 w-5 text-primary" />
+            <span>{assign3}</span>
+          </div>
         </div>
-        <div className="flex flex-raw justify-between items-center mt-2 space-x-2">
-            <a
-              className="text-sm text-muted-foreground underline"
-              href={zoomlink}
-              target="_blank"
-              rel="noopener noreferrer"
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <Link
+          href={zoomlink}
+          target="_blank"
+          className="text-sm text-primary hover:underline"
+          prefetch={false}
+        >
+          {EVENTS.LINK}
+        </Link>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size={"sm"}>
+              {EVENTS.EDIT}
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Edit le</DialogTitle>
+              <DialogDescription>
+              {EVENTS.EDIT_DESCRIPTION}
+              </DialogDescription>
+            </DialogHeader>
+            <form
+              className="space-y-4"
+              action={async (formData: FormData) => {
+                await updateEvent({
+                  name: eventName,
+                  date: eventDate,
+                  topic: eventTopic,
+                  zoomlink: eventZoomlink,
+                  group_id: 1,
+                  event_id: event_id,
+                  assign1: eventAssign1,
+                  assign2: eventAssign2,
+                  assign3: eventAssign3,
+                });
+              }}
             >
-              {EVENTS.LINK}
-            </a>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">Edit</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>Edit le</DialogTitle>
-                <DialogDescription>
-                  Make changes to your profile here. Click save whenre done.
-                </DialogDescription>
-              </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="flex flex-col">
-                  <div className="flex flex-row">
-                    <h2 className="mr-4 font-bold">Event Name : </h2>
-                    <p>{name}</p>
-                  </div>
-                  <div className="flex flex-row">
-                    <h2 className="mr-4 font-bold">Date : </h2>
-                    <p>{date}</p>
-                  </div>
-                  <div className="flex flex-row">
-                    <h2 className="mr-4 font-bold">Description : </h2>
-                    <p>{topic}</p>
-                  </div>
-                  <div className="flex flex-row">
-                    <h2 className="mr-4 font-bold">Link : </h2>
-                    <p>{zoomlink}</p>
-                  </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="title" className="text-right">
+                    {EVENTS.TITLE}
+                  </Label>
+                  <Input
+                    id="title"
+                    value={eventName}
+                    onChange={(e) => setEventName(e.target.value)}
+                    className="col-span-3"
+                    name="name"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="date" className="text-right">
+                    {EVENTS.DATE}
+                  </Label>
+                  <Input
+                    id="date"
+                    type="date"
+                    value={eventDate}
+                    onChange={(e) => setEventDate(e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="topic" className="text-right">
+                    {EVENTS.TOPIC}
+                  </Label>
+                  <Input
+                    id="topic"
+                    value={eventTopic}
+                    onChange={(e) => setEventTopic(e.target.value)}
+                    className="col-span-3"
+                    name="topic"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="zoomlink" className="text-right">
+                    {EVENTS.ZOOMLINK}
+                  </Label>
+                  <Input
+                    id="zoomlink"
+                    value={eventZoomlink}
+                    onChange={(e) => setEventZoomlink(e.target.value)}
+                    className="col-span-3"
+                    name="zoomlink"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="assign1" className="text-right">
+                    {EVENTS.ASSGINMENT_1}
+                  </Label>
+                  <Input
+                    id="assign1"
+                    value={eventAssign1}
+                    onChange={(e) => setEventAssign1(e.target.value)}
+                    className="col-span-3"
+                    name="assign1"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="assign2" className="text-right">
+                    {EVENTS.ASSGINMENT_2}
+                  </Label>
+                  <Input
+                    id="assign2"
+                    value={eventAssign2}
+                    onChange={(e) => setEventAssign2(e.target.value)}
+                    className="col-span-3"
+                    name="assign2"
+                  />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="assign3" className="text-right">
+                    {EVENTS.ASSGINMENT_3}
+                  </Label>
+                  <Input
+                    id="assign3"
+                    value={eventAssign3}
+                    onChange={(e) => setEventAssign3(e.target.value)}
+                    className="col-span-3"
+                    name="assign3"
+                  />
                 </div>
               </div>
-              <DialogFooter>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-    </div>
+              <DialogClose asChild>
+                <DialogFooter>
+                  <Button type="submit">{EVENTS.SAVE}</Button>
+                </DialogFooter>
+              </DialogClose>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </CardFooter>
+    </Card>
   );
 };
+
+function CheckIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
