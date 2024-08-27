@@ -88,8 +88,19 @@ export const deleteUser = async (email: string): Promise<string> => {
   }
 };
 
+/**
+ * Returns the user information of the currently logged in user.
+ *
+ * @returns The user object if logged in, otherwise null
+ */
+
 export const getLoggedInUser = async () => {
-  const session = await getSession();
-  const user = session?.user;
-  return user;
+  try {
+    const session = await getSession();
+    const user = session?.user;
+    return user;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 };

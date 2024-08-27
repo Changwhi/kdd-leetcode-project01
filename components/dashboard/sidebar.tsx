@@ -7,9 +7,24 @@ import { useEffect, useState } from "react";
 import { getLoggedInUser } from "@/lib/actions/user";
 import { UserType } from "@/types/user";
 
+/**
+ * Sidebar component for the dashboard.
+ *
+ * This component is used in both the admin and user dashboard and is
+ * responsible for displaying the navigation links and the user's avatar and
+ * name. The component is also responsible for checking if the user is an
+ * admin and displaying the admin navigation links if they are.
+ *
+ * @param {boolean} admin - Whether the user is an admin or not.
+ * @returns {JSX.Element} The sidebar component.
+ */
 const Sidebar = ({ admin }: { admin: boolean }) => {
   const pathname = usePathname();
-  const [user, setUser] = useState<UserType>({});
+  const [user, setUser] = useState<UserType>({
+    user_id: 0,
+    name: "",
+    email: "",
+  });
 
   const isActive = (path: string) => pathname.startsWith(path);
 
