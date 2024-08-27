@@ -1,16 +1,12 @@
 "use client";
 
 import { TableCell, TableRow } from "@/components/ui/table";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
 import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
-import { XIcon } from "./Icons/xIcon";
-import { CheckIcon } from "./Icons/checkIcon";
-import { ExclamationIcon } from "./Icons/exclamationIcon";
 
 //TODO: Fetch event data
 interface Props {
@@ -20,13 +16,19 @@ interface Props {
   topic: String;
   zoomLink: String;
   assignment_submitted: boolean;
-  attendance_attended: boolean;
+  attendance_attended: number;
   pr_submitted: boolean;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
   month: "long",
   day: "numeric",
+};
+
+const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+  0: <XToolTip text="Absent" />,
+  1: <ExclamationToolTip text="Self-Checkin" />,
+  2: <CheckToolTip text="Attend" />,
 };
 
 export const EventTableBody: React.FC<Props> = ({
@@ -39,15 +41,7 @@ export const EventTableBody: React.FC<Props> = ({
   attendance_attended,
   pr_submitted,
 }) => {
-  const isPast: boolean = date <= new Date() ? true : false;
-  const attendanceColour: string =
-    attendance_attended || !isPast ? "bg-violet-900" : "bg-orange-500";
-
-  const ATTENDANCE_STATUS = {
-    0: <XToolTip text="Absent" />,
-    1: <ExclamationToolTip text="Self-Checkin" />,
-    2: <CheckToolTip text="Attend" />,
-  };
+  const isPast: boolean = date <= new Date();
 
   return (
     <TableRow>
@@ -74,11 +68,7 @@ export const EventTableBody: React.FC<Props> = ({
         )}
       </TableCell>
       <TableCell>
-        {attendance_attended ? (
-          <ExclamationToolTip text="checkin" />
-        ) : (
-          <XToolTip text="Absent" />
-        )}
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
       </TableCell>
       <TableCell>
         <SubmitAssignmentModal

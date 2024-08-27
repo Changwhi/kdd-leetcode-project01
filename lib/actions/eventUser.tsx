@@ -47,8 +47,8 @@ export const retrieveEventsbyEventAndUser = async (
         ELSE FALSE
     END AS assignment_submitted,
     CASE
-        WHEN at.attended=1 THEN TRUE
-        ELSE FALSE
+        WHEN at.event_id IS NULL THEN 0
+        ELSE at.attended
     END AS attendance_attended,
     CASE
         WHEN PR.submitted = TRUE THEN TRUE
