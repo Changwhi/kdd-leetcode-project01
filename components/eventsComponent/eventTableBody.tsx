@@ -7,6 +7,10 @@ import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
 import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
+import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
+
+//TODO: hardcoded, to be changed
+const USER_ID = 2;
 
 //TODO: Fetch event data
 interface Props {
@@ -29,6 +33,15 @@ const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
   0: <XToolTip text="Absent" />,
   1: <ExclamationToolTip text="Self-Checkin" />,
   2: <CheckToolTip text="Attend" />,
+};
+
+const onClickSelfCheckin = async (exist: number, userId: number, event_id: number) => {
+  if(exist) {
+    await deleteAttendance(userId, event_id);
+  } else {
+    await createAttendance(userId, event_id);
+  }
+  
 };
 
 export const EventTableBody: React.FC<Props> = ({
@@ -83,10 +96,10 @@ export const EventTableBody: React.FC<Props> = ({
           className="bg-violet-900 w-20"
           disabled={isPast}
           onClick={() => {
-            console.log("Check");
+            onClickSelfCheckin(attendance_attended, USER_ID, event_id);
           }}
         >
-          {BUTTONS.BUTTON_CHECK}
+          {attendance_attended && !isPast ? BUTTONS.BUTTON_UNCHECK : BUTTONS.BUTTON_CHECK}
         </Button>
       </TableCell>
       <TableCell>

@@ -3,4 +3,5 @@ export const BUTTONS = {
     BUTTON_SUBMITTED: "Submitted",
     BUTTON_UPDATE: "Update",
     BUTTON_CHECK: "Check",
+    BUTTON_UNCHECK: "Uncheck",
 }
