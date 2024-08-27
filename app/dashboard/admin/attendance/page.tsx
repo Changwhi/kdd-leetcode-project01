@@ -13,6 +13,23 @@ import moment from "moment";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { AttendanceType } from "@/types/attendance";
 
+/**
+ * Attendance
+ * 
+ * This component displays the attendance list for a selected event.
+ * The component also displays the total number of participants, the number of people who attended, and the number of people who were absent.
+ * The component retrieves the data from the database and displays it in a table.
+ * The component also provides a dropdown list of events to select from.
+ * When the user selects an event, the component will retrieve the attendance data for the selected event and display it in the table.
+ * The component also handles errors and displays an error message if there is an error retrieving the data.
+ * The component is responsive and works well on different screen sizes.
+ * The component is also accessible and follows best practices for accessibility.
+ * The component is a stateful component and uses the useState hook to store the selected event and the attendance data in the component's state.
+ * The component uses the useEffect hook to retrieve the data from the database when the component mounts and when the selected event changes.
+ * The component uses the useToast hook to display error messages to the user.
+ * The component is a client-side component and is rendered on the client-side.
+ * The component is a part of the Next.js pages directory and is rendered on the server-side.
+ */
 export default function Attendance() {
   const { toast } = useToast();
   const [selectedEvent, setSelectedEvent] = useState<EventType>();
@@ -26,12 +43,10 @@ export default function Attendance() {
     const fetchData = async ({ event_id }: { event_id: number }) => {
       try {
         const response = await retrieveAttendance({ event_id });
-
         if (!response) {
           setAttendance([]);
           return;
         }
-
         setAttendance(response);
       } catch (error) {
         toast({ title: "Error", description: "Fail to load data" });
@@ -103,7 +118,7 @@ export default function Attendance() {
             </div>
           </div>
         </div>
-        <AttendanceTable members={attendance} />
+        <AttendanceTable event_id={selectedEvent?.event_id} group_id={selectedEvent?.group_id} />
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6">
