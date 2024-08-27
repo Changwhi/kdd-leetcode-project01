@@ -4,6 +4,7 @@ export interface EventType {
   date: Date;
   topic: string;
   zoomlink: string;
+  group_id: number;
 }
 
 export interface EventCardProps {
@@ -17,6 +18,7 @@ export interface EventCardProps {
 
 export interface EventIdType {
   event_id: number;
+  group_id: number;
 }
 
 export interface EventAttendacePrType {
@@ -28,4 +30,5 @@ export interface EventAttendacePrType {
   assignment_submitted: boolean;
   attendance_attended: boolean;
   pr_submitted: boolean;
+  group_id: number;
 }

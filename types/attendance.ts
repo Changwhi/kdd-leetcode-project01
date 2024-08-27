@@ -4,6 +4,7 @@ export interface AttendanceType {
   init_amount: number;
   curr_amout: number;
   user_id: number;
+  event_id: number;
   name: string;
   email: string;
   attended: number;
