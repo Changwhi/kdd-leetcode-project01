@@ -1,7 +1,6 @@
 "use server";
 import { AttendanceType } from "@/types/attendance";
 import { sql } from "@/utils/db";
-import { revalidatePath } from "next/cache";
 /**
  * Retrieves attendance information for a specific group.
  *
@@ -20,13 +19,13 @@ export const retrieveAttendance = async ({
       return [];
     }
     const response: AttendanceType[] = await sql`
-SELECT user_group_id, user_type, init_amount, curr_amount, user_group.user_id, "user".name, "user".email, attendance.attended, "user".user_id, "event".event_id, submission_id, pr.submitted
+SELECT user_group_id, user_type, init_amount, curr_amount, user_group.user_id, "user".name, "user".email, attendance.attended, "user".user_id, pr.event_id as "pr_event", "event".event_id, submission_id, pr.submitted
 FROM user_group
 LEFT JOIN "user" ON "user".user_id = user_group.user_id
 left join attendance on "user".user_id = attendance.user_id and attendance.event_id = ${event_id}
 left join "event" on "event".event_id = attendance.event_id
 left join submission on submission.user_id = "user".user_id and submission.event_id = "event".event_id
-left join pr on pr.user_id = "user".user_id and pr.event_id = "event".event_id
+left join pr on pr.user_id = "user".user_id and pr.event_id = ${event_id}
 WHERE user_group.group_id = ${group_id};
     `;
 
@@ -40,6 +39,13 @@ WHERE user_group.group_id = ${group_id};
   }
 };
 
+/**
+ * Sets the attendance status for a user in a specific event.
+ *
+ * @param {number} user_id - The ID of the user to set the attendance status for.
+ * @param {number} event_id - The ID of the event to set the attendance status for.
+ * @return {boolean} True if the attendance status was set successfully, false otherwise.
+ */
 export const setAttendance = async ({
   user_id,
   event_id,
@@ -57,19 +63,61 @@ export const setAttendance = async ({
     if (user_event_check == null) {
       throw new Error("User not found in event");
     }
-    console.log("here");
-    console.log(user_event_check[0].attended);
     let desired_attended_value = user_event_check[0].attended == 1 ? 0 : 1;
 
-    const setAttended: AttendanceType[] = await sql`
+    await sql`
     update attendance
     set attended = ${desired_attended_value}
     where event_id = ${event_id} and user_id = ${user_id}
     `;
-    revalidatePath("/dashboard/admin/attendance");
     return true;
   } catch (error: any) {
     console.log(error);
     return false;
   }
 };
+
+  /**
+   * Sets the PR status for a user in a specific event.
+   *
+   * @param {number} user_id - The ID of the user to set the PR status for.
+   * @param {number} event_id - The ID of the event to set the PR status for.
+   * @return {boolean} True if the PR status was set successfully, false otherwise.
+   */
+export const setPR = async ({
+  user_id,
+  event_id,
+}: {
+  user_id: number;
+  event_id: number;
+}) => {
+  try {
+    console.log(user_id, event_id);
+    let user_event_check: AttendanceType[] = await sql`
+    select *
+    from pr
+    where event_id = ${event_id} and user_id = ${user_id}
+    `;
+    let desired_submitted_value = undefined;
+    if (user_event_check.length == 0) {
+      await sql`
+      insert into pr (user_id, event_id, submitted)
+      values (${user_id}, ${event_id}, false)
+      `
+      desired_submitted_value = true;
+    }else{
+      console.log(user_event_check);
+      desired_submitted_value = user_event_check[0].submitted ? false : true;
+    }
+    
+    await sql`
+    update pr
+    set submitted = ${desired_submitted_value}
+    where event_id = ${event_id} and user_id = ${user_id}
+    `;
+    return true;  
+  } catch (error: any) {
+    console.log(error);
+    return false;
+  } 
+}
