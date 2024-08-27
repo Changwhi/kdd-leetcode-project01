@@ -75,7 +75,7 @@ export const EventTableBody: React.FC<Props> = ({
       </TableCell>
       <TableCell>
         {pr_submitted ? (
-          <CheckToolTip text="Submit" />
+          <CheckToolTip text="Submit"/>
         ) : (
           <XToolTip text="Unsubmit" />
         )}
@@ -92,7 +92,8 @@ export const EventTableBody: React.FC<Props> = ({
       </TableCell>
       <TableCell>
         {" "}
-        <Button
+        <div className="flex items-center justify-center text-center">
+          <Button
           className="bg-violet-900 w-20"
           disabled={isPast}
           onClick={() => {
@@ -101,6 +102,8 @@ export const EventTableBody: React.FC<Props> = ({
         >
           {attendance_attended && !isPast ? BUTTONS.BUTTON_UNCHECK : BUTTONS.BUTTON_CHECK}
         </Button>
+        </div>
+        
       </TableCell>
       <TableCell>
         {" "}
