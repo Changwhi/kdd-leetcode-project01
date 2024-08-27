@@ -5,17 +5,33 @@ export interface EventType {
   topic: string;
   zoomlink: string;
   group_id: number;
+  assign1: string;
+  assign2: string;
+  assign3: string;
 }
 
 export interface EventCardProps {
+  event_id: number;
+  name: string;
+  date: Date;
+  topic: string;
+  zoomlink: string;
+  group_id: number;
+  assign1: string;
+  assign2: string;
+  assign3: string;
+}
+export interface EventCardPropsForDB {
   event_id: number;
   name: string;
   date: string;
   topic: string;
   zoomlink: string;
   group_id: number;
+  assign1: string;
+  assign2: string;
+  assign3: string;
 }
-
 export interface EventIdType {
   event_id: number;
   group_id: number;
@@ -31,4 +47,7 @@ export interface EventAttendacePrType {
   attendance_attended: boolean;
   pr_submitted: boolean;
   group_id: number;
+  assign1: string;
+  assign2: string;
+  assign3: string;
 }
