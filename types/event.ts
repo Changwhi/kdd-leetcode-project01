@@ -44,7 +44,7 @@ export interface EventAttendacePrType {
   topic: string;
   zoomlink: string;
   assignment_submitted: boolean;
-  attendance_attended: boolean;
+  attendance_attended: number;
   pr_submitted: boolean;
   group_id: number;
   assign1: string;

@@ -5,6 +5,12 @@ import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
+import { BUTTONS } from "@/text/buttons";
+import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
+import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
+
+//TODO: hardcoded, to be changed
+const USER_ID = 2;
 
 //TODO: Fetch event data
 interface Props {
@@ -14,13 +20,28 @@ interface Props {
   topic: String;
   zoomLink: String;
   assignment_submitted: boolean;
-  attendance_attended: boolean;
+  attendance_attended: number;
   pr_submitted: boolean;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
   month: "long",
   day: "numeric",
+};
+
+const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+  0: <XToolTip text="Absent" />,
+  1: <ExclamationToolTip text="Self-Checkin" />,
+  2: <CheckToolTip text="Attend" />,
+};
+
+const onClickSelfCheckin = async (exist: number, userId: number, event_id: number) => {
+  if(exist) {
+    await deleteAttendance(userId, event_id);
+  } else {
+    await createAttendance(userId, event_id);
+  }
+  
 };
 
 export const EventTableBody: React.FC<Props> = ({
@@ -33,9 +54,7 @@ export const EventTableBody: React.FC<Props> = ({
   attendance_attended,
   pr_submitted,
 }) => {
-  const isPast: boolean = date <= new Date() ? true : false;
-  const attendanceColour: string =
-    attendance_attended || !isPast ? "bg-violet-900" : "bg-orange-500";
+  const isPast: boolean = date <= new Date();
 
   return (
     <TableRow>
@@ -54,7 +73,16 @@ export const EventTableBody: React.FC<Props> = ({
           </Row>
         </Col>
       </TableCell>
-      <TableCell>{pr_submitted ? <CheckIcon /> : <XIcon />}</TableCell>
+      <TableCell>
+        {pr_submitted ? (
+          <CheckToolTip text="Submit"/>
+        ) : (
+          <XToolTip text="Unsubmit" />
+        )}
+      </TableCell>
+      <TableCell>
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
+      </TableCell>
       <TableCell>
         <SubmitAssignmentModal
           isPast={isPast}
@@ -64,70 +92,31 @@ export const EventTableBody: React.FC<Props> = ({
       </TableCell>
       <TableCell>
         {" "}
-        <Button
-          className={`${attendanceColour} w-20`}
+        <div className="flex items-center justify-center text-center">
+          <Button
+          className="bg-violet-900 w-20"
           disabled={isPast}
           onClick={() => {
-            console.log("Check");
+            onClickSelfCheckin(attendance_attended, USER_ID, event_id);
           }}
         >
-          {!attendance_attended && isPast ? "Absent" : "Attend"}
+          {attendance_attended && !isPast ? BUTTONS.BUTTON_UNCHECK : BUTTONS.BUTTON_CHECK}
         </Button>
+        </div>
+        
       </TableCell>
       <TableCell>
         {" "}
         <Button
-          className="bg-violet-900 w-20"
+          className="bg-transparent border-none p-0 font-bold text-black hover:font-black hover:bg-transparent w-20"
           disabled={isPast}
           onClick={() => {
             window.open(zoomLink as string, "_blank");
           }}
         >
-          Link
+          {BUTTONS.BUTTON_JOIN}
         </Button>
       </TableCell>
     </TableRow>
-  );
-};
-
-const CheckIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#00C389" />
-      <path
-        d="M8.75 12.25L10.75 14.25L15.25 9.75"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
-
-const XIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#FF5E57" />
-      <path
-        d="M15 9L9 15M9 9L15 15"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 };
