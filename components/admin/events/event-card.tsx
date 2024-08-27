@@ -22,7 +22,7 @@ import {
 import { EVENTS } from "@/text/events";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { updateEvent } from "@/lib/actions/event";
+import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import { useState } from "react";
 
 export const EventCard: React.FC<EventCardProps> = ({
@@ -49,8 +49,39 @@ export const EventCard: React.FC<EventCardProps> = ({
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
-        <CardTitle>{name}</CardTitle>
-        <div className="text-sm text-muted-foreground">{date.toString()}</div>
+        <div className="flex items-center justify-between">
+          <CardTitle>{name}</CardTitle>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" size={"sm"}>
+                <XIcon className="w-5 h-5" />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
+                <DialogDescription>
+                  {EVENTS.REMOVE_DESCRIPTION}
+                </DialogDescription>
+              </DialogHeader>
+              <form
+                className="space-y-4"
+                action={async (formData: FormData) => {
+                  await deleteEvent(event_id);
+                }}
+              >
+                <DialogClose asChild>
+                  <DialogFooter>
+                    <Button type="submit">{EVENTS.REMOVE_BUTTON}</Button>
+                  </DialogFooter>
+                </DialogClose>
+              </form>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div className="pt-3 text-sm text-muted-foreground">
+          {date.toString()}
+        </div>
       </CardHeader>
       <CardContent>
         <p className="text-muted-foreground">{topic}</p>
@@ -87,9 +118,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
               <DialogTitle>Edit le</DialogTitle>
-              <DialogDescription>
-              {EVENTS.EDIT_DESCRIPTION}
-              </DialogDescription>
+              <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
             </DialogHeader>
             <form
               className="space-y-4"
@@ -222,6 +251,26 @@ function CheckIcon(props: any) {
       strokeLinejoin="round"
     >
       <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
+
+function XIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
     </svg>
   );
 }
