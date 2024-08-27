@@ -29,11 +29,10 @@ export default async function Events() {
                 key={event.event_id}
                 event_id={event.event_id}
                 name={event.name}
-                date={moment(event.date).format("MMMM Do YYYY, h:mm a")}
+                date={event.date}
                 topic={event.topic}
                 zoomlink={event.zoomlink}
-                group_id={1}
-              />
+                group_id={1} assign1={event.assign1} assign2={event.assign2} assign3={event.assign3}              />
             ))}
           </div>
           <h2 className="self-start text-2xl font-bold">{EVENTS.PASEDEVENTS}</h2>
@@ -44,11 +43,10 @@ export default async function Events() {
                 key={event.event_id}
                 event_id={event.event_id}
                 name={event.name}
-                date={moment(event.date).format("MMMM Do YYYY, h:mm a")}
+                date={event.date}
                 topic={event.topic}
                 zoomlink={event.zoomlink}
-                group_id={1}
-              />
+                group_id={1} assign1={event.assign1} assign2={event.assign2} assign3={event.assign3}              />
             ))}
           </div>
           <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6"></div>
