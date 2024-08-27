@@ -23,6 +23,9 @@ export const EVENTS = {
   EDIT: "Edit",
   EDIT_DESCRIPTION: "You can edit events here.",
   SAVE: "Save changes",
+  REMOVE: "Delete an event",
+  REMOVE_DESCRIPTION: "Are you sure you want to delete this event?",
+  REMOVE_BUTTON: "Delete",
 };
 
 export const EVENTS_USER = {
