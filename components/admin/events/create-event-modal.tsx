@@ -46,7 +46,7 @@ export const CreateEventModal = () => {
             <Input type="date" name="date" />
             <Input placeholder="Event Description" name="topic" />
             <Input placeholder="Event Link" name="zoomlink" />
-            <Input placeholder="Assignment 1" name="assgin1" />
+            <Input placeholder="Assignment 1" name="assign1" />
             <Input placeholder="Assignment 2" name="assign2" />
             <Input placeholder="Assignment 3" name="assign3" />
           </div>
