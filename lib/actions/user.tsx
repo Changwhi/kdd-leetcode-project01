@@ -2,6 +2,7 @@
 import { sql } from "@/utils/db";
 import { UserType } from "@/types/user";
 import { ResponseType } from "@/types/response";
+import { getSession } from "@auth0/nextjs-auth0";
 
 /**
  * Retrieve all users data in database
@@ -55,7 +56,7 @@ export const createUser = async (
     if (existingUser.length > 0) {
       return "User already exists.";
     }
-    
+
     const user_name = name.length <= 20 ? name : name.slice(0, 20);
     await sql`
       INSERT INTO "user" (name, email)
@@ -75,7 +76,7 @@ export const createUser = async (
  * @param email - User's email as a string
  * @returns a success message or an error message
  */
-export const deleteUser = async (email: string): Promise<string>  => {
+export const deleteUser = async (email: string): Promise<string> => {
   try {
     const response: ResponseType[] = await sql`
     DELETE FROM "user" WHERE email =  ${email}
@@ -85,4 +86,10 @@ export const deleteUser = async (email: string): Promise<string>  => {
     console.log(error);
     return "Failed to delete user.";
   }
+};
+
+export const getLoggedInUser = async () => {
+  const session = await getSession();
+  const user = session?.user;
+  return user;
 };
