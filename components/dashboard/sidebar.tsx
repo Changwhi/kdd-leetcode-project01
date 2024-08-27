@@ -3,18 +3,36 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SIDEBAR_CONSTANTS } from "@/text/sideBar";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { getLoggedInUser } from "@/lib/actions/user";
+import { UserType } from "@/types/user";
+
 const Sidebar = ({ admin }: { admin: boolean }) => {
   const pathname = usePathname();
+  const [user, setUser] = useState<UserType>({});
 
-  // Helper function to determine if the menu item is active
   const isActive = (path: string) => pathname.startsWith(path);
+
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const response = await getLoggedInUser();
+      if (response) {
+        setUser({
+          user_id: response.user_id,
+          name: response.username,
+          email: response.email,
+        });
+      }
+    };
+    getCurrentUser();
+  }, []);
 
   return (
     <aside className="flex flex-col justify-between w-1/5 2xl:w-2/12 bg-black text-white p-6">
       <div>
         <Link
           href={"/"}
-          className="flex flex-row items-center text-base text-white"
+          className="flex flex-row items-center text-sm text-white"
         >
           <div>
             <ArrowLeftIcon className="pr-2" />
@@ -26,14 +44,14 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
             <AvatarImage src="/avatar.png" alt="User Avatar" />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl font-bold">Chul Su</h2>
+          <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
           <p className="mt-2 text-base"></p>
           <a
-            className="text-muted-foreground underline"
-            href="mailto:samantha@email.com"
+            className="text-muted-foreground text-sm underline"
+            href={"mailto:" + user.email}
             target="_blank"
           >
-            samantha@email.com
+            {user.email}
           </a>
         </div>
         {admin && (
