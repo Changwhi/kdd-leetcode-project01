@@ -10,5 +10,9 @@ export const ATTENDANCE = {
   PEOPLE: "people",
   ATTEND: "Attend",
   ABSENT: "Absent",
+  WITHDRAW: "Withdraw",
+  SUBMITTED: "Submitted",
+  I_AM_HERE: "I'm here",
+  ATTENDED: "Attended",
 };
 
