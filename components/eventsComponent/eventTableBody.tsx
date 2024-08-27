@@ -1,10 +1,16 @@
 "use client";
 
 import { TableCell, TableRow } from "@/components/ui/table";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
+import { BUTTONS } from "@/text/buttons";
+import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
+import { XIcon } from "./Icons/xIcon";
+import { CheckIcon } from "./Icons/checkIcon";
+import { ExclamationIcon } from "./Icons/exclamationIcon";
 
 //TODO: Fetch event data
 interface Props {
@@ -37,6 +43,12 @@ export const EventTableBody: React.FC<Props> = ({
   const attendanceColour: string =
     attendance_attended || !isPast ? "bg-violet-900" : "bg-orange-500";
 
+  const ATTENDANCE_STATUS = {
+    0: <XToolTip text="Absent" />,
+    1: <ExclamationToolTip text="Self-Checkin" />,
+    2: <CheckToolTip text="Attend" />,
+  };
+
   return (
     <TableRow>
       <TableCell>
@@ -54,7 +66,20 @@ export const EventTableBody: React.FC<Props> = ({
           </Row>
         </Col>
       </TableCell>
-      <TableCell>{pr_submitted ? <CheckIcon /> : <XIcon />}</TableCell>
+      <TableCell>
+        {pr_submitted ? (
+          <CheckToolTip text="Submit" />
+        ) : (
+          <XToolTip text="Unsubmit" />
+        )}
+      </TableCell>
+      <TableCell>
+        {attendance_attended ? (
+          <ExclamationToolTip text="checkin" />
+        ) : (
+          <XToolTip text="Absent" />
+        )}
+      </TableCell>
       <TableCell>
         <SubmitAssignmentModal
           isPast={isPast}
@@ -65,13 +90,13 @@ export const EventTableBody: React.FC<Props> = ({
       <TableCell>
         {" "}
         <Button
-          className={`${attendanceColour} w-20`}
+          className="bg-violet-900 w-20"
           disabled={isPast}
           onClick={() => {
             console.log("Check");
           }}
         >
-          {!attendance_attended && isPast ? "Absent" : "Attend"}
+          {BUTTONS.BUTTON_CHECK}
         </Button>
       </TableCell>
       <TableCell>
@@ -87,47 +112,5 @@ export const EventTableBody: React.FC<Props> = ({
         </Button>
       </TableCell>
     </TableRow>
-  );
-};
-
-const CheckIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#00C389" />
-      <path
-        d="M8.75 12.25L10.75 14.25L15.25 9.75"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
-
-const XIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#FF5E57" />
-      <path
-        d="M15 9L9 15M9 9L15 15"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 };

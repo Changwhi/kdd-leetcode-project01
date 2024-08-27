@@ -24,10 +24,11 @@ export const EventTable= async () => {
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/2"></TableHead>
-          <TableHead className="w-1/12">{EVENTS_USER.PR}</TableHead>
-          <TableHead className="w-1/12">{EVENTS_USER.ASSIGNMENT}</TableHead>
-          <TableHead className="w-1/12">{EVENTS_USER.ATTENDANCE}</TableHead>
-          <TableHead className="w-1/12">{EVENTS_USER.ZOOM_LINK}</TableHead>
+          <TableHead className="w-1/12 text-center">{EVENTS_USER.PR}</TableHead>
+          <TableHead className="w-1/12 text-center">{EVENTS_USER.ATTENDANCE}</TableHead>
+          <TableHead className="w-1/12 text-center">{EVENTS_USER.ASSIGNMENT}</TableHead>
+          <TableHead className="w-1/12 text-center">{EVENTS_USER.SELF_CHECKIN}</TableHead>
+          <TableHead className="w-1/12 text-center">{EVENTS_USER.ZOOM_LINK}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
