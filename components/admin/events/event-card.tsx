@@ -36,18 +36,30 @@ export const EventCard: React.FC<EventCardProps> = ({
   assign3,
 }) => {
   const formattedDate = date.toISOString().split("T")[0];
-
   const [eventName, setEventName] = useState(name);
   const [eventDate, setEventDate] = useState(formattedDate);
-
   const [eventTopic, setEventTopic] = useState(topic);
   const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
   const [eventAssign1, setEventAssign1] = useState(assign1);
   const [eventAssign2, setEventAssign2] = useState(assign2);
   const [eventAssign3, setEventAssign3] = useState(assign3);
 
+    const formatDateTime = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'pm' : 'am';
+    
+    hours = hours % 12 || 12;
+
+    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+  };
+
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-80 max-w-md">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{name}</CardTitle>
@@ -80,7 +92,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           </Dialog>
         </div>
         <div className="pt-3 text-sm text-muted-foreground">
-          {date.toString()}
+          {formatDateTime(new Date(date))}
         </div>
       </CardHeader>
       <CardContent>

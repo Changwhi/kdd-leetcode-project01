@@ -23,7 +23,7 @@ export default async function Events() {
         <div className="flex flex-col gap-4 justify-center items-center">
           <h2 className="self-start text-2xl font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
           <hr className="w-full border-gray-300" />
-          <div className="grid grid-cols-2 2xl:grid-cols-4 mb-6 gap-5 ">
+          <div className="flex flex-row items-cneter justify-center flex-wrap mb-6 gap-5 ">
             {upcommingEvents.map((event, index) => (
               <EventCard
                 key={event.event_id}
@@ -37,7 +37,7 @@ export default async function Events() {
           </div>
           <h2 className="self-start text-2xl font-bold">{EVENTS.PASEDEVENTS}</h2>
           <hr className="w-full border-gray-300" />
-          <div className="grid grid-cols-2 2xl:grid-cols-4  mb-6 gap-5 ">
+          <div className="flex flex-row items-cneter justify-center flex-wrap mb-6 gap-5 ">
             {pastEvents.map((event, index) => (
               <EventCard
                 key={event.event_id}
