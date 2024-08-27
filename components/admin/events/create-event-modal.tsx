@@ -23,9 +23,7 @@ export const CreateEventModal = () => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{EVENTS.DIALOG_TITLE}</DialogTitle>
-          <DialogDescription>
-          {EVENTS.DIALOG_DESCRIPTION}
-          </DialogDescription>
+          <DialogDescription>{EVENTS.DIALOG_DESCRIPTION}</DialogDescription>
         </DialogHeader>
         <form
           className="space-y-4"
@@ -37,6 +35,9 @@ export const CreateEventModal = () => {
               zoomlink: formData.get("zoomlink") as string,
               group_id: 1 as number,
               event_id: 0,
+              assign1: formData.get("assign1") as string,
+              assign2: formData.get("assign2") as string,
+              assign3: formData.get("assign3") as string,
             });
           }}
         >
@@ -45,6 +46,9 @@ export const CreateEventModal = () => {
             <Input type="date" name="date" />
             <Input placeholder="Event Description" name="topic" />
             <Input placeholder="Event Link" name="zoomlink" />
+            <Input placeholder="Assignment 1" name="assgin1" />
+            <Input placeholder="Assignment 2" name="assign2" />
+            <Input placeholder="Assignment 3" name="assign3" />
           </div>
           <DialogClose asChild>
             <DialogFooter>
