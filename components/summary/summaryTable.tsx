@@ -29,7 +29,7 @@ export const SummaryTable = ({users}: {users: AttendanceType[]}) => {
             <TableCell className="font-medium">{user.name}</TableCell>
             <TableCell>{user.email}</TableCell>
             <TableCell>{user.user_type == 1 ? "User" : "Admin"}</TableCell>
-            <TableCell>{user.curr_amout}</TableCell>
+            <TableCell>{user.curr_amount}</TableCell>
           </TableRow>
         ))}
       </TableBody>
