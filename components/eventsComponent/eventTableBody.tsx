@@ -105,13 +105,13 @@ export const EventTableBody: React.FC<Props> = ({
       <TableCell>
         {" "}
         <Button
-          className="bg-violet-900 w-20"
+          className="bg-transparent border-none p-0 font-bold text-black hover:font-black hover:bg-transparent w-20"
           disabled={isPast}
           onClick={() => {
             window.open(zoomLink as string, "_blank");
           }}
         >
-          Link
+          {BUTTONS.BUTTON_JOIN}
         </Button>
       </TableCell>
     </TableRow>
