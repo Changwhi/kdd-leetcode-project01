@@ -17,34 +17,39 @@ import moment from "moment";
 import { SUMMARY } from "@/text/summary";
 import { EventCard } from "../admin/events/event-card";
 
-export const SelectedEvent = ({ events }: { events: EventType[] }) => {
+export const SelectedEvent = ({ givenEvents }: { givenEvents: EventType[] }) => {
   const { selectedDate } = useEventContext();
-  const [event, setEvent] = useState<EventType[]>([]);
+  const [events, setEvents] = useState<EventType[]>([]);
 
   useEffect(() => {
     if (selectedDate) {
-      const targetEvents = events.filter((event) =>
+      const targetEvents = givenEvents.filter((event) =>
         moment(event.date).isSame(moment(selectedDate), "day")
       );
-      setEvent(targetEvents);
+      setEvents(targetEvents);
     }
   }, [selectedDate]);
 
   return (
     <>
-        <div className="flex flex-col p-4 flex-grow">
-          {event[0] && (
-              <EventCard
-                key={event[0].event_id}
-                event_id={event[0].event_id}
-                name={event[0].name}
-                date={event[0].date}
-                topic={event[0].topic}
-                zoomlink={event[0].zoomlink}
-                group_id={1} assign1={event[0].assign1} assign2={event[0].assign2} assign3={event[0].assign3} />
-          )}
-          {!event[0] && <p>{SUMMARY.NO_EVENT}</p>}
-        </div>
+      <div className="flex flex-col p-4 flex-grow">
+        {events &&
+          events.map((event) => (
+            <EventCard
+              key={event.event_id}
+              event_id={event.event_id}
+              name={event.name}
+              date={event.date}
+              topic={event.topic}
+              zoomlink={event.zoomlink}
+              group_id={1}
+              assign1={event.assign1}
+              assign2={event.assign2}
+              assign3={event.assign3}
+            />
+          ))}
+        {!events && <p>{SUMMARY.NO_EVENT}</p>}
+      </div>
     </>
   );
 };
