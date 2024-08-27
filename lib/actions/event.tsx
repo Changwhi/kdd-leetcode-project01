@@ -82,15 +82,15 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
   }
 }
 
-// export const deleteEvent = async (event_id: number) => {
-//   try {
-//     await sql`
-//       DELETE FROM event
-//       WHERE event_id = ${event_id}
-//     `;
-//     revalidatePath("/dashboard/admin/events");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
+export const deleteEvent = async (event_id: number) => {
+  try {
+    await sql`
+      DELETE FROM event
+      WHERE event_id = ${event_id}
+    `;
+    revalidatePath("/dashboard/admin/events");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
