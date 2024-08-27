@@ -59,7 +59,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   };
 
   return (
-    <Card className="w-80 max-w-md">
+    <Card className="w-80 max-w-md shadow-lg hover:shadow-xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>{name}</CardTitle>
