@@ -8,13 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { setAttendance } from "@/lib/actions/attendance";
+import { setAttendance, setPR } from "@/lib/actions/attendance";
 import { ATTENDANCE } from "@/text/attendance";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
 import { AttendanceType } from "@/types/attendance";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { ERROR } from "@/text/error";
+import { PR } from "@/types/pr";
 
 /**
  * AttendanceTable
@@ -38,11 +39,14 @@ export const AttendanceTable = ({
 }) => {
   const { toast } = useToast();
   const [members, setMembers] = useState<AttendanceType[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState<PR[]>([]);
 
   const fetchAttendance = async () => {
-    const data = await retrieveAttendance({ event_id, group_id });
+    const data = await retrieveAttendance({ event_id});
     setMembers(data);
   };
+
+
 
   useEffect(() => {
     fetchAttendance();
@@ -60,6 +64,29 @@ export const AttendanceTable = ({
       if (!response) {
         toast({ title: ERROR.ERROR, description: ERROR.FAIL_TO_CHECK_IN });
         return;
+      }
+      toast({ title: ERROR.SUCCESS, description: ERROR.CHECK_IN_SUCCESS });
+      fetchAttendance();
+    } catch (error) {
+      toast({ title: ERROR.ERROR, description: ERROR.FAIL_TO_CHECK_IN });
+    }
+  };
+
+  const handlePR = async ({
+    user_id,
+    event_id,
+  }: {
+    user_id: number;
+    event_id: number | undefined;
+  }) => {
+    try {
+      if (!event_id) {
+        toast({ title: ERROR.ERROR, description: ERROR.FAIL_TO_CHECK_IN });
+        return;
+      }
+      const response = await setPR({ user_id, event_id });
+      if (!response) {
+        toast({ title: ERROR.ERROR, description: ERROR.FAIL_TO_CHECK_IN });
       }
       toast({ title: ERROR.SUCCESS, description: ERROR.CHECK_IN_SUCCESS });
       fetchAttendance();
@@ -96,11 +123,11 @@ export const AttendanceTable = ({
             <TableCell>{info.submission_id != null ? "Yes" : "No"}</TableCell>
             <TableCell>
               {info.submitted ? (
-                <Button className="px-2 py-1 text-sm w-24" variant="secondary">
+                <Button onClick={() => handlePR({ user_id: info.user_id, event_id: event_id })} className="px-2 py-1 text-sm w-24" variant="secondary">
                   {ATTENDANCE.SUBMITTED}
                 </Button>
               ) : (
-                <Button className="px-2 py-1 text-sm w-24" variant="outline">
+                <Button onClick={() => handlePR({ user_id: info.user_id, event_id: event_id })} className="px-2 py-1 text-sm w-24" variant="outline">
                   {ATTENDANCE.CHECK}
                 </Button>
               )}
