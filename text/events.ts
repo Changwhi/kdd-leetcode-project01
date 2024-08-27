@@ -19,6 +19,7 @@ export const EVENTS_USER = {
   PR: "PR",
   ASSIGNMENT: "Assignment",
   ATTENDANCE: "Attendance",
+  SELF_CHECKIN: "Check-in",
   ZOOM_LINK: "Zoom Link",
   ASSIGNMENT_SUBMISSION_TITLE: "Assignment Submission",
   ASSIGNMENT_TITLE: "Title",
