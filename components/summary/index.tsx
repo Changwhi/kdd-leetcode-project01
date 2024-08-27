@@ -33,7 +33,7 @@ export const Summary = async () => {
           </div>
           <div className="mt-6">
             <h1 className="text-base font-semibold">{SUMMARY.EVENT_TITLE}</h1>
-            <SelectedEvent events={events} />
+            <SelectedEvent givenEvents={events} />
           </div>
         </main>
         <aside className="basis-1/4 w-1/2 xl:w-80 bg-slate-50 p-6 rounded-xl">
