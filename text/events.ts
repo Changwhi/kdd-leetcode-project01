@@ -1,3 +1,5 @@
+import { Edit } from "lucide-react";
+
 export const EVENTS = {
   UPCOMINGEVENTS: "Upcoming events",
   PASEDEVENTS: "Past events",
@@ -13,6 +15,14 @@ export const EVENTS = {
   DIALOG_DESCRIPTION: "Let's create a new event.",
   DIALOG_TITLE: "Create new event",
   CREATE: "Create",
+  TOPIC: "Topic",
+  ZOOMLINK: "Zoom Link",
+  ASSGINMENT_1: "Assignment",
+  ASSGINMENT_2: "Assignment",
+  ASSGINMENT_3: "Assignment",
+  EDIT: "Edit",
+  EDIT_DESCRIPTION: "You can edit events here.",
+  SAVE: "Save changes",
 };
 
 export const EVENTS_USER = {
