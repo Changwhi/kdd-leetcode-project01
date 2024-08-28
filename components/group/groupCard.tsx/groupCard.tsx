@@ -29,14 +29,17 @@ export const GroupCard = ({
 
     fetchMembers();
   }, []);
+  const userType = isOwner === 0 ? "admin" : "user";
   return (
     <Card>
       <CardContent className="p-6">
         <div className="mb-4">
-          <h3 className="text-xl font-semibold">{name} {isOwner === 0 ? "(admin)":"(user)"}</h3>
+          <h3 className="text-xl font-semibold">
+            {name} {isOwner === 0 ? "(admin)" : "(user)"}
+          </h3>
           <p className="text-muted-foreground">{description}</p>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-5">
           <div className="flex items-center gap-2">
             <UsersIcon className="w-5 h-5 text-muted-foreground" />
             <span className="text-muted-foreground">
@@ -45,7 +48,9 @@ export const GroupCard = ({
           </div>
           {isMyCard && (
             <Button variant="outline" size="sm">
-              {GROUP.GOTO}
+              <a href={`/dashboard/${userType}/${group_id}/summary`}>
+                {GROUP.GOTO}
+              </a>
             </Button>
           )}
           {!isMyCard && (
