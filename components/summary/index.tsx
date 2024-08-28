@@ -10,9 +10,9 @@ import { SelectedEvent } from "./selectedEvent";
 import { CalendarTool } from "./calendar";
 import { EventProvider } from "@/lib/context/selectedEventContext";
 
-export const Summary = async () => {
-  const users = await retrieveAllUsers({ group_id: 1 });
-  const events = await retrieveEvents();
+export const Summary = async ({ group_id }: { group_id: number}) => {
+  const users = await retrieveAllUsers({ group_id });
+  const events = await retrieveEvents( group_id );
   const eventdates = events.map((event) => new Date(event.date));
   const upcomingEvents = events.filter((event) =>
     moment(event.date).isAfter(moment())
