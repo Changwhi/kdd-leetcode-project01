@@ -11,4 +11,6 @@ export const GROUP = {
    ATTENDANCE_DEDUCTION: "Attendance deduction",
    ASSIGNMENT_DEDUCTION: "Assignment deduction",
    CREATE: "Create",
+   JOIN_TITLE: "Join Group",
+   JOIN_DESCRIPTION: "Are you sure you want to join this group?",
 }
