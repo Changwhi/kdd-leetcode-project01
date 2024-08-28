@@ -42,11 +42,9 @@ export const AttendanceTable = ({
   const [isSubmitted, setIsSubmitted] = useState<PR[]>([]);
 
   const fetchAttendance = async () => {
-    const data = await retrieveAttendance({ event_id});
+    const data = await retrieveAttendance({ event_id: event_id, group_id: group_id });
     setMembers(data);
   };
-
-
 
   useEffect(() => {
     fetchAttendance();
