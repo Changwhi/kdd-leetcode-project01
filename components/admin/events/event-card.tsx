@@ -34,6 +34,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   assign1,
   assign2,
   assign3,
+  group_id,
 }) => {
   const formattedDate = date.toISOString().split("T")[0];
   const [eventName, setEventName] = useState(name);
@@ -140,7 +141,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                   date: eventDate,
                   topic: eventTopic,
                   zoomlink: eventZoomlink,
-                  group_id: 1,
+                  group_id: group_id,
                   event_id: event_id,
                   assign1: eventAssign1,
                   assign2: eventAssign2,
