@@ -4,7 +4,7 @@ import { GroupType, MyGroup, otherGroup } from "@/types/group";
 import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
-export const getMyGroups = async ({ email }: {email: string}) => {
+export const getMyGroups = async ({ email }: { email: string }) => {
   try {
     if (!email) {
       return [];
@@ -83,5 +83,44 @@ export const getAllMemberInGroup = async ({
   } catch (error) {
     console.log(error);
     return [];
+  }
+};
+
+export const createGroup = async ({formData, email}: {formData: FormData, email: string}) => {
+  const name = formData.get("title");
+  const description = formData.get("description");
+  const max_participants = formData.get("maxParticipants");
+  const attendance_deduction = formData.get("attendanceDeduction");
+  const assignment_deduction = formData.get("assignmentDeduction");
+
+  try {
+    const response = await sql`
+    INSERT INTO "group" (name, description, max_participants, attendance_deduction, assignment_deduction)
+    VALUES (${name as string}, ${description as string}, ${
+      max_participants as string
+    }, ${attendance_deduction as string}, ${assignment_deduction as string})
+    RETURNING group_id
+    `;
+    const newGroupId = response[0]?.group_id;
+
+    if (newGroupId) {
+      console.log("New group ID:", newGroupId);
+      const user = await sql`
+        SELECT user_id FROM "user" WHERE email = ${email}
+        `;
+
+      if (user) {
+        await sql`
+          INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
+          VALUES (${user[0].user_id}, ${newGroupId}, 0, 0, 0)
+          `;
+      }
+
+    }
+    revalidatePath("/group");
+    return "Group created successfully.";
+  } catch (error) {
+    console.error("Error creating group:", error);
+    return "Failed to create group.";
   }
 };
