@@ -4,10 +4,23 @@ import { Input } from "@/components/ui/input";
 import Header from "@/components/header";
 import { getLoggedInUser } from "@/lib/actions/user";
 import { GroupCard } from "@/components/group/groupCard.tsx/groupCard";
-import { getMyGroups, getOtherGroups } from "@/lib/actions/group";
+import { createGroup, getMyGroups, getOtherGroups } from "@/lib/actions/group";
 import { useEffect, useState } from "react";
 import { UserType } from "@/types/user";
 import { GroupType, MyGroup, otherGroup } from "@/types/group";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { GROUP } from "@/text/group";
 
 export default function Group() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -62,7 +75,113 @@ export default function Group() {
                 <div className="mb-12">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-2xl font-bold">Your Groups</h2>
-                    <Button>Create New Group</Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button>{GROUP.CREATE_BUTTON}</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>{GROUP.GROUP_TITLE}</DialogTitle>
+                          <DialogDescription>
+                            {GROUP.GROUP_DESCRIPTION}
+                          </DialogDescription>
+                        </DialogHeader>
+                        <form
+                          className="space-y-4"
+                          action={async (formData: FormData) => {
+                            await createGroup({
+                              formData: formData,
+                              email: currentUser.email,
+                            });
+                          }}
+                        >
+                          <div className="grid gap-4 py-4">
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label htmlFor="title" className="text-right">
+                                {GROUP.TITLE}
+                              </Label>
+                              <Input
+                                id="title"
+                                className="col-span-3"
+                                name="title"
+                                placeholder="Group Title"
+                                required
+                              />
+                            </div>
+
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="description"
+                                className="text-right"
+                              >
+                                {GROUP.DESCRIPTION}
+                              </Label>
+                              <Input
+                                id="description"
+                                name="description"
+                                className="col-span-3"
+                                placeholder="Group Description"
+                                required
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="maxParticipants"
+                                className="text-right"
+                              >
+                                {GROUP.MAX_PARTICIPANTS}
+                              </Label>
+                              <Input
+                                id="topic"
+                                className="col-span-3"
+                                name="maxParticipants"
+                                placeholder="e.g. 10 (participants)"
+                                type="number"
+                                required
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="attendanceDeduction"
+                                className="text-right"
+                              >
+                                {GROUP.ATTENDANCE_DEDUCTION}
+                              </Label>
+                              <Input
+                                id="zoomlink"
+                                className="col-span-3"
+                                name="attendanceDeduction"
+                                type="number"
+                                placeholder="e.g. 10 (CAD 10)"
+                                required
+                              />
+                            </div>
+                            <div className="grid grid-cols-4 items-center gap-4">
+                              <Label
+                                htmlFor="assginmentDeduction"
+                                className="text-right"
+                              >
+                                {GROUP.ASSIGNMENT_DEDUCTION}
+                              </Label>
+                              <Input
+                                id="assign1"
+                                className="col-span-3"
+                                name="assginmentDeduction"
+                                placeholder="e.g. 10 (CAD 10)"
+                                type="number"
+                                required
+                              />
+                            </div>
+                          </div>
+
+                          <DialogClose asChild>
+                            <DialogFooter>
+                              <Button type="submit">{GROUP.CREATE}</Button>
+                            </DialogFooter>
+                          </DialogClose>
+                        </form>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                   <div className="flex flex-row flex-wrap gap-6">
                     {myGroups.map((group) => (
@@ -75,7 +194,6 @@ export default function Group() {
                         group_id={group.group_id}
                       />
                     ))}
-                    {/* Add more cards as needed */}
                   </div>
                 </div>
                 <div>
@@ -92,7 +210,7 @@ export default function Group() {
                   <div className="flex flex-row flex-wrap gap-6">
                     {otherGroups.map((group) => (
                       <GroupCard
-                      isOwner={group.user_type}
+                        isOwner={group.user_type}
                         isMyCard={false}
                         key={group.group_id}
                         name={group.name}
@@ -100,7 +218,6 @@ export default function Group() {
                         group_id={group.group_id}
                       />
                     ))}
-                    {/* Add more cards as needed */}
                   </div>
                 </div>
               </div>
@@ -111,47 +228,3 @@ export default function Group() {
     </>
   );
 }
-
-//   <Dialog
-//     open={isCreateModalOpen}
-//     onOpenChange={setIsCreateModalOpen}
-//   >
-//     <DialogContent className="max-w-md">
-//       <DialogHeader>
-//         <DialogTitle>Create a New Group</DialogTitle>
-//         <DialogDescription>
-//           Enter the details for your new group.
-//         </DialogDescription>
-//       </DialogHeader>
-//       <form
-//         onSubmit={() => {
-//           /* handle submit logic here */
-//         }}
-//       >
-//         <div className="space-y-4">
-//           <div>
-//             <Label htmlFor="groupName">Group Name</Label>
-//             <Input
-//               id="groupName"
-//               placeholder="Enter group name"
-//             />
-//           </div>
-//           <div>
-//             <Label htmlFor="groupDescription">
-//               Group Description
-//             </Label>
-//             <Textarea
-//               id="groupDescription"
-//               placeholder="Enter group description"
-//               rows={3}
-//             />
-//           </div>
-//         </div>
-//         <DialogFooter>
-//           <Button type="submit" className="ml-auto">
-//             Create Group
-//           </Button>
-//         </DialogFooter>
-//       </form>
-//     </DialogContent>
-//   </Dialog>
