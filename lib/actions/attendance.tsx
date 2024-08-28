@@ -10,10 +10,10 @@ import { revalidatePath } from "next/cache";
  */
 export const retrieveAttendance = async ({
   event_id,
-  group_id = 1,
+  group_id,
 }: {
   event_id: number | undefined;
-  group_id?: number | undefined;
+  group_id: number | undefined;
 }) => {
   try {
     if (!event_id || !group_id) {
