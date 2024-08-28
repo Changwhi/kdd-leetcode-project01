@@ -64,7 +64,7 @@ export default function Group() {
                     <h2 className="text-2xl font-bold">Your Groups</h2>
                     <Button>Create New Group</Button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="flex flex-row flex-wrap gap-6">
                     {myGroups.map((group) => (
                       <GroupCard
                         isOwner={group.user_type}
@@ -89,7 +89,7 @@ export default function Group() {
                       <Button variant="outline">Browse</Button>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="flex flex-row flex-wrap gap-6">
                     {otherGroups.map((group) => (
                       <GroupCard
                       isOwner={group.user_type}
