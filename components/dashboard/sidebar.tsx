@@ -18,7 +18,7 @@ import { UserType } from "@/types/user";
  * @param {boolean} admin - Whether the user is an admin or not.
  * @returns {JSX.Element} The sidebar component.
  */
-const Sidebar = ({ admin }: { admin: boolean }) => {
+const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
   const pathname = usePathname();
   const [user, setUser] = useState<UserType>({
     user_id: 0,
@@ -46,7 +46,7 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
     <aside className="flex flex-col justify-between w-1/5 2xl:w-2/12 bg-black text-white p-6">
       <div>
         <Link
-          href={"/"}
+          href={"/group"}
           className="flex flex-row items-center text-sm text-white"
         >
           <div>
@@ -72,9 +72,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
         {admin && (
           <nav className="mt-8 space-y-8">
             <a
-              href="/dashboard/admin/summary"
+              href={`/dashboard/admin/${groupId}/summary`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/admin/summary")
+                isActive(`/dashboard/admin/${groupId}/summary`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -82,9 +82,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
               {SIDEBAR_CONSTANTS.SUMMARY}
             </a>
             <a
-              href="/dashboard/admin/attendance"
+              href={`/dashboard/admin/${groupId}/attendance`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/admin/attendance")
+                isActive(`/dashboard/admin/${groupId}/attendance`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -92,9 +92,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ATTENDANCE}
             </a>
             <a
-              href="/dashboard/admin/events"
+              href={`/dashboard/admin/${groupId}/events`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/admin/events")
+                isActive(`/dashboard/admin/${groupId}/events`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -102,9 +102,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
               {SIDEBAR_CONSTANTS.EVENTS}
             </a>
             <a
-              href="/dashboard/admin/assignments"
+              href={`/dashboard/admin/${groupId}/assignments`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/admin/assignments")
+                isActive(`/dashboard/admin/${groupId}/assignments`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -112,9 +112,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ASSIGNMENTS}
             </a>
             <a
-              href="/dashboard/admin/members"
+              href={`/dashboard/admin/${groupId}/members`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/admin/members")
+                isActive(`/dashboard/admin/${groupId}/members`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -122,9 +122,9 @@ const Sidebar = ({ admin }: { admin: boolean }) => {
               {SIDEBAR_CONSTANTS.MEMBERS}
             </a>
             <a
-              href="/dashboard/admin/settings"
+              href={`/dashboard/admin/${groupId}/settings`}
               className={`block text-lg text-muted-foreground ${
-                isActive("/dashboard/admin/settings")
+                isActive(`/dashboard/admin/${groupId}/settings`)
                   ? "text-white"
                   : "opacity-50 cursor-not-allowed"
               }`}
