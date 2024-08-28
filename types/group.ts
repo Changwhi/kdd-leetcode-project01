@@ -23,3 +23,24 @@ export interface UserGroupProps {
   group_id: number;
   user_id: number;
 }
+
+export interface MyGroup {
+  group_id: number;
+  user_id: number;
+  name: string;
+  description: string;
+  max_participants: number;
+  attendance_deduction: number;
+  assignment_deduction: number;
+  user_type: number;
+}
+
+export interface otherGroup {
+  group_id: number;
+  name: string;
+  description: string;
+  user_ids: number[];
+  emails: string[];
+  user_types: number[];
+  user_type: number;
+}
