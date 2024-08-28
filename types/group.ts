@@ -4,7 +4,7 @@ export interface GroupType {
   max_participants: number;
   attendance_deduction: number;
   assignment_deduction: number;
-
+  description: string;
 }
 
 export interface UserGroupType {
