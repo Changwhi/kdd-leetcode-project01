@@ -124,3 +124,22 @@ export const createGroup = async ({formData, email}: {formData: FormData, email:
     return "Failed to create group.";
   }
 };
+
+export const joinGroup = async ({group_id, email}: {group_id: number, email: string}) => {
+  try {
+    const response = await sql`
+    INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
+    VALUES ((SELECT user_id FROM "user" WHERE email = ${email}), ${group_id}, 1, 30, 30)
+    RETURNING group_id
+    `;
+
+    if (response) {
+      revalidatePath("/group");
+      return "Joined group successfully.";
+    }
+    return "Failed to join group.";
+  } catch (error) {
+    console.error("Error joining group:", error);
+    return "Failed to join group.";
+  }
+};
