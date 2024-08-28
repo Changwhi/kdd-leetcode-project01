@@ -1,9 +1,14 @@
 "use server";
-import { AttendanceType } from "@/types/attendance";
-import { GroupType, MyGroup, otherGroup } from "@/types/group";
+import { MyGroup, otherGroup } from "@/types/group";
 import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Retrieve all groups that the user with the given email is a member of
+ *
+ * @param email - The user's email as a string
+ * @returns An array of MyGroup if exist, otherwise an empty array
+ */
 export const getMyGroups = async ({ email }: { email: string }) => {
   try {
     if (!email) {
@@ -26,6 +31,12 @@ export const getMyGroups = async ({ email }: { email: string }) => {
   }
 };
 
+/**
+ * Returns all groups that the user is not in
+ *
+ * @param email - The user's email as a string
+ * @returns An array of otherGroup if exist, otherwise an empty array
+ */
 export const getOtherGroups = async ({ email }: { email: string }) => {
   try {
     if (!email) {
@@ -64,6 +75,12 @@ export const getOtherGroups = async ({ email }: { email: string }) => {
   }
 };
 
+/**
+ * Retrieve all members in a group
+ *
+ * @param group_id - Group ID as a number
+ * @returns An array of { user_type, group_id, user_id, name, description } if exist, otherwise an empty array
+ */
 export const getAllMemberInGroup = async ({
   group_id,
 }: {
@@ -86,7 +103,20 @@ export const getAllMemberInGroup = async ({
   }
 };
 
-export const createGroup = async ({formData, email}: {formData: FormData, email: string}) => {
+/**
+ * Create a new group with the given form data and the user's email
+ *
+ * @param formData - A FormData object with the group data
+ * @param email - The user's email as a string
+ * @returns A boolean indicating whether the group was created successfully
+ */
+export const createGroup = async ({
+  formData,
+  email,
+}: {
+  formData: FormData;
+  email: string;
+}) => {
   const name = formData.get("title");
   const description = formData.get("description");
   const max_participants = formData.get("maxParticipants");
@@ -115,17 +145,29 @@ export const createGroup = async ({formData, email}: {formData: FormData, email:
           VALUES (${user[0].user_id}, ${newGroupId}, 0, 0, 0)
           `;
       }
-
     }
     revalidatePath("/group");
-    return "Group created successfully.";
+    return true;
   } catch (error) {
     console.error("Error creating group:", error);
-    return "Failed to create group.";
+    return false;
   }
 };
 
-export const joinGroup = async ({group_id, email}: {group_id: number, email: string}) => {
+/**
+ * Join an existing group with the given group_id and user email
+ *
+ * @param group_id - The group_id of the group to join
+ * @param email - The user's email as a string
+ * @returns A string indicating success or failure of the join operation
+ */
+export const joinGroup = async ({
+  group_id,
+  email,
+}: {
+  group_id: number;
+  email: string;
+}) => {
   try {
     const response = await sql`
     INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
