@@ -3,16 +3,28 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { GROUP } from "@/text/group";
 import { UserType } from "@/types/user";
-import { getAllMemberInGroup } from "@/lib/actions/group";
+import { getAllMemberInGroup, joinGroup } from "@/lib/actions/group";
 import { useEffect, useState } from "react";
-
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { group } from "console";
 export const GroupCard = ({
+  email,
   isOwner,
   name,
   description,
   group_id,
   isMyCard = false,
 }: {
+  email: string;
   isOwner: number;
   name: string;
   description: string;
@@ -54,9 +66,33 @@ export const GroupCard = ({
             </Button>
           )}
           {!isMyCard && (
-            <Button variant="outline" size="sm">
-              {GROUP.JOIN}
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size={"sm"}>
+                  {GROUP.JOIN}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>{GROUP.JOIN_TITLE}</DialogTitle>
+                  <DialogDescription>
+                    {GROUP.JOIN_DESCRIPTION}
+                  </DialogDescription>
+                </DialogHeader>
+                <form
+                  className="space-y-4"
+                  action={async (formData: FormData) => {
+                    await joinGroup({ group_id: group_id, email: email });
+                  }}
+                >
+                  <DialogClose asChild>
+                    <DialogFooter>
+                      <Button type="submit">{GROUP.JOIN}</Button>
+                    </DialogFooter>
+                  </DialogClose>
+                </form>
+              </DialogContent>
+            </Dialog>
           )}
         </div>
       </CardContent>
