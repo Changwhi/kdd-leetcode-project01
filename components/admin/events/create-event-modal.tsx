@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { addEvent } from "@/lib/actions/event";
 import { EVENTS } from "@/text/events";
 
-export const CreateEventModal = () => {
+export const CreateEventModal = ({groupId}: {groupId: number}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -33,8 +33,7 @@ export const CreateEventModal = () => {
               date: formData.get("date") as string,
               topic: formData.get("topic") as string,
               zoomlink: formData.get("zoomlink") as string,
-              group_id: 1 as number,
-              event_id: 0,
+              group_id: groupId,
               assign1: formData.get("assign1") as string,
               assign2: formData.get("assign2") as string,
               assign3: formData.get("assign3") as string,
