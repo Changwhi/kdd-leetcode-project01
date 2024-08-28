@@ -210,6 +210,7 @@ export default function Group() {
                   <div className="flex flex-row flex-wrap gap-6">
                     {otherGroups.map((group) => (
                       <GroupCard
+                        email={currentUser.email}
                         isOwner={group.user_type}
                         isMyCard={false}
                         key={group.group_id}
