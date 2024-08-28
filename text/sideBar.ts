@@ -13,5 +13,5 @@ export const SIDEBAR_CONSTANTS = {
   LINK_ACTIVE: "block text-lg font-bold text-white",
   LINK_INACTIVE: "block text-lg font-bold text-gray-500",
   LOGOUT_BUTTON: "Logout",
-  BACK_BUTTON: "Event Page",
+  BACK_BUTTON: "Group Page",
 };
