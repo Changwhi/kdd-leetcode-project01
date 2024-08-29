@@ -66,7 +66,7 @@ export const EventTableBody: React.FC<Props> = ({
   const isPast: boolean = date <= new Date();
   const assignmentColour: string = assignment_submitted
     ? "bg-violet-900"
-    : "bg-orange-500";
+    : "bg-red-500";
 
   return (
     <TableRow>
