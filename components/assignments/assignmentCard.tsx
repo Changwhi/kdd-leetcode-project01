@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Row from "react-bootstrap/Row";
@@ -6,10 +5,10 @@ import Col from "react-bootstrap/Col";
 import { SUMMARY } from "@/text/summary";
 
 interface Props {
-  userName: String;
+  userName: string;
   date: Date;
-  title: String;
-  content: String;
+  title: string;
+  content: string;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -34,8 +33,15 @@ export const AssignmentCard: React.FC<Props> = ({
         </Row>
       </Col>
       <Col>
-        <Button className="bg-violet-900 m-2 w-20" variant="default" size="sm">
-          <a href="#">{SUMMARY.BUTTON_VIEW}</a>
+        <Button
+          onClick={() => {
+            window.open(content, "_blank");
+          }}
+          className="bg-violet-900 m-2 w-20"
+          variant="default"
+          size="sm"
+        >
+          {SUMMARY.BUTTON_VIEW}
         </Button>
       </Col>
     </Card>

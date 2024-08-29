@@ -91,11 +91,9 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className="flex items-center justify-center text-center">
           <Button className={`bg-violet-900 w-20`}>
             {!submitted ? BUTTONS.BUTTON_SUBMIT : BUTTONS.BUTTON_SUBMITTED}
           </Button>
-        </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[90vh] h-[70vh]">
         <div className="relative">
