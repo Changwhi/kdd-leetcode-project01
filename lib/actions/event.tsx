@@ -10,7 +10,8 @@ import { revalidatePath } from "next/cache";
 export const retrieveEvents = async (group_id: number) => {
   try {
     console.log(group_id);
-    const response: EventType[] = await sql`SELECT * FROM event where group_id = ${group_id}`;
+    const response: EventType[] =
+      await sql`SELECT * FROM event where group_id = ${group_id} ORDER BY date DESC`;
     if (response) {
       return response;
     }
@@ -36,21 +37,27 @@ export const addEvent = async ({
   assign1,
   assign2,
   assign3,
-
-}: 
-  {
-    name: string;
-    date: string;
-    topic: string;
-    zoomlink: string;
-    group_id: number;
-    assign1: string;
-    assign2: string;
-    assign3: string;
-  }
-) => {
+}: {
+  name: string;
+  date: string;
+  topic: string;
+  zoomlink: string;
+  group_id: number;
+  assign1: string;
+  assign2: string;
+  assign3: string;
+}) => {
   try {
-    console.log(group_id, name, date, topic, zoomlink, assign1, assign2, assign3);
+    console.log(
+      group_id,
+      name,
+      date,
+      topic,
+      zoomlink,
+      assign1,
+      assign2,
+      assign3
+    );
 
     await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
@@ -91,7 +98,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 export const deleteEvent = async (event_id: number) => {
   try {
@@ -103,5 +110,4 @@ export const deleteEvent = async (event_id: number) => {
   } catch (error) {
     console.log(error);
   }
-}
-
+};

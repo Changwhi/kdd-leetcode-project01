@@ -1,7 +1,6 @@
 "use server";
 import { sql } from "@/utils/db";
 import { EventAttendacePrType, EventIdType } from "@/types/event";
-import { revalidatePath } from "next/cache";
 
 /**
  * Retrieve all events data along with the given group_id in database
