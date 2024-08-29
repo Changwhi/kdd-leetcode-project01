@@ -5,7 +5,7 @@ import { ERROR } from "@/text/error";
 export default function Page() {
     const route = useRouter()
     useEffect(() => {
-        route.push("/dashboard/admin/summary")
+        route.push("/group")
     })
   return <div>{ERROR.PAGE_NOT_FOUND}</div>;
 }
