@@ -19,6 +19,9 @@ interface Props {
   date: Date;
   topic: String;
   zoomLink: String;
+  assign1: String;
+  assign2: String;
+  assign3: String;
   assignment_submitted: boolean;
   attendance_attended: number;
   pr_submitted: boolean;
@@ -50,6 +53,9 @@ export const EventTableBody: React.FC<Props> = ({
   date,
   topic,
   zoomLink,
+  assign1,
+  assign2,
+  assign3,
   assignment_submitted,
   attendance_attended,
   pr_submitted,
@@ -67,7 +73,7 @@ export const EventTableBody: React.FC<Props> = ({
             <span className="text-gray-400">
               {date.toLocaleDateString(undefined, options)}
             </span>
-            <EventDetailModal name={name} topic={topic} date={date}/>
+            <EventDetailModal name={name} topic={topic} date={date} assign1={assign1} assign2={assign2} assign3={assign3}/>
           </Row>
         </Col>
       </TableCell>

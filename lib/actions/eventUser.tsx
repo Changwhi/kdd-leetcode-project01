@@ -42,6 +42,9 @@ export const retrieveEventsbyEventAndUser = async (
     e.date,
     e.topic,
     e.zoomlink,
+    e.assign1,
+    e.assign2,
+    e.assign3,
     CASE
         WHEN s.event_id IS NOT NULL THEN TRUE
         ELSE FALSE

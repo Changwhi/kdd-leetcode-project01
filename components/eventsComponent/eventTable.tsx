@@ -40,6 +40,9 @@ export const EventTable= async ({ group_id }: { group_id: number}) => {
             date={eachEvent.date}
             topic={eachEvent.topic}
             zoomLink={eachEvent.zoomlink}
+            assign1={eachEvent.assign1}
+            assign2={eachEvent.assign2}
+            assign3={eachEvent.assign3}
             assignment_submitted={eachEvent.assignment_submitted}
             attendance_attended={eachEvent.attendance_attended}
             pr_submitted={eachEvent.pr_submitted}

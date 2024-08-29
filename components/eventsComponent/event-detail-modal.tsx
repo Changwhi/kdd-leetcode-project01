@@ -15,6 +15,9 @@ interface SubmitAssignmentModalProps {
   name: String;
   topic: String;
   date: Date;
+  assign1: String;
+  assign2: String;
+  assign3: String;
 }
 
 const options: Intl.DateTimeFormatOptions = {
@@ -27,6 +30,9 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
   name,
   topic,
   date,
+  assign1,
+  assign2,
+  assign3
 }) => {
   return (
     <Dialog>
@@ -51,15 +57,15 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
           <div className="mt-4 pt-3 space-y-5">
             <div className="flex items-center gap-2">
               <CheckIcon className="h-5 w-5 text-primary" />
-              <span>{"AA"}</span>
+              <span>{assign1}</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckIcon className="h-5 w-5 text-primary" />
-              <span>{"AAA"}</span>
+              <span>{assign2}</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckIcon className="h-5 w-5 text-primary" />
-              <span>{"AAAAA"}</span>
+              <span>{assign3}</span>
             </div>
           </div>
         </div>
