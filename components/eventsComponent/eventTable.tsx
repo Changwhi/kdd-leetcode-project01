@@ -11,12 +11,11 @@ import { EventTableBody } from "./eventTableBody";
 import { retrieveAllEventsIdByGroup, retrieveEventsbyEventAndUser } from "@/lib/actions/eventUser";
 
 
-// TODO: Change group ID, user ID, it is now hardcoded
-const GROUP_ID = 1;
+// TODO: Change user ID, it is now hardcoded
 const USER_ID = 2;
 
-export const EventTable= async () => {
-  const allEventID = await retrieveAllEventsIdByGroup(GROUP_ID);
+export const EventTable= async ({ group_id }: { group_id: number}) => {
+  const allEventID = await retrieveAllEventsIdByGroup(group_id);
   const allEvents = await retrieveEventsbyEventAndUser(allEventID, USER_ID);
 
   return (

@@ -12,7 +12,6 @@ import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
 //TODO: hardcoded, to be changed
 const USER_ID = 2;
 
-//TODO: Fetch event data
 interface Props {
   event_id: number;
   name: String;
