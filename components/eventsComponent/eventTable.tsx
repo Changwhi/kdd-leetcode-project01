@@ -20,7 +20,8 @@ export const EventTable= async () => {
   const allEvents = await retrieveEventsbyEventAndUser(allEventID, USER_ID);
 
   return (
-    <Table>
+    <div className="max-h-[80vh] overflow-y-auto">
+      <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/2"></TableHead>
@@ -47,5 +48,7 @@ export const EventTable= async () => {
         ))}
       </TableBody>
     </Table>
+    </div>
+    
   );
 };
