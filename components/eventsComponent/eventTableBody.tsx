@@ -101,7 +101,8 @@ export const EventTableBody: React.FC<Props> = ({
         {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
       </TableCell>
       <TableCell>
-        {isPast ? (
+        <div className="flex items-center justify-center text-center">
+          {isPast ? (
           <Button disabled className={`${assignmentColour} w-20`}>
             {assignment_submitted
               ? BUTTONS.BUTTON_SUBMITTED
@@ -113,6 +114,8 @@ export const EventTableBody: React.FC<Props> = ({
             submitted={assignment_submitted}
           ></SubmitAssignmentModal>
         )}
+        </div>
+        
       </TableCell>
       <TableCell>
         {" "}
