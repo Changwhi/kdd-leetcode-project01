@@ -8,6 +8,7 @@ import { SubmitAssignmentModal } from "./submit-assignment-modal";
 import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
 import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
+import { EventDetailModal } from "./event-detail-modal";
 
 //TODO: hardcoded, to be changed
 const USER_ID = 2;
@@ -66,9 +67,7 @@ export const EventTableBody: React.FC<Props> = ({
             <span className="text-gray-400">
               {date.toLocaleDateString(undefined, options)}
             </span>
-            <span className="ml-7">
-              <a href={"#"}>See Project details</a>
-            </span>
+            <EventDetailModal name={name} topic={topic} date={date}/>
           </Row>
         </Col>
       </TableCell>
