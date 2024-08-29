@@ -9,7 +9,6 @@ import { revalidatePath } from "next/cache";
  */
 export const retrieveEvents = async (group_id: number) => {
   try {
-    console.log(group_id);
     const response: EventType[] =
       await sql`SELECT * FROM event where group_id = ${group_id} ORDER BY date DESC`;
     if (response) {

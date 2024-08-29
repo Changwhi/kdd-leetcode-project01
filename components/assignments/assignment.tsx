@@ -1,11 +1,25 @@
+"use client"
 import { retrieveSubmissionsByEventID } from "@/lib/actions/submission";
 import { AssignmentCard } from "./assignmentCard";
+import { useEffect, useState } from "react";
+import { SubmissionUserNameType } from "@/types/submission";
 
-export const Assignment = async ({ event_id }: { event_id: number }) => {
-  const assignments = await retrieveSubmissionsByEventID(event_id);
+export const Assignment = ({ eventId }: { eventId: number }) => {
+  const [assignments, setAssignments ] = useState([] as SubmissionUserNameType[]);
+
+  useEffect(()=> {
+    const fetchAssignments = async () => {
+      const response = await retrieveSubmissionsByEventID(eventId);
+      setAssignments(response);
+    };
+    if (eventId != -1) {
+      fetchAssignments();
+    }
+  }, [eventId]);
+
   return (
     <>
-      {event_id != -1 ? (
+      {eventId != -1 ? (
         <div className="lg:h-[70vh] md:h-[45vh] overflow-y-auto">
           {assignments.map((assignment) => (
             <AssignmentCard
