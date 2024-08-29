@@ -15,7 +15,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <Header user={user}/>
+      <Header user={user} />
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 border-y">
           <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
@@ -46,6 +46,7 @@ export default async function Home() {
               </div>
               <div className="flex justify-center">
                 <Image
+                  priority
                   src="/landing1.png"
                   alt="Landing Page"
                   width={400}
