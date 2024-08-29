@@ -1,12 +1,17 @@
 "use server";
-import { SubmissionCardProps, SubmissionType } from "@/types/submission";
+import { SubmissionCardProps, SubmissionType, SubmissionUserNameType } from "@/types/submission";
 import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
 export const retrieveSubmissionsByEventID = async (eventID: number) => {
   try {
-    const response: SubmissionType[] =
-      await sql`SELECT * FROM submission WHERE event_id=${eventID}`;
+    const response: SubmissionUserNameType[] =
+      await sql`SELECT 
+      s.*,
+      u.name AS user_name
+      FROM submission s
+      JOIN "user" u ON u.user_id=s.user_id
+      WHERE event_id=${eventID}`;
     if (response) {
       return response;
     }
