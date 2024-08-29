@@ -23,7 +23,6 @@ import { SubmissionType } from "@/types/submission";
 import { useToast } from "@/components/ui/use-toast";
 
 interface SubmitAssignmentModalProps {
-  isPast: boolean;
   eventID: number;
   submitted: boolean;
 }
@@ -32,20 +31,17 @@ interface SubmitAssignmentModalProps {
 const USER_ID: number = 2;
 
 export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
-  isPast,
   eventID,
   submitted,
 }) => {
   const { toast } = useToast();
-  const assignmentColour: string =
-    submitted || !isPast ? "bg-violet-900" : "bg-orange-500";
 
   const [originalSubmission, setOriginalSubmission] = useState<
     SubmissionType | undefined
   >(undefined);
 
   useEffect(() => {
-    if (submitted && !isPast) {
+    if (submitted) {
       const fetchData = async () => {
         try {
           const response = await retrieveSubmissionsByUserIdEventId(
@@ -60,7 +56,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
 
       fetchData();
     }
-  }, [submitted, eventID, isPast, toast]);
+  }, [submitted, eventID, toast]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -96,7 +92,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
     <Dialog>
       <DialogTrigger asChild>
         <div className="flex items-center justify-center text-center">
-          <Button disabled={isPast} className={`${assignmentColour} w-20`}>
+          <Button className={`bg-violet-900 w-20`}>
             {!submitted ? BUTTONS.BUTTON_SUBMIT : BUTTONS.BUTTON_SUBMITTED}
           </Button>
         </div>

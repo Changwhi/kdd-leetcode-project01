@@ -11,16 +11,16 @@ import { EventTableBody } from "./eventTableBody";
 import { retrieveAllEventsIdByGroup, retrieveEventsbyEventAndUser } from "@/lib/actions/eventUser";
 
 
-// TODO: Change group ID, user ID, it is now hardcoded
-const GROUP_ID = 1;
+// TODO: Change user ID, it is now hardcoded
 const USER_ID = 2;
 
-export const EventTable= async () => {
-  const allEventID = await retrieveAllEventsIdByGroup(GROUP_ID);
+export const EventTable= async ({ group_id }: { group_id: number}) => {
+  const allEventID = await retrieveAllEventsIdByGroup(group_id);
   const allEvents = await retrieveEventsbyEventAndUser(allEventID, USER_ID);
 
   return (
-    <Table>
+    <div className="max-h-[80vh] overflow-y-auto">
+      <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-1/2"></TableHead>
@@ -40,6 +40,9 @@ export const EventTable= async () => {
             date={eachEvent.date}
             topic={eachEvent.topic}
             zoomLink={eachEvent.zoomlink}
+            assign1={eachEvent.assign1}
+            assign2={eachEvent.assign2}
+            assign3={eachEvent.assign3}
             assignment_submitted={eachEvent.assignment_submitted}
             attendance_attended={eachEvent.attendance_attended}
             pr_submitted={eachEvent.pr_submitted}
@@ -47,5 +50,7 @@ export const EventTable= async () => {
         ))}
       </TableBody>
     </Table>
+    </div>
+    
   );
 };
