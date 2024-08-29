@@ -136,9 +136,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         {!admin && (
           <nav className="mt-8 space-y-8">
             <a
-              href="/dashboard/user/summary"
+              href={`/dashboard/user/${groupId}/summary`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/user/summary")
+                isActive(`/dashboard/user/${groupId}/summary`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -146,9 +146,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.SUMMARY}
             </a>
             <a
-              href="/dashboard/user/eventsPage"
+              href={`/dashboard/user/${groupId}/eventsPage`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/user/events")
+                isActive(`/dashboard/user/${groupId}/eventsPage`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -156,9 +156,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.EVENTS}
             </a>
             <a
-              href="/dashboard/user/assignments"
+              href={`/dashboard/user/${groupId}/assignments`}
               className={`block text-lg font-bold ${
-                isActive("/dashboard/user/assignments")
+                isActive(`/dashboard/user/${groupId}/assignments`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -166,9 +166,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ASSIGNMENTS}
             </a>
             <a
-              href="/dashboard/user/settings"
+              href={`/dashboard/user/${groupId}/settings`}
               className={`block text-lg text-muted-foreground ${
-                isActive("/dashboard/user/settings")
+                isActive(`/dashboard/user/${groupId}/settings`)
                   ? "text-white"
                   : "opacity-50 cursor-not-allowed"
               }`}
