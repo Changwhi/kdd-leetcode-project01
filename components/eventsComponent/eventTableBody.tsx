@@ -38,13 +38,16 @@ const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
   2: <CheckToolTip text="Attend" />,
 };
 
-const onClickSelfCheckin = async (exist: number, userId: number, event_id: number) => {
-  if(exist) {
+const onClickSelfCheckin = async (
+  exist: number,
+  userId: number,
+  event_id: number
+) => {
+  if (exist) {
     await deleteAttendance(userId, event_id);
   } else {
     await createAttendance(userId, event_id);
   }
-  
 };
 
 export const EventTableBody: React.FC<Props> = ({
@@ -61,6 +64,9 @@ export const EventTableBody: React.FC<Props> = ({
   pr_submitted,
 }) => {
   const isPast: boolean = date <= new Date();
+  const assignmentColour: string = assignment_submitted
+    ? "bg-violet-900"
+    : "bg-orange-500";
 
   return (
     <TableRow>
@@ -73,13 +79,20 @@ export const EventTableBody: React.FC<Props> = ({
             <span className="text-gray-400">
               {date.toLocaleDateString(undefined, options)}
             </span>
-            <EventDetailModal name={name} topic={topic} date={date} assign1={assign1} assign2={assign2} assign3={assign3}/>
+            <EventDetailModal
+              name={name}
+              topic={topic}
+              date={date}
+              assign1={assign1}
+              assign2={assign2}
+              assign3={assign3}
+            />
           </Row>
         </Col>
       </TableCell>
       <TableCell>
         {pr_submitted ? (
-          <CheckToolTip text="Submit"/>
+          <CheckToolTip text="Submit" />
         ) : (
           <XToolTip text="Unsubmit" />
         )}
@@ -88,26 +101,34 @@ export const EventTableBody: React.FC<Props> = ({
         {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
       </TableCell>
       <TableCell>
-        <SubmitAssignmentModal
-          isPast={isPast}
-          eventID={event_id}
-          submitted={assignment_submitted}
-        ></SubmitAssignmentModal>
+        {isPast ? (
+          <Button disabled className={`${assignmentColour} w-20`}>
+            {assignment_submitted
+              ? BUTTONS.BUTTON_SUBMITTED
+              : BUTTONS.BUTTON_UNSUBMITTED}
+          </Button>
+        ) : (
+          <SubmitAssignmentModal
+            eventID={event_id}
+            submitted={assignment_submitted}
+          ></SubmitAssignmentModal>
+        )}
       </TableCell>
       <TableCell>
         {" "}
         <div className="flex items-center justify-center text-center">
           <Button
-          className="bg-violet-900 w-20"
-          disabled={isPast}
-          onClick={() => {
-            onClickSelfCheckin(attendance_attended, USER_ID, event_id);
-          }}
-        >
-          {attendance_attended && !isPast ? BUTTONS.BUTTON_UNCHECK : BUTTONS.BUTTON_CHECK}
-        </Button>
+            className="bg-violet-900 w-20"
+            disabled={isPast}
+            onClick={() => {
+              onClickSelfCheckin(attendance_attended, USER_ID, event_id);
+            }}
+          >
+            {attendance_attended && !isPast
+              ? BUTTONS.BUTTON_UNCHECK
+              : BUTTONS.BUTTON_CHECK}
+          </Button>
         </div>
-        
       </TableCell>
       <TableCell>
         {" "}
