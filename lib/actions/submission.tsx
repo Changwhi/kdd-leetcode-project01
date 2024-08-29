@@ -43,8 +43,8 @@ export const createSubmission = async (formData: SubmissionCardProps) => {
     const user_id = formData.user_id;
 
     await sql`
-      INSERT INTO submission (title, content, event_id, user_id)
-      VALUES (${title}, ${content}, ${event_id}, ${user_id})
+      INSERT INTO submission (title, date, content, event_id, user_id)
+      VALUES (${title}, NOW(), ${content}, ${event_id}, ${user_id})
     `;
     revalidatePath("/dashboard/user/eventsPage");
   } catch (error) {
@@ -65,7 +65,7 @@ export const updateSubmission = async (formData: SubmissionCardProps) => {
 
     await sql`
       UPDATE submission
-      SET title=${title}, content=${content}
+      SET title=${title}, date=NOW() content=${content}
       WHERE user_id=${user_id} AND event_id=${event_id}
     `;
     revalidatePath("/dashboard/user/eventsPage");
