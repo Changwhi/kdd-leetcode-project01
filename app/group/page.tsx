@@ -7,6 +7,8 @@ import { GroupCard } from "@/components/group/ui/groupCard";
 import { getMyGroups, getOtherGroups } from "@/lib/actions/group";
 import { GROUP } from "@/text/group";
 import { CreateGroupButton } from "@/components/group/CreateGroupButton";
+import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 /**
  * The group page, which displays a list of groups that the user is part of,
@@ -17,7 +19,8 @@ import { CreateGroupButton } from "@/components/group/CreateGroupButton";
 export default async function Group() {
   const currentUser = await getLoggedInUser();
   if (!currentUser) {
-    return <p>{GROUP.MUST_BE_LOGGED_IN}</p>
+    redirect("/api/auth/login"); // Redirect to login if user is not logged in
+    return null; // Important to return null after redirect
   }
   const otherGroups = await getOtherGroups({ email: currentUser.email });
   const myGroups = await getMyGroups({ email: currentUser.email });
@@ -31,9 +34,11 @@ export default async function Group() {
             <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
               <div className="container mx-auto px-4 sm:px-36 ">
                 <div className="mb-8">
-                  <h1 className="text-3xl font-bold mb-2">{GROUP.MANAGE_GROUP}</h1>
+                  <h1 className="text-3xl font-bold mb-2">
+                    {GROUP.MANAGE_GROUP}
+                  </h1>
                   <p className="text-muted-foreground">
-                  {GROUP.GROUP_PAGE_SUB_TITLE}
+                    {GROUP.GROUP_PAGE_SUB_TITLE}
                   </p>
                 </div>
                 <div className="mb-12">
