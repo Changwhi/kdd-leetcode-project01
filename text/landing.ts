@@ -42,4 +42,5 @@ export const CONSTANTS = {
   FOOTER_COPYRIGHT: "© 2024 Study Meetup. All rights reserved.",
   FOOTER_TERMS: "Terms of Service",
   FOOTER_PRIVACY: "Privacy",
+  LETS_START: "Let's get started",
 };
