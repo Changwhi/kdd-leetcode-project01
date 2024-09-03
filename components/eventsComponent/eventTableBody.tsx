@@ -1,17 +1,30 @@
 "use client";
+
 import { TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { Dispatch, SetStateAction } from "react";
+import { SubmitAssignmentModal } from "./submit-assignment-modal";
+import { BUTTONS } from "@/text/buttons";
+import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
+import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
+import { EventDetailModal } from "./event-detail-modal";
 
-//TODO: Fetch event data
+//TODO: hardcoded, to be changed
+const USER_ID = 2;
+
 interface Props {
+  event_id: number;
   name: String;
   date: Date;
   topic: String;
   zoomLink: String;
-  setOpenModal: Dispatch<SetStateAction<boolean>>
+  assign1: String;
+  assign2: String;
+  assign3: String;
+  assignment_submitted: boolean;
+  attendance_attended: number;
+  pr_submitted: boolean;
 }
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
@@ -19,14 +32,42 @@ const options: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
+const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+  0: <XToolTip text="Absent" />,
+  1: <ExclamationToolTip text="Self-Checkin" />,
+  2: <CheckToolTip text="Attend" />,
+};
+
+const onClickSelfCheckin = async (
+  exist: number,
+  userId: number,
+  event_id: number
+) => {
+  if (exist) {
+    await deleteAttendance(userId, event_id);
+  } else {
+    await createAttendance(userId, event_id);
+  }
+};
+
 export const EventTableBody: React.FC<Props> = ({
-  setOpenModal,
+  event_id,
   name,
   date,
   topic,
   zoomLink,
+  assign1,
+  assign2,
+  assign3,
+  assignment_submitted,
+  attendance_attended,
+  pr_submitted,
 }) => {
-  const past = date <= new Date() ? true : false;
+  const isPast: boolean = date <= new Date();
+  const assignmentColour: string = assignment_submitted
+    ? "bg-violet-900"
+    : "bg-red-500";
+
   return (
     <TableRow>
       <TableCell>
@@ -38,87 +79,72 @@ export const EventTableBody: React.FC<Props> = ({
             <span className="text-gray-400">
               {date.toLocaleDateString(undefined, options)}
             </span>
-            <span className="ml-7">
-              <a href={"#"}>See Project details</a>
-            </span>
+            <EventDetailModal
+              name={name}
+              topic={topic}
+              date={date}
+              assign1={assign1}
+              assign2={assign2}
+              assign3={assign3}
+            />
           </Row>
         </Col>
       </TableCell>
       <TableCell>
-        <CheckIcon></CheckIcon>
+        {pr_submitted ? (
+          <CheckToolTip text="Submit" />
+        ) : (
+          <XToolTip text="Unsubmit" />
+        )}
+      </TableCell>
+      <TableCell>
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center justify-center text-center">
+          {isPast ? (
+          <Button disabled className={`${assignmentColour} w-20`}>
+            {assignment_submitted
+              ? BUTTONS.BUTTON_SUBMITTED
+              : BUTTONS.BUTTON_UNSUBMITTED}
+          </Button>
+        ) : (
+          <SubmitAssignmentModal
+            eventID={event_id}
+            submitted={assignment_submitted}
+          ></SubmitAssignmentModal>
+        )}
+        </div>
+        
+      </TableCell>
+      <TableCell>
+        {" "}
+        <div className="flex items-center justify-center text-center">
+          <Button
+            className="bg-violet-900 w-20"
+            disabled={isPast}
+            onClick={() => {
+              onClickSelfCheckin(attendance_attended, USER_ID, event_id);
+            }}
+          >
+            {attendance_attended && !isPast
+              ? BUTTONS.BUTTON_UNCHECK
+              : BUTTONS.BUTTON_CHECK}
+          </Button>
+        </div>
       </TableCell>
       <TableCell>
         {" "}
         <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => setOpenModal(true)}
+          className="bg-transparent border-none p-0 font-bold text-black hover:font-black hover:bg-transparent w-20"
+          disabled={isPast}
+          onClick={() => {
+            window.open(zoomLink as string, "_blank");
+          }}
         >
-          Submit
-        </Button>
-      </TableCell>
-      <TableCell>
-        {" "}
-        <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => console.log("Check")}
-        >
-          Check
-        </Button>
-      </TableCell>
-      <TableCell>
-        {" "}
-        <Button
-          className="bg-violet-900 w-20"
-          disabled={past}
-          onClick={() => console.log("ZoomLink")}
-        >
-          Join
+          {BUTTONS.BUTTON_JOIN}
         </Button>
       </TableCell>
     </TableRow>
-  );
-};
-
-const CheckIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#00C389" />
-      <path
-        d="M8.75 12.25L10.75 14.25L15.25 9.75"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-};
-
-const XIcon = (props: any) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <circle cx="12" cy="12" r="12" fill="#FF5E57" />
-      <path
-        d="M15 9L9 15M9 9L15 15"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 };

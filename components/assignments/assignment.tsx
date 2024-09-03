@@ -1,45 +1,41 @@
+"use client"
+import { retrieveSubmissionsByEventID } from "@/lib/actions/submission";
 import { AssignmentCard } from "./assignmentCard";
 import { useEffect, useState } from "react";
+import { SubmissionUserNameType } from "@/types/submission";
 
-// TODO: Fetch submission list
-const tempAssignments = [
-  {
-    submissionId: "1",
-    userName: "Chulsu",
-    date: new Date(2024, 7, 15),
-    title: "Two Sum",
-    content: "blah blah"
-  },
-  {
-    submissionId: "2",
-    userName: "Mangu",
-    date: new Date(2024, 7, 15),
-    title: "Task Scheduler",
-    content: "blah blah"
-  },
-  {
-    submissionId: "3",
-    userName: "Zzanggu",
-    date: new Date(2024, 7, 15),
-    title: "Find The Town Judge",
-    content: "blah blah"
-  },
-  {
-    submissionId: "4",
-    userName: "Yuri",
-    date: new Date(2024, 7, 15),
-    title: "Two Sum2",
-    content: "blah blah"
-  },
+export const Assignment = ({ eventId }: { eventId: number }) => {
+  const [assignments, setAssignments ] = useState([] as SubmissionUserNameType[]);
 
-];
+  useEffect(()=> {
+    const fetchAssignments = async () => {
+      const response = await retrieveSubmissionsByEventID(eventId);
+      setAssignments(response);
+    };
+    if (eventId != -1) {
+      fetchAssignments();
+    }
+  }, [eventId]);
 
-export const Assignment = () => {
   return (
-    <div className="lg:h-[80vh] md:h-[45vh] overflow-y-auto">
-      {tempAssignments.map((assignment) => (
-        <AssignmentCard key={assignment.submissionId} userName={assignment.userName} date={assignment.date} title={assignment.title} content={assignment.content}></AssignmentCard>
-      ))}
-    </div>
+    <>
+      {eventId != -1 ? (
+        <div className="lg:h-[70vh] md:h-[45vh] overflow-y-auto">
+          {assignments.map((assignment) => (
+            <AssignmentCard
+              key={assignment.submission_id}
+              userName={assignment.user_name}
+              date={assignment.date}
+              title={assignment.title}
+              content={assignment.content}
+            ></AssignmentCard>
+          ))}
+        </div>
+      ) : (
+        <div className="flex text-xl items-center justify-center h-[70vh]">
+          No event has been created yet.
+        </div>
+      )}
+    </>
   );
 };

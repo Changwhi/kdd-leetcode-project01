@@ -1,4 +1,4 @@
-export const CONSTANTS = {
+export const SIDEBAR_CONSTANTS = {
   AVATAR_ALT: "User Avatar",
   USER_NAME: "Chul Su",
   USER_ROLE: "User",
@@ -12,4 +12,6 @@ export const CONSTANTS = {
   SETTINGS_DISABLED: "block text-lg text-muted-foreground opacity-50 cursor-not-allowed",
   LINK_ACTIVE: "block text-lg font-bold text-white",
   LINK_INACTIVE: "block text-lg font-bold text-gray-500",
+  LOGOUT_BUTTON: "Logout",
+  BACK_BUTTON: "Group Page",
 };

@@ -1,58 +1,21 @@
-"use client";
+"use server";
 
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/text/landing";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
+import { createUser, retrieveUser } from "@/lib/actions/user";
+import Header from "@/components/header";
 
-export default function Home() {
-  const { user, error } = useUser();
-  
-  if (error) return <div>{error.message}</div>;
-  console.log(user)
+export default async function Home() {
+  const session = await getSession();
+  const user = session?.user;
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
-        <Link
-          href="#"
-          className="flex items-center justify-center"
-          prefetch={false}
-        >
-          <BookOpenIcon className="h-6 w-6" />
-          <span className="sr-only">{CONSTANTS.HEADER_TITLE}</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link
-            href="#"
-            className="text-sm font-medium hover:underline underline-offset-4"
-            prefetch={false}
-          >
-            {CONSTANTS.ABOUT_US}
-          </Link>
-          {!user && (
-            <button className="text-sm font-medium hover:underline underline-offset-4">
-              <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
-            </button>
-          )}
-          {user && (
-            <>
-              <Link
-                href="/dashboard"
-                className="text-sm font-medium hover:underline underline-offset-4"
-                prefetch={false}
-              >
-                {CONSTANTS.DASHBOARD}
-              </Link>
-              <button className="text-sm font-medium hover:underline underline-offset-4">
-                <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
-              </button>
-            </>
-          )}
-        </nav>
-      </header>
+      <Header user={user} />
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-32 border-y">
           <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
@@ -70,19 +33,20 @@ export default function Home() {
                     className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
-                    {CONSTANTS.CREATE_GROUP}
+                    {CONSTANTS.LETS_START}
                   </Link>
-                  <Link
+                  {/* <Link
                     href="#"
                     className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
                     {CONSTANTS.JOIN_GROUP}
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
               <div className="flex justify-center">
                 <Image
+                  priority
                   src="/landing1.png"
                   alt="Landing Page"
                   width={400}
@@ -207,25 +171,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  );
-}
-
-function BookOpenIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
-      <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
-    </svg>
   );
 }
