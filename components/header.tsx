@@ -10,7 +10,6 @@ export default function Header({ user }: any) {
 
   return (
     <header className="text-sm px-4 lg:px-6 h-14 flex items-center">
-
       <Link
         href="#"
         className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
@@ -22,7 +21,7 @@ export default function Header({ user }: any) {
         <span className="sr-only">{CONSTANTS.HEADER_TITLE}</span>
       </Link>
       <nav className="ml-auto flex gap-4 sm:gap-6">
- <Link
+        <Link
           href="/"
           className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
             path == "/" && "text-primary font-bold"
@@ -40,7 +39,7 @@ export default function Header({ user }: any) {
         >
           Group
         </Link>
-        <Link
+        {/* <Link
           href="#"
           className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
             path == "/aboutus" && "text-primary font-bold"
@@ -48,52 +47,41 @@ export default function Header({ user }: any) {
           prefetch={false}
         >
           {CONSTANTS.ABOUT_US}
-        </Link>
+        </Link> */}
         {!user && (
           <button className="text-sm font-medium hover:underline underline-offset-4">
             <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
           </button>
         )}
         {user && (
-          <>
-            <Link
-              href="/dashboard"
-              className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
-                path == "/dashboard" && "text-primary font-bold"
-              }`}
-              prefetch={false}
-            >
-              {CONSTANTS.DASHBOARD}
-            </Link>
             <button className="text-sm font-medium hover:underline underline-offset-4">
               <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
             </button>
-          </>
         )}
       </nav>
     </header>
   );
 }
 
-function HamburgerIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth="1.5"
-      stroke="currentColor"
-      className="w-6 h-6"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3.75 5.25h16.5m-16.5 6.75h16.5m-16.5 6.75h16.5"
-      />
-    </svg>
-  );
-}
+// function HamburgerIcon(props: any) {
+//   return (
+//     <svg
+//       {...props}
+//       xmlns="http://www.w3.org/2000/svg"
+//       fill="none"
+//       viewBox="0 0 24 24"
+//       strokeWidth="1.5"
+//       stroke="currentColor"
+//       className="w-6 h-6"
+//     >
+//       <path
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//         d="M3.75 5.25h16.5m-16.5 6.75h16.5m-16.5 6.75h16.5"
+//       />
+//     </svg>
+//   );
+// }
 
 function BookOpenIcon(props: any) {
   return (
