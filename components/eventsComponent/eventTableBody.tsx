@@ -32,10 +32,11 @@ const options: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+const ATTENDANCE_STATUS: Record<0 | 1 | 2 | 3, JSX.Element> = {
   0: <XToolTip text="Absent" />,
-  1: <ExclamationToolTip text="Self-Checkin" />,
-  2: <CheckToolTip text="Attend" />,
+  1: <XToolTip text="Self_checkin" />,
+  2: <ExclamationToolTip text="Late" />,
+  3: <CheckToolTip text="Attend" />,
 };
 
 const onClickSelfCheckin = async (
@@ -98,7 +99,7 @@ export const EventTableBody: React.FC<Props> = ({
         )}
       </TableCell>
       <TableCell>
-        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2 | 3]}
       </TableCell>
       <TableCell>
         <div className="flex items-center justify-center text-center">
@@ -122,12 +123,12 @@ export const EventTableBody: React.FC<Props> = ({
         <div className="flex items-center justify-center text-center">
           <Button
             className="bg-violet-900 w-20"
-            disabled={isPast}
+            disabled={isPast || [2, 3].includes(attendance_attended)}
             onClick={() => {
               onClickSelfCheckin(attendance_attended, USER_ID, event_id);
             }}
           >
-            {attendance_attended && !isPast
+            {attendance_attended === 1 && !isPast
               ? BUTTONS.BUTTON_UNCHECK
               : BUTTONS.BUTTON_CHECK}
           </Button>
