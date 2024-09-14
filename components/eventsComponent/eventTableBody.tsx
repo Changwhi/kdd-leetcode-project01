@@ -40,7 +40,11 @@ const ATTENDANCE_STATUS: Record<0 | 1 | 2 | 3, JSX.Element> = {
   3: <CheckToolTip text="Attend" />,
 };
 
-const onClickSelfCheckin = async (exist: number, user_email:string|null|undefined, event_id: number) => {
+const onClickSelfCheckin = async (
+  exist: number,
+  user_email: string | null | undefined,
+  event_id: number
+) => {
   if (user_email) {
     if (exist) {
       await deleteAttendanceWithUserEmail(user_email, event_id);
