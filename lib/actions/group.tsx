@@ -122,13 +122,17 @@ export const createGroup = async ({
   const max_participants = formData.get("maxParticipants");
   const attendance_deduction = formData.get("attendanceDeduction");
   const assignment_deduction = formData.get("assignmentDeduction");
+  const total_deposit = formData.get("totalDeposit");
+  const initial_deduction = formData.get("initialDeduction");
 
   try {
     const response = await sql`
-    INSERT INTO "group" (name, description, max_participants, attendance_deduction, assignment_deduction)
+    INSERT INTO "group" (name, description, max_participants, attendance_deduction, assignment_deduction, total_deposit,init_deduction)
     VALUES (${name as string}, ${description as string}, ${
       max_participants as string
-    }, ${attendance_deduction as string}, ${assignment_deduction as string})
+    }, ${attendance_deduction as string}, ${assignment_deduction as string}, ${
+      total_deposit as string
+    }, ${initial_deduction as string})
     RETURNING group_id
     `;
     const newGroupId = response[0]?.group_id;
