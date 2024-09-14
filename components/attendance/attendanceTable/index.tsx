@@ -16,6 +16,7 @@ import { AttendanceType } from "@/types/attendance";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { ERROR } from "@/text/error";
 import { PR } from "@/types/pr";
+import { DropdownButton } from "./dropdownButton";
 
 /**
  * AttendanceTable
@@ -169,6 +170,9 @@ export const AttendanceTable = ({
                   {ATTENDANCE.ABSENT}
                 </Button>
               )}
+            </TableCell>
+            <TableCell>
+              <DropdownButton user_id={info.user_id} event_id={info.event_id} />
             </TableCell>
           </TableRow>
         ))}
