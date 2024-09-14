@@ -117,3 +117,57 @@ export const retrieveEventsbyEventAndUser = async (
     return [];
   }
 };
+
+/**
+ * Retrieve all events data along with the given group_id in database
+ *
+ * @param eventIds - a event id as an int
+ * @param userEmail -a user email as a string
+ * @returns An array of users data if users exist, otherwise an empty array
+ */
+export const retrieveEventsbyEventAndUserEmail = async (
+  eventIds: number[],
+  userEmail: string
+): Promise<EventAttendacePrType[]> => {
+  try {
+    const response: EventAttendacePrType[] = await sql`SELECT
+    e.event_id,
+    e.name,
+    e.date,
+    e.topic,
+    e.zoomlink,
+    e.assign1,
+    e.assign2,
+    e.assign3,
+    CASE
+        WHEN s.event_id IS NOT NULL THEN TRUE
+        ELSE FALSE
+    END AS assignment_submitted,
+    CASE
+        WHEN at.event_id IS NULL THEN 0
+        ELSE at.attended
+    END AS attendance_attended,
+    CASE
+        WHEN PR.submitted = TRUE THEN TRUE
+        ELSE FALSE
+    END AS pr_submitted
+    FROM event e
+    LEFT JOIN "user" u ON u.email = ${userEmail}
+    LEFT JOIN
+        Submission s ON s.user_id= u.user_id AND e.event_id = s.event_id
+    LEFT JOIN
+        Attendance at ON at.user_id = u.user_id AND e.event_id = at.event_id
+    LEFT JOIN
+        PR ON PR.user_id = u.user_id AND e.event_id = PR.event_id
+    WHERE
+        e.event_id IN ${sql(eventIds)}
+    ORDER BY date DESC`;
+    if (response) {
+      return response;
+    }
+    return [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
