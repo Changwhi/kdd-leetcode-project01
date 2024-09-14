@@ -7,11 +7,12 @@ import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
 import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
-import { createAttendance, deleteAttendance } from "@/lib/actions/attendance";
+import {
+  createAttendanceWithUserEmail,
+  deleteAttendanceWithUserEmail,
+} from "@/lib/actions/attendance";
 import { EventDetailModal } from "./event-detail-modal";
-
-//TODO: hardcoded, to be changed
-const USER_ID = 2;
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface Props {
   event_id: number;
@@ -32,21 +33,24 @@ const options: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+const ATTENDANCE_STATUS: Record<0 | 1 | 2 | 3, JSX.Element> = {
   0: <XToolTip text="Absent" />,
-  1: <ExclamationToolTip text="Self-Checkin" />,
-  2: <CheckToolTip text="Attend" />,
+  1: <XToolTip text="Self_checkin" />,
+  2: <ExclamationToolTip text="Late" />,
+  3: <CheckToolTip text="Attend" />,
 };
 
 const onClickSelfCheckin = async (
   exist: number,
-  userId: number,
+  user_email: string | null | undefined,
   event_id: number
 ) => {
-  if (exist) {
-    await deleteAttendance(userId, event_id);
-  } else {
-    await createAttendance(userId, event_id);
+  if (user_email) {
+    if (exist) {
+      await deleteAttendanceWithUserEmail(user_email, event_id);
+    } else {
+      await createAttendanceWithUserEmail(user_email, event_id);
+    }
   }
 };
 
@@ -63,6 +67,8 @@ export const EventTableBody: React.FC<Props> = ({
   attendance_attended,
   pr_submitted,
 }) => {
+  const { user } = useUser();
+  const userEmail = user?.email;
   const isPast: boolean = date <= new Date();
   const assignmentColour: string = assignment_submitted
     ? "bg-violet-900"
@@ -98,36 +104,35 @@ export const EventTableBody: React.FC<Props> = ({
         )}
       </TableCell>
       <TableCell>
-        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2 | 3]}
       </TableCell>
       <TableCell>
         <div className="flex items-center justify-center text-center">
           {isPast ? (
-          <Button disabled className={`${assignmentColour} w-20`}>
-            {assignment_submitted
-              ? BUTTONS.BUTTON_SUBMITTED
-              : BUTTONS.BUTTON_UNSUBMITTED}
-          </Button>
-        ) : (
-          <SubmitAssignmentModal
-            eventID={event_id}
-            submitted={assignment_submitted}
-          ></SubmitAssignmentModal>
-        )}
+            <Button disabled className={`${assignmentColour} w-20`}>
+              {assignment_submitted
+                ? BUTTONS.BUTTON_SUBMITTED
+                : BUTTONS.BUTTON_UNSUBMITTED}
+            </Button>
+          ) : (
+            <SubmitAssignmentModal
+              eventID={event_id}
+              submitted={assignment_submitted}
+            ></SubmitAssignmentModal>
+          )}
         </div>
-        
       </TableCell>
       <TableCell>
         {" "}
         <div className="flex items-center justify-center text-center">
           <Button
             className="bg-violet-900 w-20"
-            disabled={isPast}
+            disabled={isPast || [2, 3].includes(attendance_attended)}
             onClick={() => {
-              onClickSelfCheckin(attendance_attended, USER_ID, event_id);
+              onClickSelfCheckin(attendance_attended, userEmail, event_id);
             }}
           >
-            {attendance_attended && !isPast
+            {attendance_attended === 1 && !isPast
               ? BUTTONS.BUTTON_UNCHECK
               : BUTTONS.BUTTON_CHECK}
           </Button>

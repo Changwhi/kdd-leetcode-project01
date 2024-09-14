@@ -2,6 +2,7 @@ import { Edit } from "lucide-react";
 
 export const EVENTS = {
   UPCOMINGEVENTS: "Upcoming events",
+  HISTORYEVENTS: "Past events",
   PASEDEVENTS: "Past events",
   ADDNEWEVENT: "Add a new event",
   CREATENEWEVENT: "Create a new event",

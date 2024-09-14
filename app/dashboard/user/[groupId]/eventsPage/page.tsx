@@ -8,11 +8,15 @@ export default async function EventPage({
   params: { groupId: string };
 }) {
   return (
-    <>
+    <div className="max-h-[80vh] overflow-y-auto">
       <h2 className="text-lg font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
-      <div className="space-y-4 mt-4">
-        <EventTable group_id={Number(params.groupId)}></EventTable>
+      <div className="space-y-4">
+        <EventTable group_id={Number(params.groupId)} history={true}></EventTable>
       </div>
-    </>
+      <h2 className="text-lg font-bold mt-10">{EVENTS.HISTORYEVENTS}</h2>
+      <div className="space-y-4">
+        <EventTable group_id={Number(params.groupId)} history={false}></EventTable>
+      </div>
+    </div>
   );
 }
