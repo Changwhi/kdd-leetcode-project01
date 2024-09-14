@@ -10,12 +10,10 @@ import { EVENTS_USER } from "@/text/events";
 import { EventTableBody } from "./eventTableBody";
 import {
   retrieveUpcomingEventsIdByGroup,
-  retrieveEventsbyEventAndUser,
   retrievePastEventsIdByGroup,
+  retrieveEventsbyEventAndUserEmail
 } from "@/lib/actions/eventUser";
-
-// TODO: Change user ID, it is now hardcoded
-const USER_ID = 2;
+import { getSession } from '@auth0/nextjs-auth0';
 
 export const EventTable = async ({
   group_id,
@@ -24,10 +22,12 @@ export const EventTable = async ({
   group_id: number;
   history: boolean;
 }) => {
+  const session = await getSession();
+  const user_email = session?.user.email;
   const allEventID = history
     ? await retrieveUpcomingEventsIdByGroup(group_id)
     : await retrievePastEventsIdByGroup(group_id);
-  const allEvents = await retrieveEventsbyEventAndUser(allEventID, USER_ID);
+  const allEvents = await retrieveEventsbyEventAndUserEmail(allEventID, user_email);
 
   return (
     <div className="max-h-[60vh] overflow-y-auto">
