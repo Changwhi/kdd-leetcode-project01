@@ -24,6 +24,48 @@ export const retrieveAllEventsIdByGroup = async (
 };
 
 /**
+ * Retrieve upcoming events data along with the given group_id in database
+ *
+ * @param groupId - a group_id as an int
+ * @returns An array of users data if users exist, otherwise an empty array
+ */
+export const retrieveUpcomingEventsIdByGroup = async (
+  groupId: number
+): Promise<number[]> => {
+  try {
+    const response: EventIdType[] = await sql`SELECT event_id 
+    FROM event 
+    WHERE group_id = ${groupId} AND date >= NOW()`;
+    const eventIds: number[] = response.map((event: { event_id: number }) => event.event_id);
+    return eventIds;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+/**
+ * Retrieve past events data along with the given group_id in database
+ *
+ * @param groupId - a group_id as an int
+ * @returns An array of users data if users exist, otherwise an empty array
+ */
+export const retrievePastEventsIdByGroup = async (
+  groupId: number
+): Promise<number[]> => {
+  try {
+    const response: EventIdType[] = await sql`SELECT event_id 
+    FROM event 
+    WHERE group_id = ${groupId} AND date < NOW()`;
+    const eventIds: number[] = response.map((event: { event_id: number }) => event.event_id);
+    return eventIds;
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+/**
  * Retrieve all events data along with the given group_id in database
  *
  * @param eventIds - a event id as an int
