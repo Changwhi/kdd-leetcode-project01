@@ -10,7 +10,7 @@ import { SelectedEvent } from "./selectedEvent";
 import { CalendarTool } from "./calendar";
 import { EventProvider } from "@/lib/context/selectedEventContext";
 
-export const Summary = async ({ group_id }: { group_id: number}) => {
+export const Summary = async ({ group_id, admin }: { group_id: number, admin:boolean}) => {
   const users = await retrieveAllUsers({ group_id });
   const events = await retrieveEvents( group_id );
   const eventdates = events.map((event) => new Date(event.date));
@@ -33,7 +33,7 @@ export const Summary = async ({ group_id }: { group_id: number}) => {
           </div>
           <div className="mt-6">
             <h1 className="text-base font-semibold">{SUMMARY.EVENT_TITLE}</h1>
-            <SelectedEvent givenEvents={events} group_id={group_id}/>
+            <SelectedEvent givenEvents={events} group_id={group_id} admin={admin}/>
           </div>
         </main>
         <aside className="basis-1/4 w-1/2 xl:w-80 bg-slate-50 p-6 rounded-xl">

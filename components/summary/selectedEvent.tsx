@@ -17,7 +17,15 @@ import moment from "moment";
 import { SUMMARY } from "@/text/summary";
 import { EventCard } from "../admin/events/event-card";
 
-export const SelectedEvent = ({ givenEvents, group_id }: { givenEvents: EventType[], group_id:number }) => {
+export const SelectedEvent = ({
+  givenEvents,
+  group_id,
+  admin,
+}: {
+  givenEvents: EventType[];
+  group_id: number;
+  admin: boolean;
+}) => {
   const { selectedDate } = useEventContext();
   const [events, setEvents] = useState<EventType[]>([]);
 
@@ -43,6 +51,7 @@ export const SelectedEvent = ({ givenEvents, group_id }: { givenEvents: EventTyp
               topic={event.topic}
               zoomlink={event.zoomlink}
               group_id={group_id}
+              admin={admin}
               assign1={event.assign1}
               assign2={event.assign2}
               assign3={event.assign3}
