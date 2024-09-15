@@ -13,7 +13,7 @@ export default function Dashboard({
   return (
     <div className="flex min-h-screen">
       <Sidebar admin={admin} groupId={groupId}/>
-      <main className="flex-1 bg-white my-5 mr-5 p-10 rounded-2xl">{children}</main>;
+      <main className="flex-1 max-h-[95vh] overflow-y-auto bg-white my-5 mr-5 p-10 rounded-2xl">{children}</main>;
     </div>
   );
 }
