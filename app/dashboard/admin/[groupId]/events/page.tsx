@@ -42,6 +42,7 @@ export default async function Events({
                 assign1={event.assign1}
                 assign2={event.assign2}
                 assign3={event.assign3}
+                admin={true}
               />
             ))}
           </div>
@@ -62,6 +63,7 @@ export default async function Events({
                 assign1={event.assign1}
                 assign2={event.assign2}
                 assign3={event.assign3}
+                admin={true}
               />
             ))}
           </div>
