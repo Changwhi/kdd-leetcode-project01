@@ -12,10 +12,10 @@ export default async function JoinPage() {
       <main className="max-w-2xl mx-auto text-center">
         <h1 className="text-4xl font-bold mb-6">Join Our Community</h1>
         <p className="text-xl mb-8">
-          Welcome to our vibrant community! We're excited to have you join us on
+          Welcome to our vibrant community! We&apos;re excited to have you join us on
           this journey. Our platform offers a space for collaboration, learning,
-          and growth. Whether you're a seasoned professional or just starting
-          out, there's a place for you here.
+          and growth. Whether you&apos;re a seasoned professional or just starting
+          out, there&apos;s a place for you here.
         </p>
         {isMember ? (
           // Render a disabled button indicating the user is already a member
