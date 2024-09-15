@@ -4,6 +4,7 @@ export const SIDEBAR_CONSTANTS = {
   USER_ROLE: "User",
   USER_EMAIL: "samantha@email.com",
   SUMMARY: "Summary",
+  INSTRUCTION: "Instruction",
   ATTENDANCE: "Attendance",
   EVENTS: "Events",
   ASSIGNMENTS: "Assignments",
