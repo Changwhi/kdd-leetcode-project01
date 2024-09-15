@@ -15,7 +15,6 @@ export const createInstruction = async (formData: InstructionCardProps) => {
       INSERT INTO instruction (content, date, group_id)
       VALUES (${content}, NOW(), ${group_id})
     `;
-    revalidatePath(`/dashboard/admin/${group_id}/instruction`);
   } catch (error) {
     console.log(error);
   }
@@ -34,7 +33,6 @@ export const updateInstruction = async (formData: InstructionCardProps) => {
       SET date=NOW(), content=${content}
       WHERE group_id=${group_id}
     `;
-    revalidatePath(`/dashboard/admin/${group_id}/instruction`);
   } catch (error) {
     console.log(error);
   }

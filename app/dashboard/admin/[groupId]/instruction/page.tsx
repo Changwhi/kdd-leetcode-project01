@@ -1,17 +1,9 @@
-"use server";
-import { INSTRUCTION } from "@/text/instruction";
+import { Instruction } from "@/components/instruction";
 
-export default async function EventPage({
+export default function InstructionPage({
   params,
 }: {
   params: { groupId: string };
 }) {
-  return (
-    <div>
-      <h2 className="text-lg font-bold">{INSTRUCTION.INSTRUCTION_TITLE}</h2>
-      <div className="space-y-4">
-        
-      </div>
-    </div>
-  );
+  return <Instruction group_id={Number(params.groupId)} admin={true}/>
 }
