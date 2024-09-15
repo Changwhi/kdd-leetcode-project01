@@ -35,6 +35,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   assign2,
   assign3,
   group_id,
+  admin
 }) => {
   const formattedDate = date.toISOString().split("T")[0];
   const [eventName, setEventName] = useState(name);
@@ -45,15 +46,15 @@ export const EventCard: React.FC<EventCardProps> = ({
   const [eventAssign2, setEventAssign2] = useState(assign2);
   const [eventAssign3, setEventAssign3] = useState(assign3);
 
-    const formatDateTime = (date: Date) => {
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+  const formatDateTime = (date: Date) => {
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
-    
+
     let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const ampm = hours >= 12 ? 'pm' : 'am';
-    
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
+
     hours = hours % 12 || 12;
 
     return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
@@ -122,128 +123,130 @@ export const EventCard: React.FC<EventCardProps> = ({
         >
           {EVENTS.LINK}
         </Link>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline" size={"sm"}>
-              {EVENTS.EDIT}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit le</DialogTitle>
-              <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
-            </DialogHeader>
-            <form
-              className="space-y-4"
-              action={async (formData: FormData) => {
-                await updateEvent({
-                  name: eventName,
-                  date: eventDate,
-                  topic: eventTopic,
-                  zoomlink: eventZoomlink,
-                  group_id: group_id,
-                  event_id: event_id,
-                  assign1: eventAssign1,
-                  assign2: eventAssign2,
-                  assign3: eventAssign3,
-                });
-              }}
-            >
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="title" className="text-right">
-                    {EVENTS.TITLE}
-                  </Label>
-                  <Input
-                    id="title"
-                    value={eventName}
-                    onChange={(e) => setEventName(e.target.value)}
-                    className="col-span-3"
-                    name="name"
-                  />
-                </div>
+        {admin && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size={"sm"}>
+                {EVENTS.EDIT}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Edit</DialogTitle>
+                <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
+              </DialogHeader>
+              <form
+                className="space-y-4"
+                action={async (formData: FormData) => {
+                  await updateEvent({
+                    name: eventName,
+                    date: eventDate,
+                    topic: eventTopic,
+                    zoomlink: eventZoomlink,
+                    group_id: group_id,
+                    event_id: event_id,
+                    assign1: eventAssign1,
+                    assign2: eventAssign2,
+                    assign3: eventAssign3,
+                  });
+                }}
+              >
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="title" className="text-right">
+                      {EVENTS.TITLE}
+                    </Label>
+                    <Input
+                      id="title"
+                      value={eventName}
+                      onChange={(e) => setEventName(e.target.value)}
+                      className="col-span-3"
+                      name="name"
+                    />
+                  </div>
 
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="date" className="text-right">
-                    {EVENTS.DATE}
-                  </Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={eventDate}
-                    onChange={(e) => setEventDate(e.target.value)}
-                    className="col-span-3"
-                  />
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="date" className="text-right">
+                      {EVENTS.DATE}
+                    </Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={eventDate}
+                      onChange={(e) => setEventDate(e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="topic" className="text-right">
+                      {EVENTS.TOPIC}
+                    </Label>
+                    <Input
+                      id="topic"
+                      value={eventTopic}
+                      onChange={(e) => setEventTopic(e.target.value)}
+                      className="col-span-3"
+                      name="topic"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="zoomlink" className="text-right">
+                      {EVENTS.ZOOMLINK}
+                    </Label>
+                    <Input
+                      id="zoomlink"
+                      value={eventZoomlink}
+                      onChange={(e) => setEventZoomlink(e.target.value)}
+                      className="col-span-3"
+                      name="zoomlink"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="assign1" className="text-right">
+                      {EVENTS.ASSGINMENT_1}
+                    </Label>
+                    <Input
+                      id="assign1"
+                      value={eventAssign1}
+                      onChange={(e) => setEventAssign1(e.target.value)}
+                      className="col-span-3"
+                      name="assign1"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="assign2" className="text-right">
+                      {EVENTS.ASSGINMENT_2}
+                    </Label>
+                    <Input
+                      id="assign2"
+                      value={eventAssign2}
+                      onChange={(e) => setEventAssign2(e.target.value)}
+                      className="col-span-3"
+                      name="assign2"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="assign3" className="text-right">
+                      {EVENTS.ASSGINMENT_3}
+                    </Label>
+                    <Input
+                      id="assign3"
+                      value={eventAssign3}
+                      onChange={(e) => setEventAssign3(e.target.value)}
+                      className="col-span-3"
+                      name="assign3"
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="topic" className="text-right">
-                    {EVENTS.TOPIC}
-                  </Label>
-                  <Input
-                    id="topic"
-                    value={eventTopic}
-                    onChange={(e) => setEventTopic(e.target.value)}
-                    className="col-span-3"
-                    name="topic"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="zoomlink" className="text-right">
-                    {EVENTS.ZOOMLINK}
-                  </Label>
-                  <Input
-                    id="zoomlink"
-                    value={eventZoomlink}
-                    onChange={(e) => setEventZoomlink(e.target.value)}
-                    className="col-span-3"
-                    name="zoomlink"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="assign1" className="text-right">
-                    {EVENTS.ASSGINMENT_1}
-                  </Label>
-                  <Input
-                    id="assign1"
-                    value={eventAssign1}
-                    onChange={(e) => setEventAssign1(e.target.value)}
-                    className="col-span-3"
-                    name="assign1"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="assign2" className="text-right">
-                    {EVENTS.ASSGINMENT_2}
-                  </Label>
-                  <Input
-                    id="assign2"
-                    value={eventAssign2}
-                    onChange={(e) => setEventAssign2(e.target.value)}
-                    className="col-span-3"
-                    name="assign2"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="assign3" className="text-right">
-                    {EVENTS.ASSGINMENT_3}
-                  </Label>
-                  <Input
-                    id="assign3"
-                    value={eventAssign3}
-                    onChange={(e) => setEventAssign3(e.target.value)}
-                    className="col-span-3"
-                    name="assign3"
-                  />
-                </div>
-              </div>
-              <DialogClose asChild>
-                <DialogFooter>
-                  <Button type="submit">{EVENTS.SAVE}</Button>
-                </DialogFooter>
-              </DialogClose>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <DialogClose asChild>
+                  <DialogFooter>
+                    <Button type="submit">{EVENTS.SAVE}</Button>
+                  </DialogFooter>
+                </DialogClose>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
       </CardFooter>
     </Card>
   );
