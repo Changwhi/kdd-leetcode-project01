@@ -1,6 +1,6 @@
 "use client";
 import { Card } from "@/components/ui/card";
-import { ATTENDANCE} from "@/text/attendance";
+import { ATTENDANCE } from "@/text/attendance";
 import { useEffect, useState } from "react";
 import { AttendanceTable } from "@/components/attendance/attendanceTable";
 import { ParticipantsIcon } from "@/components/attendance/icons/participantsIcon";
@@ -16,7 +16,7 @@ import { group } from "console";
 
 /**
  * Attendance
- * 
+ *
  * This component displays the attendance list for a selected event.
  * The component also displays the total number of participants, the number of people who attended, and the number of people who were absent.
  * The component retrieves the data from the database and displays it in a table.
@@ -32,8 +32,10 @@ import { group } from "console";
  * The component is a part of the Next.js pages directory and is rendered on the server-side.
  */
 export default function Attendance({
-  params}: {params: {groupId: string}}) {
-
+  params,
+}: {
+  params: { groupId: string };
+}) {
   const { toast } = useToast();
   const [selectedEvent, setSelectedEvent] = useState<EventType>();
   const [events, setEvents] = useState<EventType[]>([]);
@@ -45,7 +47,10 @@ export default function Attendance({
   useEffect(() => {
     const fetchData = async ({ event_id }: { event_id: number }) => {
       try {
-        const response = await retrieveAttendance({ event_id: event_id, group_id: Number(params.groupId) });
+        const response = await retrieveAttendance({
+          event_id: event_id,
+          group_id: Number(params.groupId),
+        });
         if (!response) {
           setAttendance([]);
           return;
@@ -93,13 +98,16 @@ export default function Attendance({
                   </h3>
                 </div>
                 <p className="pt-3 text-center text-base font-semibold">
-                  {attendance.length}{ATTENDANCE.PEOPLE}
+                  {attendance.length}
+                  {ATTENDANCE.PEOPLE}
                 </p>
               </Card>
               <Card className="w-40 p-4 ">
                 <div className="flex gap-2 items-center">
                   <AttendedIcon />
-                  <h3 className="text-xs text-muted-foreground">{ATTENDANCE.ATTEND}</h3>
+                  <h3 className="text-xs text-muted-foreground">
+                    {ATTENDANCE.ATTEND}
+                  </h3>
                 </div>
                 <p className="pt-3 text-center text-base font-semibold">
                   {attendance.filter((member) => member.attended === 1).length}{" "}
@@ -109,7 +117,9 @@ export default function Attendance({
               <Card className="w-40 p-4 ">
                 <div className="flex gap-2 items-center">
                   <AbsentIcon />
-                  <h3 className="text-xs text-muted-foreground">{ATTENDANCE.ABSENT}</h3>
+                  <h3 className="text-xs text-muted-foreground">
+                    {ATTENDANCE.ABSENT}
+                  </h3>
                 </div>
                 <p className="pt-3 text-left text-base font-semibold">
                   {attendance.length -
@@ -121,7 +131,10 @@ export default function Attendance({
             </div>
           </div>
         </div>
-        <AttendanceTable event_id={selectedEvent?.event_id} group_id={Number(params.groupId)} />
+        <AttendanceTable
+          event_id={selectedEvent?.event_id}
+          group_id={Number(params.groupId)}
+        />
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
         <div className="mb-6">
@@ -130,7 +143,11 @@ export default function Attendance({
             {events.map((event, index) => (
               <Card
                 key={index}
-                className="p-4 hover:bg-slate-300 hover:cursor-pointer"
+                className={`p-4 hover:bg-slate-300 hover:cursor-pointer ${
+                  selectedEvent?.event_id === event.event_id
+                    ? "bg-blue-100"
+                    : ""
+                }`}
                 onClick={() => handleEvent(event)}
               >
                 <h1 className="text-lg font-semibold">{event.name}</h1>

@@ -218,3 +218,43 @@ export const setPR = async ({
     return false;
   } 
 }
+
+  /**
+   * Force attendance status for a user in a specific event.
+   *
+   * @param {number} user_id - The ID of the user to set the attendance status for.
+   * @param {number} event_id - The ID of the event to set the attendance status for.
+   * @param {number} attendance_status - The desired attendance status (0=absent, 1=attended, 2=late).
+   * @return {boolean} True if the attendance status was set successfully, false otherwise.
+   */
+export const forceAttendance = async ({
+  user_id,
+  event_id,
+  attendance_status,
+}: {
+  user_id: number;
+  event_id: number;
+  attendance_status: number;
+}) => {
+    try{
+    console.log(user_id, event_id);
+    const user_event_check: AttendanceType[] = await sql`
+    select attended
+    from attendance
+    where event_id = ${event_id} and user_id = ${user_id}
+    `;
+    if (user_event_check == null) {
+      throw new Error("User not found in event");
+    }
+
+    await sql`
+    update attendance
+    set attended = ${attendance_status}
+    where event_id = ${event_id} and user_id = ${user_id}
+    `;
+    return true;
+  } catch (error: any) {
+    console.log(error);
+    return false;
+  }
+};

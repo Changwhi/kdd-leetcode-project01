@@ -19,4 +19,10 @@ export const GROUP = {
   SEARCH_BTUTTON: "Browse",
   YOUR_GROUP: "Your Group",
   MUST_BE_LOGGED_IN: "You must be logged in to view this page.",
+  TOTAL_DEPOSITS: "Total Deposits",
+  INITIAL_DEDUCTION: "Initial Deduction",
+  MARKED_AS_ATTENDED: "Marked as Attended",
+  MARKED_AS_PRESENT: "Marked as Present",
+  MARKED_AS_ABSENT: "Marked as Absent",
+  MARKED_AS_LATE: "Marked as Late",
 };

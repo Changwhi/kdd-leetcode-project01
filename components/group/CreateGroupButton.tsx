@@ -79,10 +79,36 @@ export const CreateGroupButton = ({ email }: { email: string }) => {
                 {GROUP.MAX_PARTICIPANTS}
               </Label>
               <Input
-                id="topic"
+                id="maxParticipants"
                 className="col-span-3"
                 name="maxParticipants"
                 placeholder="e.g. 10 (participants)"
+                type="number"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="totalDeposit" className="text-right">
+                {GROUP.TOTAL_DEPOSITS}
+              </Label>
+              <Input
+                id="totalDeposit"
+                className="col-span-3"
+                name="totalDeposit"
+                placeholder="e.g. 10 (CAD 10)"
+                type="number"
+                required
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="initialDeduction" className="text-right">
+                {GROUP.INITIAL_DEDUCTION}
+              </Label>
+              <Input
+                id="initialDeduction"
+                className="col-span-3"
+                name="initialDeduction"
+                placeholder="e.g. 10 (CAD 10)"
                 type="number"
                 required
               />
@@ -92,7 +118,7 @@ export const CreateGroupButton = ({ email }: { email: string }) => {
                 {GROUP.ATTENDANCE_DEDUCTION}
               </Label>
               <Input
-                id="zoomlink"
+                id="attendanceDeduction"
                 className="col-span-3"
                 name="attendanceDeduction"
                 type="number"
@@ -101,13 +127,13 @@ export const CreateGroupButton = ({ email }: { email: string }) => {
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="assginmentDeduction" className="text-right">
+              <Label htmlFor="assignmentDeduction" className="text-right">
                 {GROUP.ASSIGNMENT_DEDUCTION}
               </Label>
               <Input
-                id="assign1"
+                id="assignmentDeduction"
                 className="col-span-3"
-                name="assginmentDeduction"
+                name="assignmentDeduction"
                 placeholder="e.g. 10 (CAD 10)"
                 type="number"
                 required
