@@ -1,8 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import { SUMMARY } from "@/text/summary";
+import { AssignmentViewModal } from "./assignmentViewModal";
 
 interface Props {
   userName: string;
@@ -33,16 +32,12 @@ export const AssignmentCard: React.FC<Props> = ({
         </Row>
       </Col>
       <Col>
-        <Button
-          onClick={() => {
-            window.open(content, "_blank");
-          }}
-          className="bg-violet-900 m-2 w-20"
-          variant="default"
-          size="sm"
-        >
-          {SUMMARY.BUTTON_VIEW}
-        </Button>
+        <AssignmentViewModal
+          userName={userName}
+          date={date}
+          title={title}
+          content={content}
+        />
       </Col>
     </Card>
   );

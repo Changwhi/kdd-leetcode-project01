@@ -82,6 +82,16 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.SUMMARY}
             </a>
             <a
+              href={`/dashboard/admin/${groupId}/instruction`}
+              className={`block text-lg font-bold ${
+                isActive(`/dashboard/admin/${groupId}/instruction`)
+                  ? "text-white"
+                  : "text-gray-500"
+              }`}
+            >
+              {SIDEBAR_CONSTANTS.INSTRUCTION}
+            </a>
+            <a
               href={`/dashboard/admin/${groupId}/attendance`}
               className={`block text-lg font-bold ${
                 isActive(`/dashboard/admin/${groupId}/attendance`)
@@ -144,6 +154,16 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               }`}
             >
               {SIDEBAR_CONSTANTS.SUMMARY}
+            </a>
+            <a
+              href={`/dashboard/user/${groupId}/instruction`}
+              className={`block text-lg font-bold ${
+                isActive(`/dashboard/user/${groupId}/instruction`)
+                  ? "text-white"
+                  : "text-gray-500"
+              }`}
+            >
+              {SIDEBAR_CONSTANTS.INSTRUCTION}
             </a>
             <a
               href={`/dashboard/user/${groupId}/eventsPage`}
