@@ -17,7 +17,7 @@ export const Instruction = ({
   group_id: number;
   admin: boolean;
 }) => {
-  const [value, setValue] = useState<string>("");
+  const [value, setValue] = useState<string | undefined>("");
   const [isInstruction, setIsInstruction] = useState<boolean>(false);
   const [isEditMode, setisEditMode] = useState<boolean>(false);
 
@@ -31,29 +31,36 @@ export const Instruction = ({
 
   useEffect(() => {
     fetchInstruction();
-  }, []);
+  }, [group_id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      if (isInstruction) {
-        await updateInstruction({
-          content: value,
-          group_id: group_id,
+      if (value) {
+        if (isInstruction) {
+          await updateInstruction({
+            content: value,
+            group_id: group_id,
+          });
+        } else {
+          await createInstruction({
+            content: value,
+            group_id: group_id,
+          });
+          setIsInstruction(true);
+        }
+        toast({
+          title: "Success",
+          description: "Instruction updated successfully.",
         });
       } else {
-        await createInstruction({
-          content: value,
-          group_id: group_id,
+        toast({
+          title: "Error",
+          description: "instruction is not entered.",
         });
-        setIsInstruction(true);
       }
-      toast({
-        title: "Success",
-        description: "Submission created successfully",
-      });
     } catch (error) {
-      toast({ title: "Error", description: "Failed to create submission" });
+      toast({ title: "Error", description: "Failed to update instruction." });
     }
   };
 
@@ -71,7 +78,7 @@ export const Instruction = ({
             className="hover:bg-gray-100 px-4 py-2 w-20 rounded"
             onClick={onClickEditMode}
           >
-            {isEditMode ? "Close": "Edit"}
+            {isEditMode ? "Close" : "Edit"}
           </Button>
         )}
       </div>
@@ -83,7 +90,7 @@ export const Instruction = ({
                 value={value}
                 onChange={setValue}
                 preview="edit"
-                height={700}
+                height={600}
               />
               <div className="flex justify-end">
                 <Button type="submit" className="mt-2">
