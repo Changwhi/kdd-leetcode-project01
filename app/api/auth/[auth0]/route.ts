@@ -52,8 +52,6 @@ const afterCallback = async (req: any, session: any) => {
   if (user) {
     try {
       console.log(await createUser(user.nickname, user.email));
-      //TODO: This is temporary, will be removed
-      console.log(await addNewUserToGroup(user.email));
     } catch (error) {
       console.error("Error creating user:", error);
     }
