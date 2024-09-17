@@ -24,6 +24,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
     user_id: 0,
     name: "",
     email: "",
+    picture: ""
   });
 
   const isActive = (path: string) => pathname.startsWith(path);
@@ -36,6 +37,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
           user_id: response.user_id,
           name: response.username,
           email: response.email,
+          picture: response.picture
         });
       }
     };
@@ -56,7 +58,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         </Link>
         <div className="py-16 flex flex-col items-start">
           <Avatar className="relative w-24 h-24">
-            <AvatarImage src="/avatar.png" alt="User Avatar" />
+            <AvatarImage src={user.picture ? user.picture : "/avatar.png"} alt="User Avatar" />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
           <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
