@@ -35,7 +35,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
       if (response) {
         setUser({
           user_id: response.user_id,
-          name: response.username,
+          name: response.given_name ? response.given_name : response.username,
           email: response.email,
           picture: response.picture
         });
