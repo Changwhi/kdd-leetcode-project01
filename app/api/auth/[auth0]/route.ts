@@ -47,13 +47,11 @@ interface UserProfile {
 const afterCallback = async (req: any, session: any) => {
   const user = session.user as UserProfile;
 
-  const username = user["username"] as string | undefined;
+  const username = user.given_name ? user.given_name : user.username as string;
   console.log(user);
   if (user) {
     try {
-      console.log(await createUser(user.nickname, user.email));
-      //TODO: This is temporary, will be removed
-      console.log(await addNewUserToGroup(user.email));
+      console.log(await createUser(username, user.email));
     } catch (error) {
       console.error("Error creating user:", error);
     }
