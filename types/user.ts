@@ -4,3 +4,9 @@ export interface UserType {
   email: string;
   picture: string;
 }
+
+export interface UserRoleType {
+  user_id: number;
+  group_id: number;
+  user_type: number;
+}
