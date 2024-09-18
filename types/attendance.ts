@@ -1,6 +1,10 @@
+type UserType = 0 | 1
+type DepositStatus = "Received" | "Pending" | "Returned"
+
 export interface AttendanceType {
   user_group_id: number;
-  user_type: number;
+  user_type: UserType
+  avatar: string;
   init_amount: number;
   curr_amount: number;
   user_id: number;
@@ -10,4 +14,6 @@ export interface AttendanceType {
   attended: number;
   submission_id: number;
   submitted: boolean;
+  deposit_status: DepositStatus;
+  group_id: number;
 }
