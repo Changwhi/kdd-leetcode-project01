@@ -62,7 +62,7 @@ export const addEvent = async ({
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
     `;
-    revalidatePath(`/dashboard/admin/${group_id}/events`);
+    revalidatePath(`/dashboard/${group_id}/admin/events`);
   } catch (error) {
     console.log(error);
   }
