@@ -104,3 +104,47 @@ export const getLoggedInUser = async () => {
     return null;
   }
 };
+
+export const setDepositStatus = async ({
+  user_id,
+  group_id,
+  status,
+}: {
+  user_id: number;
+  group_id: number;
+  status: "Received" | "Pending" | "Returned";
+}) => {
+  try {
+    const response: ResponseType[] = await sql`
+UPDATE user_group
+SET deposit_status = ${status}
+WHERE user_id = ${user_id} and group_id = ${group_id};
+    `;
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export const setUserType = async ({
+  user_id,
+  group_id,
+  user_type,
+}: {
+  user_id: number;
+  group_id: number;
+  user_type: 0 | 1;
+}) => {
+  try {
+    const response: ResponseType[] = await sql`
+UPDATE user_group
+SET user_type = ${user_type}
+WHERE user_id = ${user_id} and group_id = ${group_id};
+    `;
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
