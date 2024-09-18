@@ -148,3 +148,22 @@ WHERE user_id = ${user_id} and group_id = ${group_id};
     return false;
   }
 };
+
+export const kickOutUserFromGroup = async ({
+  user_id,
+  group_id,
+}: {
+  user_id: number;
+  group_id: number;
+}) => {
+  try {
+    const response: ResponseType[] = await sql`
+DELETE FROM user_group
+WHERE user_id = ${user_id} and group_id = ${group_id};
+    `;
+    return true;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
