@@ -74,9 +74,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         {admin && (
           <nav className="mt-8 space-y-8">
             <a
-              href={`/dashboard/admin/${groupId}/summary`}
+              href={`/dashboard/${groupId}/admin/summary`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/summary`)
+                isActive(`/dashboard/${groupId}/admin/summary`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -84,9 +84,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.SUMMARY}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/instruction`}
+              href={`/dashboard/${groupId}/admin/instruction`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/instruction`)
+                isActive(`/dashboard/${groupId}/admin/instruction`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -94,9 +94,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.INSTRUCTION}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/attendance`}
+              href={`/dashboard/${groupId}/admin/attendance`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/attendance`)
+                isActive(`/dashboard/${groupId}/admin/attendance`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -104,9 +104,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ATTENDANCE}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/events`}
+              href={`/dashboard/${groupId}/admin/events`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/events`)
+                isActive(`/dashboard/${groupId}/admin/events`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -114,9 +114,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.EVENTS}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/assignments`}
+              href={`/dashboard/${groupId}/admin/assignments`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/assignments`)
+                isActive(`/dashboard/${groupId}/admin/assignments`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -124,9 +124,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ASSIGNMENTS}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/members`}
+              href={`/dashboard/${groupId}/admin/members`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/admin/${groupId}/members`)
+                isActive(`/dashboard/${groupId}/admin/members`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -134,9 +134,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.MEMBERS}
             </a>
             <a
-              href={`/dashboard/admin/${groupId}/settings`}
+              href={`/dashboard/${groupId}/admin/settings`}
               className={`block text-lg text-muted-foreground ${
-                isActive(`/dashboard/admin/${groupId}/settings`)
+                isActive(`/dashboard/${groupId}/admin/settings`)
                   ? "text-white"
                   : "opacity-50 cursor-not-allowed"
               }`}
@@ -148,9 +148,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         {!admin && (
           <nav className="mt-8 space-y-8">
             <a
-              href={`/dashboard/user/${groupId}/summary`}
+              href={`/dashboard/${groupId}/user/summary`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/user/${groupId}/summary`)
+                isActive(`/dashboard/${groupId}/user/summary`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -158,9 +158,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.SUMMARY}
             </a>
             <a
-              href={`/dashboard/user/${groupId}/instruction`}
+              href={`/dashboard/${groupId}/user/instruction`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/user/${groupId}/instruction`)
+                isActive(`/dashboard/${groupId}/user/instruction`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -168,9 +168,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.INSTRUCTION}
             </a>
             <a
-              href={`/dashboard/user/${groupId}/eventsPage`}
+              href={`/dashboard/${groupId}/user/eventsPage`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/user/${groupId}/eventsPage`)
+                isActive(`/dashboard/${groupId}/user/eventsPage`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -178,9 +178,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.EVENTS}
             </a>
             <a
-              href={`/dashboard/user/${groupId}/assignments`}
+              href={`/dashboard/${groupId}/user/assignments`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/user/${groupId}/assignments`)
+                isActive(`/dashboard/${groupId}/user/assignments`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
@@ -188,9 +188,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
               {SIDEBAR_CONSTANTS.ASSIGNMENTS}
             </a>
             <a
-              href={`/dashboard/user/${groupId}/settings`}
+              href={`/dashboard/${groupId}/user/settings`}
               className={`block text-lg text-muted-foreground ${
-                isActive(`/dashboard/user/${groupId}/settings`)
+                isActive(`/dashboard/${groupId}/user/settings`)
                   ? "text-white"
                   : "opacity-50 cursor-not-allowed"
               }`}

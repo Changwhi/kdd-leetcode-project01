@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 export default function Page({params}: {params: {groupId: string}}) {
     const route = useRouter()
     useEffect(() => {
-        route.push(`/dashboard/admin/${params.groupId}/summary`)
+        route.push(`/dashboard/${params.groupId}/user/summary`)
     })
   return <div>404 page </div>;
 }

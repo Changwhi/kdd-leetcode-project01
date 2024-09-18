@@ -69,7 +69,7 @@ export const GroupCard = ({
           </div>
           {isMyCard && (
             <Button variant="outline" size="sm">
-              <a href={`/dashboard/${userType}/${group_id}/summary`}>
+              <a href={`/dashboard/${group_id}/${userType}/summary`}>
                 {GROUP.GOTO}
               </a>
             </Button>
