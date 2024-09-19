@@ -77,9 +77,11 @@ export const GroupCard = ({
           {!isMyCard && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="ghost" size={"sm"}>
-                  {GROUP.JOIN}
-                </Button>
+                {email && (
+                  <Button variant="ghost" size={"sm"}>
+                    {GROUP.JOIN}
+                  </Button>
+                )}
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

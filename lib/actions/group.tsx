@@ -4,6 +4,22 @@ import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
 
 /**
+ * Retrieve all existing groups
+ *
+ * @returns An array of MyGroup if exist, otherwise an empty array
+ */
+export const getAllGroups = async () => {
+  try {
+    const response: MyGroup[] = await sql`
+        SELECT group_id, name, description FROM "group";`;
+    return response ? response : [];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+};
+
+/**
  * Retrieve all groups that the user with the given email is a member of
  *
  * @param email - The user's email as a string
