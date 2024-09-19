@@ -56,7 +56,7 @@ export const GroupCard = ({
       <CardContent className="p-6">
         <div className="mb-4">
           <h3 className="text-xl font-semibold">
-            {name} {isOwner === 0 ? "(admin)" : "(user)"}
+            {name}
           </h3>
           <p className="text-muted-foreground">{description}</p>
         </div>
