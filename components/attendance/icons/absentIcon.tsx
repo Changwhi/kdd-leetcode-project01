@@ -7,7 +7,7 @@ export const AbsentIcon = () => (
     xmlns="http://www.w3.org/2000/svg"
   >
     <circle cx="20" cy="20" r="20" fill="url(#paint0_linear_5_400)" />
-    <g clip-path="url(#clip0_5_400)">
+    <g clipPath="url(#clip0_5_400)">
       <rect
         width="20"
         height="20"
@@ -28,8 +28,8 @@ export const AbsentIcon = () => (
         y2="20"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EB4444" />
-        <stop offset="1" stop-color="#FE0404" />
+        <stop stopColor="#EB4444" />
+        <stop offset="1" stopColor="#FE0404" />
       </linearGradient>
       <linearGradient
         id="paint1_linear_5_400"
@@ -39,8 +39,8 @@ export const AbsentIcon = () => (
         y2="10"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#EB4444" />
-        <stop offset="1" stop-color="#FE0404" />
+        <stop stopColor="#EB4444" />
+        <stop offset="1" stopColor="#FE0404" />
       </linearGradient>
       <clipPath id="clip0_5_400">
         <rect
