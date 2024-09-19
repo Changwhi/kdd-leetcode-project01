@@ -113,6 +113,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
                 placeholder={EVENTS_USER.ASSIGNMENT_TITLE_DESCRIPTION}
                 defaultValue={originalSubmission?.title || ""}
                 className="w-full my-2"
+                maxLength={199}
               />
             </div>
             <div className="grid gap-1.5">
