@@ -8,6 +8,7 @@ import { CONSTANTS } from "@/text/landing";
 import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
 import { createUser, retrieveUser } from "@/lib/actions/user";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 export default async function Home() {
   const session = await getSession();
@@ -33,15 +34,15 @@ export default async function Home() {
                     className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
-                    {CONSTANTS.LETS_START}
+                    {CONSTANTS.CHECKOUT_GROUP}
                   </Link>
-                  {/* <Link
-                    href="#"
+                  <Link
+                    href="/join"
                     className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
                     prefetch={false}
                   >
                     {CONSTANTS.JOIN_GROUP}
-                  </Link> */}
+                  </Link>
                 </div>
               </div>
               <div className="flex justify-center">
@@ -149,27 +150,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
-      <footer className="bg-background border-t py-6">
-        <div className="container flex flex-col items-center justify-center gap-4 px-4 md:px-6">
-          <nav className="flex gap-4 text-sm">
-            <Link
-              href="#"
-              className="font-medium transition-colors hover:underline underline-offset-4"
-            >
-              {CONSTANTS.FOOTER_TERMS}
-            </Link>
-            <Link
-              href="#"
-              className="font-medium transition-colors hover:underline underline-offset-4"
-            >
-              {CONSTANTS.FOOTER_PRIVACY}
-            </Link>
-          </nav>
-          <div className="text-center text-sm">
-            {CONSTANTS.FOOTER_COPYRIGHT}
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 }

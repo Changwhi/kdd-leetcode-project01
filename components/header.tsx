@@ -39,15 +39,15 @@ export default function Header({ user }: any) {
         >
           Group
         </Link>
-        {/* <Link
-          href="#"
+        <Link
+          href="/join"
           className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
-            path == "/aboutus" && "text-primary font-bold"
+            path == "/join" && "text-primary font-bold"
           }`}
           prefetch={false}
         >
-          {CONSTANTS.ABOUT_US}
-        </Link> */}
+          {CONSTANTS.JOIN}
+        </Link>
         {!user && (
           <button className="text-sm font-medium hover:underline underline-offset-4">
             <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>

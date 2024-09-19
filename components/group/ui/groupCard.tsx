@@ -56,7 +56,7 @@ export const GroupCard = ({
       <CardContent className="p-6">
         <div className="mb-4">
           <h3 className="text-xl font-semibold">
-            {name} {isOwner === 0 ? "(admin)" : "(user)"}
+            {name}
           </h3>
           <p className="text-muted-foreground">{description}</p>
         </div>
@@ -77,9 +77,11 @@ export const GroupCard = ({
           {!isMyCard && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="ghost" size={"sm"}>
-                  {GROUP.JOIN}
-                </Button>
+                {email && (
+                  <Button variant="ghost" size={"sm"}>
+                    {GROUP.JOIN}
+                  </Button>
+                )}
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>

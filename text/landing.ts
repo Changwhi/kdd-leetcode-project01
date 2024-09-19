@@ -5,12 +5,14 @@ export const CONSTANTS = {
   DASHBOARD: "Dashboard",
   FOR_HOSTS: "For Hosts",
   FOR_PARTICIPANTS: "For Participants",
+  JOIN: "Join",
   ABOUT_US: "About Us (coming soon)",
   MAIN_TITLE: "Streamline Your Study Meetups",
   MAIN_DESCRIPTION:
     "Easily create and manage study groups, and help participants stay accountable with our deposit system.",
   CREATE_GROUP: "Create a Group (Coming Soon)",
-  JOIN_GROUP: "Join a Group (Coming Soon)",
+  CHECKOUT_GROUP: "Explore My Groups",
+  JOIN_GROUP: "Find New Groups to Joins",
   KEY_FEATURES: "Key Features",
   SECTION_TITLE: "Manage Your Study Meetups with Ease",
   SECTION_DESCRIPTION:

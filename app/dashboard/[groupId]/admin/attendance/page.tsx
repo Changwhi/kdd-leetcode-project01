@@ -13,6 +13,7 @@ import moment from "moment";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { AttendanceType } from "@/types/attendance";
 import { group } from "console";
+import { SelectEvent } from "@/components/attendance/selectEvents";
 
 /**
  * Attendance
@@ -82,7 +83,14 @@ export default function Attendance({
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
-      <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
+      <aside className="block lg:hidden basis-1/3 lg:w-1/2">
+        <SelectEvent
+          events={events}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+        ></SelectEvent>
+      </aside>
+      <main className="basis-2/3 p-6 bg-white lg:pr-6 lg:w-3/4">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-xl font-bold">{selectedEvent?.name}</h1>
@@ -136,29 +144,12 @@ export default function Attendance({
           group_id={Number(params.groupId)}
         />
       </main>
-      <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
-        <div className="mb-6">
-          <div className="space-y-4 mt-4">
-            <h2 className="text-lg font-bold">{ATTENDANCE.SELECT_EVENTS}</h2>
-            {events.map((event, index) => (
-              <Card
-                key={index}
-                className={`p-4 hover:bg-slate-300 hover:cursor-pointer ${
-                  selectedEvent?.event_id === event.event_id
-                    ? "bg-blue-100"
-                    : ""
-                }`}
-                onClick={() => handleEvent(event)}
-              >
-                <h1 className="text-lg font-semibold">{event.name}</h1>
-                <p className="text-sm">{event.topic}</p>
-                <p className="text-xs text-gray-400 text-muted-foreground">
-                  {moment(event.date).format("MMMM Do YYYY, h:mm a")}
-                </p>
-              </Card>
-            ))}
-          </div>
-        </div>
+      <aside className="hidden lg:block basis-1/3 lg:w-1/2">
+        <SelectEvent
+          events={events}
+          selectedEvent={selectedEvent}
+          setSelectedEvent={setSelectedEvent}
+        ></SelectEvent>
       </aside>
     </div>
   );

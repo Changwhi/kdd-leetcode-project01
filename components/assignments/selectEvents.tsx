@@ -3,7 +3,6 @@ import { SUMMARY } from "@/text/summary";
 import { Card } from "@/components/ui/card";
 import Row from "react-bootstrap/Row";
 import { EventType } from "@/types/event";
-import { useState } from "react";
 
 const options: Intl.DateTimeFormatOptions = {
   year: "numeric",
