@@ -2,36 +2,23 @@
 import { Card } from "@/components/ui/card";
 import { ATTENDANCE } from "@/text/attendance";
 import { useEffect, useState } from "react";
-import { AttendanceTable } from "@/components/attendance/attendanceTable";
-import { ParticipantsIcon } from "@/components/attendance/icons/participantsIcon";
-import { AttendedIcon } from "@/components/attendance/icons/attendedIcon";
-import { AbsentIcon } from "@/components/attendance/icons/absentIcon";
 import { useToast } from "@/components/ui/use-toast";
 import { retrieveEvents } from "@/lib/actions/event";
 import { EventType } from "@/types/event";
 import moment from "moment";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { AttendanceType } from "@/types/attendance";
-import { group } from "console";
+import Attendance from "@/components/attendance";
 
 /**
- * Attendance
- *
- * This component displays the attendance list for a selected event.
- * The component also displays the total number of participants, the number of people who attended, and the number of people who were absent.
- * The component retrieves the data from the database and displays it in a table.
- * The component also provides a dropdown list of events to select from.
- * When the user selects an event, the component will retrieve the attendance data for the selected event and display it in the table.
- * The component also handles errors and displays an error message if there is an error retrieving the data.
- * The component is responsive and works well on different screen sizes.
- * The component is also accessible and follows best practices for accessibility.
- * The component is a stateful component and uses the useState hook to store the selected event and the attendance data in the component's state.
- * The component uses the useEffect hook to retrieve the data from the database when the component mounts and when the selected event changes.
- * The component uses the useToast hook to display error messages to the user.
- * The component is a client-side component and is rendered on the client-side.
- * The component is a part of the Next.js pages directory and is rendered on the server-side.
+ * This component renders a page for viewing attendance of a given event.
+ * It fetches all events of the given group and displays them in a list.
+ * When an event is selected from the list, it fetches the attendance data
+ * for the selected event and displays it in a table.
+ * @param {params} - An object containing a groupId property, which is the id of the group to fetch events and attendance for.
+ * @returns A JSX element representing the page.
  */
-export default function Attendance({
+export default function AttendancePage({
   params,
 }: {
   params: { groupId: string };
@@ -89,50 +76,11 @@ export default function Attendance({
             <p className="text-muted-foreground">
               {moment(selectedEvent?.date).format("MMMM Do YYYY, h:mm a")}
             </p>
-            <div className="flex gap-4 p-5">
-              <Card className="w-40 p-4 ">
-                <div className="flex gap-2 items-center">
-                  <ParticipantsIcon />
-                  <h3 className="text-xs text-muted-foreground">
-                    {ATTENDANCE.TOTAL_PARTICIPANTS}
-                  </h3>
-                </div>
-                <p className="pt-3 text-center text-base font-semibold">
-                  {attendance.length}
-                  {ATTENDANCE.PEOPLE}
-                </p>
-              </Card>
-              <Card className="w-40 p-4 ">
-                <div className="flex gap-2 items-center">
-                  <AttendedIcon />
-                  <h3 className="text-xs text-muted-foreground">
-                    {ATTENDANCE.ATTEND}
-                  </h3>
-                </div>
-                <p className="pt-3 text-center text-base font-semibold">
-                  {attendance.filter((member) => member.attended === 1).length}{" "}
-                  {ATTENDANCE.PEOPLE}
-                </p>
-              </Card>
-              <Card className="w-40 p-4 ">
-                <div className="flex gap-2 items-center">
-                  <AbsentIcon />
-                  <h3 className="text-xs text-muted-foreground">
-                    {ATTENDANCE.ABSENT}
-                  </h3>
-                </div>
-                <p className="pt-3 text-left text-base font-semibold">
-                  {attendance.length -
-                    attendance.filter((member) => member.attended === 1)
-                      .length}{" "}
-                  {ATTENDANCE.PEOPLE}
-                </p>
-              </Card>
-            </div>
+            
           </div>
         </div>
-        <AttendanceTable
-          event_id={selectedEvent?.event_id}
+        <Attendance
+          event_id={selectedEvent?.event_id ?? 0}
           group_id={Number(params.groupId)}
         />
       </main>
