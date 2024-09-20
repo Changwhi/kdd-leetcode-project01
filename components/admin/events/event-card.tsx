@@ -24,6 +24,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import { useState } from "react";
+import { ExternalLinkIcon, Trash2 } from "lucide-react";
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -35,7 +36,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   assign2,
   assign3,
   group_id,
-  admin
+  admin,
 }) => {
   const formattedDate = date.toISOString().split("T")[0];
   const [eventName, setEventName] = useState(name);
@@ -68,7 +69,8 @@ export const EventCard: React.FC<EventCardProps> = ({
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="ghost" size={"sm"}>
-                <XIcon className="w-5 h-5" />
+                                <Trash2 className="w-5 h-5" />
+
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -114,19 +116,25 @@ export const EventCard: React.FC<EventCardProps> = ({
           </div>
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex justify-center ">
+        {/* <Button
+          className="w-full hover:border-gray-700 hover:text-gray-700 transition-all duration-200"
+          variant="outline"
+        > */}
         <Link
+          className="w-full text-base text-primary hover:underline inline-flex items-center"
           href={zoomlink}
           target="_blank"
-          className="text-sm text-primary hover:underline"
           prefetch={false}
+          rel="noopener noreferrer"
         >
-          {EVENTS.LINK}
+          {EVENTS.LINK} <ExternalLinkIcon className="ml-1 h-5 w-5" />
         </Link>
+        {/* </Button> */}
         {admin && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" size={"sm"}>
+              <Button variant="outline" className="w-full hover:bg-gray-700 hover:text-white transition-all duration-200">
                 {EVENTS.EDIT}
               </Button>
             </DialogTrigger>
