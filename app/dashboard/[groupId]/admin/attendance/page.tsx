@@ -9,6 +9,7 @@ import moment from "moment";
 import { retrieveAttendance } from "@/lib/actions/attendance";
 import { AttendanceType } from "@/types/attendance";
 import Attendance from "@/components/attendance";
+import { SelectEvent } from "@/components/attendance/selectEvents";
 
 /**
  * This component renders a page for viewing attendance of a given event.
@@ -17,25 +18,6 @@ import Attendance from "@/components/attendance";
  * for the selected event and displays it in a table.
  * @param {params} - An object containing a groupId property, which is the id of the group to fetch events and attendance for.
  * @returns A JSX element representing the page.
-import { group } from "console";
-import { SelectEvent } from "@/components/attendance/selectEvents";
-
-/**
- * Attendance
- *
- * This component displays the attendance list for a selected event.
- * The component also displays the total number of participants, the number of people who attended, and the number of people who were absent.
- * The component retrieves the data from the database and displays it in a table.
- * The component also provides a dropdown list of events to select from.
- * When the user selects an event, the component will retrieve the attendance data for the selected event and display it in the table.
- * The component also handles errors and displays an error message if there is an error retrieving the data.
- * The component is responsive and works well on different screen sizes.
- * The component is also accessible and follows best practices for accessibility.
- * The component is a stateful component and uses the useState hook to store the selected event and the attendance data in the component's state.
- * The component uses the useEffect hook to retrieve the data from the database when the component mounts and when the selected event changes.
- * The component uses the useToast hook to display error messages to the user.
- * The component is a client-side component and is rendered on the client-side.
- * The component is a part of the Next.js pages directory and is rendered on the server-side.
  */
 export default function AttendancePage({
   params,
@@ -88,14 +70,14 @@ export default function AttendancePage({
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
-      <aside className="block lg:hidden basis-1/3 lg:w-1/2">
+ <aside className="block lg:hidden basis-1/3 lg:w-1/2">
         <SelectEvent
           events={events}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
         ></SelectEvent>
       </aside>
-      <main className="basis-2/3 p-6 bg-white lg:pr-6 lg:w-3/4">
+      <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-xl font-bold">{selectedEvent?.name}</h1>
@@ -110,12 +92,35 @@ export default function AttendancePage({
           group_id={Number(params.groupId)}
         />
       </main>
-      <aside className="hidden lg:block basis-1/3 lg:w-1/2">
-        <SelectEvent
+      <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
+     <SelectEvent
           events={events}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
         ></SelectEvent>
+
+        {/* <div className="mb-6">
+          <div className="space-y-4 mt-4">
+            <h2 className="text-lg font-bold">{ATTENDANCE.SELECT_EVENTS}</h2>
+            {events.map((event, index) => (
+              <Card
+                key={index}
+                className={`p-4 hover:bg-slate-300 hover:cursor-pointer ${
+                  selectedEvent?.event_id === event.event_id
+                    ? "bg-blue-100"
+                    : ""
+                }`}
+                onClick={() => handleEvent(event)}
+              >
+                <h1 className="text-lg font-semibold">{event.name}</h1>
+                <p className="text-sm">{event.topic}</p>
+                <p className="text-xs text-gray-400 text-muted-foreground">
+                  {moment(event.date).format("MMMM Do YYYY, h:mm a")}
+                </p>
+              </Card>
+            ))}
+          </div>
+        </div> */}
       </aside>
     </div>
   );
