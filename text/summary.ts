@@ -36,7 +36,7 @@ export const SUMMARY= {
   BUTTON_CHECK: "Check",
   BUTTON_JOIN: "Join",
   BUTTON_VIEW: "View",
-  EVENT_TITLE: "Event",
+  EVENT_TITLE: "Selected event",
   NO_EVENT: "No event",
 
 };
