@@ -14,5 +14,7 @@ export const ATTENDANCE = {
   SUBMITTED: "Submitted",
   I_AM_HERE: "I'm here",
   ATTENDED: "Attended",
+  ATTENDANCE: "Attendance",
+  ACTIONS: "Actions",
+  LATE: "Late",
 };
-

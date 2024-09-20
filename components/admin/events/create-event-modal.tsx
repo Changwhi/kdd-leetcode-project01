@@ -13,12 +13,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { addEvent } from "@/lib/actions/event";
 import { EVENTS } from "@/text/events";
+import { PlusCircle } from "lucide-react";
 
 export const CreateEventModal = ({groupId}: {groupId: number}) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">{EVENTS.CREATENEWEVENT}</Button>
+        <Button variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> {EVENTS.CREATENEWEVENT}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

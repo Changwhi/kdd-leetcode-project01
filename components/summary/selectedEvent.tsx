@@ -41,6 +41,9 @@ export const SelectedEvent = ({
   return (
     <>
       <div className="flex flex-col p-4 flex-grow">
+        {events && events.length > 0 && (
+          <h1 className="mb-5 text-base font-semibold">{SUMMARY.EVENT_TITLE}</h1>
+        )}
         {events &&
           events.map((event) => (
             <EventCard

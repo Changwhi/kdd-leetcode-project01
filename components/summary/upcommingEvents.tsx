@@ -4,6 +4,7 @@ import Link from "next/link";
 import { SUMMARY } from "@/text/summary";
 import moment from "moment";
 import { EventType } from "@/types/event";
+import { EventModal } from "./detailModal";
 
 export const UpcommingEvents = ({events}: {events: EventType[]}) => {
   return (
@@ -15,13 +16,14 @@ export const UpcommingEvents = ({events}: {events: EventType[]}) => {
           <p className="text-muted-foreground">
             {moment(event.date).format("MMMM Do YYYY, h:mm a")}
           </p>
-          <Link
-            href={event.zoomlink}
-            className="text-blue-500"
-            prefetch={false}
-          >
-            {SUMMARY.SEE_PROJECT_DETAILS}
-          </Link>
+          <EventModal 
+            event={event} 
+            trigger={
+              <span className="text-blue-500 cursor-pointer hover:underline">
+                {SUMMARY.SEE_PROJECT_DETAILS}
+              </span>
+            } 
+          />
         </Card>
       ))}
       {events.length === 0 && (

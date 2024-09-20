@@ -50,7 +50,11 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AttendanceType } from "@/types/attendance";
-import { setDepositStatus, setUserType } from "@/lib/actions/user";
+import {
+  kickOutUserFromGroup,
+  setDepositStatus,
+  setUserType,
+} from "@/lib/actions/user";
 import { useToast } from "@/components/ui/use-toast";
 
 type DepositStatus = "Received" | "Pending" | "Returned";
@@ -125,7 +129,7 @@ export default function UserTable({
         title: "Success",
         description: "Deposit status updated successfully.",
         variant: "default",
-      })
+      });
     } else {
       toast({
         title: "Error",
@@ -155,7 +159,7 @@ export default function UserTable({
         title: "Success",
         description: "User type updated successfully.",
         variant: "default",
-      })
+      });
     } else {
       toast({
         title: "Error",
@@ -165,8 +169,25 @@ export default function UserTable({
     }
   };
 
-  const handleKickOut = (userId: number) => {
-    setUsers(users.filter((user) => user.user_id !== userId));
+  const handleKickOut = async (userId: number, groupId: number) => {
+    const response = await kickOutUserFromGroup({
+      user_id: userId,
+      group_id: groupId,
+    });
+    if (response) {
+      setUsers(users.filter((user) => user.user_id !== userId));
+      toast({
+        title: "Success",
+        description: "User kicked out successfully.",
+        variant: "default",
+      });
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to kick out user.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleSort = (field: SortField) => {
@@ -361,7 +382,9 @@ export default function UserTable({
                 <TableCell>
                   <StatusBadge status={user.deposit_status} />
                 </TableCell>
-                <TableCell>${user.curr_amount} CAD</TableCell>
+                <TableCell>
+                  ${user.curr_amount === null ? 0 : user.curr_amount} CAD
+                </TableCell>
                 <TableCell>
                   <UserTypeBadge userType={user.user_type} />
                 </TableCell>
@@ -443,7 +466,9 @@ export default function UserTable({
                           <AlertDialogFooter>
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
-                              onClick={() => handleKickOut(user.user_id)}
+                              onClick={() =>
+                                handleKickOut(user.user_id, user.group_id)
+                              }
                             >
                               Confirm
                             </AlertDialogAction>
