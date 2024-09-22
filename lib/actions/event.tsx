@@ -62,7 +62,7 @@ export const addEvent = async ({
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
     `;
-    revalidatePath(`/dashboard/${group_id}/admin/events`);
+    revalidatePath(`/dashboard/${group_id}/events`);
   } catch (error) {
     console.log(error);
   }
@@ -93,7 +93,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}, assign1 = ${assign1}, assign2 = ${assign2}, assign3 = ${assign3}
       WHERE event_id = ${event_id}
     `;
-    revalidatePath("/dashboard/admin/events");
+    revalidatePath("/dashboard/events");
   } catch (error) {
     console.log(error);
   }
@@ -105,7 +105,7 @@ export const deleteEvent = async (event_id: number) => {
       DELETE FROM event
       WHERE event_id = ${event_id}
     `;
-    revalidatePath("/dashboard/admin/events");
+    revalidatePath("/dashboard/events");
   } catch (error) {
     console.log(error);
   }

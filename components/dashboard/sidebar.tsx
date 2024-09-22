@@ -24,10 +24,21 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
     user_id: 0,
     name: "",
     email: "",
-    picture: ""
+    picture: "",
   });
 
   const isActive = (path: string) => pathname.startsWith(path);
+  const sideBarOptions = admin
+    ? [
+        "summary",
+        "instruction",
+        "attendance",
+        "events",
+        "assignments",
+        "members",
+        "settings",
+      ]
+    : ["summary", "instruction", "events", "assignments", "settings"];
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -37,7 +48,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
           user_id: response.user_id,
           name: response.given_name ? response.given_name : response.username,
           email: response.email,
-          picture: response.picture
+          picture: response.picture,
         });
       }
     };
@@ -58,7 +69,10 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         </Link>
         <div className="py-16 flex flex-col items-start">
           <Avatar className="relative w-24 h-24">
-            <AvatarImage src={user.picture ? user.picture : "/avatar.png"} alt="User Avatar" />
+            <AvatarImage
+              src={user.picture ? user.picture : "/avatar.png"}
+              alt="User Avatar"
+            />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
           <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
@@ -71,140 +85,29 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
             {user.email}
           </a>
         </div>
-        {admin && (
-          <nav className="mt-8 space-y-8">
+        <nav className=" space-y-6">
+          {sideBarOptions.map((option, index) => (
             <a
-              href={`/dashboard/${groupId}/admin/summary`}
+              key={index}
+              href={`/dashboard/${groupId}/${option}`}
               className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/summary`)
+                isActive(
+                  `/dashboard/${groupId}/${option}`
+                )
                   ? "text-white"
                   : "text-gray-500"
               }`}
             >
-              {SIDEBAR_CONSTANTS.SUMMARY}
+              {option.charAt(0).toUpperCase() + option.slice(1)}
             </a>
-            <a
-              href={`/dashboard/${groupId}/admin/instruction`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/instruction`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.INSTRUCTION}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/admin/attendance`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/attendance`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.ATTENDANCE}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/admin/events`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/events`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.EVENTS}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/admin/assignments`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/assignments`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.ASSIGNMENTS}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/admin/members`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/admin/members`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.MEMBERS}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/admin/settings`}
-              className={`block text-lg text-muted-foreground ${
-                isActive(`/dashboard/${groupId}/admin/settings`)
-                  ? "text-white"
-                  : "opacity-50 cursor-not-allowed"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.SETTINGS}
-            </a>
-          </nav>
-        )}
-        {!admin && (
-          <nav className="mt-8 space-y-8">
-            <a
-              href={`/dashboard/${groupId}/user/summary`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/user/summary`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.SUMMARY}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/user/instruction`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/user/instruction`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.INSTRUCTION}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/user/eventsPage`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/user/eventsPage`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.EVENTS}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/user/assignments`}
-              className={`block text-lg font-bold ${
-                isActive(`/dashboard/${groupId}/user/assignments`)
-                  ? "text-white"
-                  : "text-gray-500"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.ASSIGNMENTS}
-            </a>
-            <a
-              href={`/dashboard/${groupId}/user/settings`}
-              className={`block text-lg text-muted-foreground ${
-                isActive(`/dashboard/${groupId}/user/settings`)
-                  ? "text-white"
-                  : "opacity-50 cursor-not-allowed"
-              }`}
-            >
-              {SIDEBAR_CONSTANTS.SETTINGS}
-            </a>
-          </nav>
-        )}
+          ))}
+        </nav>
       </div>
       <div>
         <button className="text-sm font-medium hover:underline underline-offset-4">
           <a
             className={`block text-lg text-muted-foreground 
-                  text-white pb-20`}
+                  text-white pb-10`}
             href="/api/auth/logout"
           >
             {SIDEBAR_CONSTANTS.LOGOUT_BUTTON}

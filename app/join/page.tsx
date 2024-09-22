@@ -58,7 +58,6 @@ export default async function Join() {
                     {otherGroups.map((group) => (
                       <GroupCard
                         email={user?.email}
-                        isOwner={1}
                         isMyCard={false}
                         key={group.group_id}
                         name={group.name}

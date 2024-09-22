@@ -138,19 +138,18 @@ export const deleteUserGroup = async (
  * @param group_id - Group Id as a number
  * @returns true if user type is admin (0), otherwise false
  */
-export const getIsAdmin = async (group_id: number): Promise<boolean | undefined> => {
+export const getIsAdmin = async (group_id: number): Promise<UserRoleType[]> => {
   try {
     const session = await getSession();
-    const user_email = session?.user.uemail;
+    const user_email = session?.user.email;
     const response: UserRoleType[] =
       await sql`SELECT u.user_id, ug.group_id, ug.user_type 
       FROM "user_group" ug
       JOIN "user" u ON u.email=${user_email}
       WHERE ug.group_id = ${group_id} AND ug.user_id = u.user_id`;
-    const isAdmin = response[0].user_type === 0 ? true : false
-    return isAdmin;
+    return response;
   } catch (error) {
     console.error("Error retrieving user:", error);
-    return undefined;
+    return [];
   }
 };

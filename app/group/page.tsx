@@ -56,7 +56,6 @@ export default async function Group() {
                     {adminGroups.map((group) => (
                       <GroupCard
                         email={currentUser.email}
-                        isOwner={group.user_type}
                         isMyCard={true}
                         key={group.group_id}
                         name={group.name}
@@ -76,7 +75,6 @@ export default async function Group() {
                     {memberGroups.map((group) => (
                       <GroupCard
                         email={currentUser.email}
-                        isOwner={group.user_type}
                         isMyCard={true}
                         key={group.group_id}
                         name={group.name}

@@ -51,6 +51,7 @@ export const createSubmission = async (formData: SubmissionCardProps) => {
       INSERT INTO submission (title, date, content, event_id, user_id)
       VALUES (${title}, NOW(), ${content}, ${event_id}, ${user_id})
     `;
+    //TODO: Get groupid
     revalidatePath("/dashboard/user/eventsPage");
   } catch (error) {
     console.log(error);
@@ -73,6 +74,7 @@ export const updateSubmission = async (formData: SubmissionCardProps) => {
       SET title=${title}, date=NOW() content=${content}
       WHERE user_id=${user_id} AND event_id=${event_id}
     `;
+    //TODO: Get groupid
     revalidatePath("/dashboard/user/eventsPage");
   } catch (error) {
     console.log(error);
