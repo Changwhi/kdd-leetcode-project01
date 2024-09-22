@@ -89,12 +89,10 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
           {sideBarOptions.map((option, index) => (
             <a
               key={index}
-              href={`/dashboard/${groupId}/${
-                admin ? "admin" : "user"
-              }/${option}`}
+              href={`/dashboard/${groupId}/${option}`}
               className={`block text-lg font-bold ${
                 isActive(
-                  `/dashboard/${groupId}/${admin ? "admin" : "user"}/${option}`
+                  `/dashboard/${groupId}/${option}`
                 )
                   ? "text-white"
                   : "text-gray-500"

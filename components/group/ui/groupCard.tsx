@@ -18,7 +18,6 @@ import {
  * A card that displays a group's information, with a button to join the group if the user is not already part of it.
  *
  * @param email - The email of the user to join the group.
- * @param isOwner - If the user is the owner of the group.
  * @param name - The name of the group.
  * @param description - The description of the group.
  * @param group_id - The id of the group.
@@ -27,14 +26,12 @@ import {
 
 export const GroupCard = ({
   email,
-  isOwner,
   name,
   description,
   group_id,
   isMyCard = false,
 }: {
   email: string;
-  isOwner: number;
   name: string;
   description: string;
   group_id: number;
@@ -50,7 +47,6 @@ export const GroupCard = ({
 
     fetchMembers();
   }, []);
-  const userType = isOwner === 0 ? "admin" : "user";
   return (
     <Card>
       <CardContent className="p-6">
@@ -69,7 +65,7 @@ export const GroupCard = ({
           </div>
           {isMyCard && (
             <Button variant="outline" size="sm">
-              <a href={`/dashboard/${group_id}/${userType}/summary`}>
+              <a href={`/dashboard/${group_id}/summary`}>
                 {GROUP.GOTO}
               </a>
             </Button>

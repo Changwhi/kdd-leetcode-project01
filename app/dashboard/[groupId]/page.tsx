@@ -15,9 +15,9 @@ export default function Page({ params }: { params: { groupId: string } }) {
         route.push(`/group`);
       } else {
         if (userInfo[0].user_type === 0) {
-          route.push(`/dashboard/${params.groupId}/admin/summary`);
+          route.push(`/dashboard/${params.groupId}/summary`);
         } else {
-          route.push(`/dashboard/${params.groupId}/user/summary`);
+          route.push(`/dashboard/${params.groupId}/summary`);
         }
       }
     };
