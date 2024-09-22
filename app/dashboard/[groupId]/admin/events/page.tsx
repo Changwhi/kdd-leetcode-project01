@@ -23,9 +23,9 @@ export default async function Events({
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
-      <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
+      <main className="basis-3/4 bg-white lg:w-3/4">
         <div className="flex flex-col gap-4 justify-center items-start">
-          <h2 className="self-start text-2xl font-bold">
+          <h2 className="self-start text-xl font-bold">
             {EVENTS.UPCOMINGEVENTS}
           </h2>
           <hr className="w-full border-gray-300" />
@@ -46,7 +46,7 @@ export default async function Events({
               />
             ))}
           </div>
-          <h2 className="self-start text-2xl font-bold">
+          <h2 className="self-start text-xl font-bold">
             {EVENTS.PASEDEVENTS}
           </h2>
           <hr className="w-full border-gray-300" />

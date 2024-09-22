@@ -24,12 +24,12 @@ export const Assignments = ({ group_id }: { group_id: number }) => {
 
   return (
     <>
-      <h2 className="text-lg font-bold">{SUMMARY.ASSIGNMENTS_TITLE}</h2>
+      <h2 className="text-xl font-bold">{SUMMARY.ASSIGNMENTS_TITLE}</h2>
       <div className="flex flex-col lg:flex-row">
         <aside className="block lg:hidden basis-1/3 lg:w-1/2">
           <SelectEvent allEvents={allEvents} currEventId={currEventId} setCurrEventId={setCurrEventId}></SelectEvent>
         </aside>
-        <main className="basis-2/3 p-6 bg-white lg:pr-6 lg:w-3/4">
+        <main className="basis-2/3 p-6 bg-white lg:w-3/4">
           <Assignment eventId={currEventId}></Assignment>
         </main>
         <aside className="hidden lg:block basis-1/3 lg:w-1/2">

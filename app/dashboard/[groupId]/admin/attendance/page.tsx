@@ -70,21 +70,20 @@ export default function AttendancePage({
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
- <aside className="block lg:hidden basis-1/3 lg:w-1/2">
+      <aside className="block lg:hidden basis-1/3 lg:w-1/2">
         <SelectEvent
           events={events}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
         ></SelectEvent>
       </aside>
-      <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
+      <main className="basis-3/4 bg-white lg:w-3/4">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-xl font-bold">{selectedEvent?.name}</h1>
             <p className="text-muted-foreground">
               {moment(selectedEvent?.date).format("MMMM Do YYYY, h:mm a")}
             </p>
-            
           </div>
         </div>
         <Attendance
@@ -93,7 +92,7 @@ export default function AttendancePage({
         />
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
-     <SelectEvent
+        <SelectEvent
           events={events}
           selectedEvent={selectedEvent}
           setSelectedEvent={setSelectedEvent}
