@@ -10,32 +10,7 @@ This creates the following routes:
  */
 import { handleAuth, handleCallback } from "@auth0/nextjs-auth0";
 import { NextResponse } from "next/server";
-import { createUser, retrieveUser } from "@/lib/actions/user";
-import { UserGroupProps } from "@/types/group";
-import { createUserGroup } from "@/lib/actions/usergroup";
-
-
-//TODO: This will be deleted after making create/join group page, now all new users will be automatically assigned to group 1 as user
-const addNewUserToGroup = async (email: string) => {
-  try {
-    const response = await retrieveUser(email);
-    if (response.length === 0) {
-      return "User does not exist.";
-    }
-    const user = response[0].user_id;
-    const user_group_form: UserGroupProps = {
-      user_type: 1,
-      init_amount: 27,
-      curr_amount: 27,
-      group_id: 1,
-      user_id: user,
-    };
-    return await createUserGroup(user_group_form);
-  } catch (error) {
-    console.error("Error adding user to group:", error);
-    return "Error adding user to group.";
-  }
-};
+import { createUser } from "@/lib/actions/user";
 
 interface UserProfile {
   name: string;
