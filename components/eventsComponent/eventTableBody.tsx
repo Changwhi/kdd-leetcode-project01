@@ -89,6 +89,7 @@ export const EventTableBody: React.FC<Props> = ({
               name={name}
               topic={topic}
               date={date}
+              zoomLink={zoomLink}
               assign1={assign1}
               assign2={assign2}
               assign3={assign3}

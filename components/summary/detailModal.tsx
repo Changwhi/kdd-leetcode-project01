@@ -1,23 +1,33 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { EventType } from "@/types/event"
-import moment from "moment"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { EventType } from "@/types/event";
+import moment from "moment";
+import { BUTTONS } from "@/text/buttons";
+import { SUMMARY } from "@/text/summary";
 
 interface EventModalProps {
-  event: EventType
-  trigger: React.ReactNode
+  event: EventType;
 }
 
-export function EventModal({ event, trigger }: EventModalProps) {
-  const [isOpen, setIsOpen] = useState(false)
-
+export function EventModal({ event }: EventModalProps) {
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog>
       <DialogTrigger asChild>
-        {trigger}
+        <span className="text-blue-500 cursor-pointer hover:underline">
+          {SUMMARY.SEE_PROJECT_DETAILS}
+        </span>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] p-0">
         <DialogHeader className="p-6 pb-0">
@@ -34,7 +44,12 @@ export function EventModal({ event, trigger }: EventModalProps) {
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Zoom Link:</span>
-            <a href={event.zoomlink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={event.zoomlink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               Join Meeting
             </a>
           </div>
@@ -47,15 +62,15 @@ export function EventModal({ event, trigger }: EventModalProps) {
             </ul>
           </div>
         </div>
-        <div className="p-6 pt-0">
-          <Button 
-            onClick={() => setIsOpen(false)} 
-            className="w-full bg-gray-900 text-white hover:bg-gray-800"
-          >
-            Close
-          </Button>
-        </div>
+        <DialogDescription />
+        <DialogClose asChild>
+          <DialogFooter className="p-6 pt-0">
+            <Button className="w-full bg-gray-900 text-white hover:bg-gray-800">
+              {BUTTONS.BUTTON_CLOSE}
+            </Button>
+          </DialogFooter>
+        </DialogClose>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
