@@ -16,21 +16,20 @@ import { BUTTONS } from "@/text/buttons";
 import {
   createSubmission,
   updateSubmission,
-  retrieveSubmissionsByUserIdEventId,
+  retrieveSubmissionsByUserEmailEventId,
 } from "@/lib/actions/submission";
 import { useEffect, useState } from "react";
 import { SubmissionType } from "@/types/submission";
 import { useToast } from "@/components/ui/use-toast";
 
 interface SubmitAssignmentModalProps {
+  userEmail: string | undefined | null;
   eventID: number;
   submitted: boolean;
 }
 
-//TODO: hardcoded, need to make it dynamically
-const USER_ID: number = 2;
-
 export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
+  userEmail,
   eventID,
   submitted,
 }) => {
@@ -44,8 +43,8 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
     if (submitted) {
       const fetchData = async () => {
         try {
-          const response = await retrieveSubmissionsByUserIdEventId(
-            USER_ID,
+          const response = await retrieveSubmissionsByUserEmailEventId(
+            userEmail,
             eventID
           );
           setOriginalSubmission(response[0]);
@@ -68,14 +67,14 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
           title: formData.get("title") as string,
           content: formData.get("content") as string,
           event_id: eventID,
-          user_id: USER_ID,
+          user_email: userEmail,
         });
       } else {
         await createSubmission({
           title: formData.get("title") as string,
           content: formData.get("content") as string,
           event_id: eventID,
-          user_id: USER_ID,
+          user_email: userEmail,
         });
       }
 

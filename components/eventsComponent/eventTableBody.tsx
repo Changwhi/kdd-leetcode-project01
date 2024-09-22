@@ -117,6 +117,7 @@ export const EventTableBody: React.FC<Props> = ({
             </Button>
           ) : (
             <SubmitAssignmentModal
+              userEmail={userEmail}
               eventID={event_id}
               submitted={assignment_submitted}
             ></SubmitAssignmentModal>
