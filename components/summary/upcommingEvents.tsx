@@ -18,11 +18,6 @@ export const UpcommingEvents = ({events}: {events: EventType[]}) => {
           </p>
           <EventModal 
             event={event} 
-            trigger={
-              <span className="text-blue-500 cursor-pointer hover:underline">
-                {SUMMARY.SEE_PROJECT_DETAILS}
-              </span>
-            } 
           />
         </Card>
       ))}

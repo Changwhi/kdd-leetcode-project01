@@ -9,11 +9,11 @@ export default async function EventPage({
 }) {
   return (
     <div>
-      <h2 className="text-lg font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
+      <h2 className="text-xl font-bold">{EVENTS.UPCOMINGEVENTS}</h2>
       <div className="space-y-4">
         <EventTable group_id={Number(params.groupId)} history={true}></EventTable>
       </div>
-      <h2 className="text-lg font-bold mt-10">{EVENTS.HISTORYEVENTS}</h2>
+      <h2 className="text-xl font-bold mt-10">{EVENTS.HISTORYEVENTS}</h2>
       <div className="space-y-4">
         <EventTable group_id={Number(params.groupId)} history={false}></EventTable>
       </div>
