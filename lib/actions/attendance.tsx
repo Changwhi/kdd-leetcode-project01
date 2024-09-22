@@ -56,8 +56,7 @@ export const createAttendance = async (
     INSERT INTO attendance (attended, date, user_id, event_id)
     VALUES (1, NOW(),${user_id}, ${event_id})
     `;
-    //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
+    revalidatePath("/dashboard");
     return "Attendance created successfully.";
   } catch (error) {
     console.error("Error creating attendance:", error);
@@ -81,8 +80,7 @@ export const createAttendanceWithUserEmail = async (
     INSERT INTO attendance (attended, date, user_id, event_id)
     VALUES (1, NOW(), (SELECT user_id FROM "user" WHERE email = ${user_email}), ${event_id})
   `;
-  //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
+    revalidatePath("/dashboard");
     return "Attendance created successfully.";
   } catch (error) {
     console.error("Error creating attendance:", error);
@@ -106,8 +104,7 @@ export const deleteAttendance = async (
     DELETE FROM attendance
     WHERE user_id=${user_id} AND event_id=${event_id}
     `;
-    //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
+    revalidatePath("/dashboard");
     return "Attendance deleted successfully.";
   } catch (error) {
     console.error("Error deleting attendance:", error);
@@ -131,8 +128,7 @@ export const deleteAttendanceWithUserEmail = async (
     DELETE FROM attendance
     WHERE user_id=(SELECT user_id FROM "user" WHERE email = ${user_email}) AND event_id=${event_id}
     `;
-    //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
+    revalidatePath("/dashboard");
     return "Attendance deleted successfully.";
   } catch (error) {
     console.error("Error deleting attendance:", error);
