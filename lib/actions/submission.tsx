@@ -5,7 +5,6 @@ import {
   SubmissionUserNameType,
 } from "@/types/submission";
 import { sql } from "@/utils/db";
-import { revalidatePath } from "next/cache";
 
 export const retrieveSubmissionsByEventID = async (eventID: number) => {
   try {
@@ -30,14 +29,15 @@ export const retrieveSubmissionsByUserEmailEventId = async (
   eventID: number
 ) => {
   try {
-    if (!userEmail) throw new Error(`User email is not entered`);
-
-    const response: SubmissionType[] = await sql`SELECT s.* 
+    if (userEmail) {
+      const response: SubmissionType[] = await sql`SELECT s.* 
       FROM submission s 
       JOIN "user" u ON u.email=${userEmail}
       WHERE u.user_id=s.user_id AND event_id=${eventID}`;
-    if (response) {
-      return response;
+
+      if (response) {
+        return response;
+      }
     }
     return [];
   } catch (error) {
@@ -60,11 +60,8 @@ export const createSubmission = async (formData: SubmissionCardProps) => {
 
     await sql`
       INSERT INTO submission (title, date, content, event_id, user_id)
-      VALUES (${title}, NOW(), ${content}, ${event_id}, (SELECT user_id FROM user WHERE email = ${user_email}))
+      VALUES (${title}, NOW(), ${content}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${user_email}))
     `;
-
-    //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
   } catch (error) {
     console.log(error);
   }
@@ -84,11 +81,9 @@ export const updateSubmission = async (formData: SubmissionCardProps) => {
 
     await sql`
       UPDATE submission
-      SET title=${title}, date=NOW() content=${content}
-      WHERE user_id=(SELECT user_id FROM user WHERE email = ${user_email}) AND event_id=${event_id}
+      SET title=${title}, date=NOW(), content=${content}
+      WHERE event_id=${event_id} AND user_id=(SELECT user_id FROM "user" WHERE email = ${user_email})
     `;
-    //TODO: Get groupid
-    revalidatePath("/dashboard/user/eventsPage");
   } catch (error) {
     console.log(error);
   }
