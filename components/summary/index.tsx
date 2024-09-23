@@ -28,11 +28,6 @@ export const Summary = async ({
     <EventProvider>
       <div className="flex flex-col min-h-full lg:flex-row">
         <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-xl font-bold">{SUMMARY.TITLE}</h1>
-            </div>
-          </div>
           <div className="mb-6">
             <UpcommingEvents events={upcomingEvents} />
           </div>
