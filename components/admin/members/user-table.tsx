@@ -3,8 +3,6 @@
 import { useState, useMemo } from "react";
 import {
   MoreHorizontal,
-  ChevronUp,
-  ChevronDown,
   Users,
   Mail,
   Filter,
@@ -48,7 +46,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AttendanceType } from "@/types/attendance";
 import {
   kickOutUserFromGroup,
@@ -59,17 +56,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 type DepositStatus = "Received" | "Pending" | "Returned";
 type UserType = 0 | 1;
-
-interface User {
-  user_id: number;
-  name: string;
-  email: string;
-  deposit_status: DepositStatus;
-  avatar: string;
-  curr_amount: number;
-  user_type: UserType;
-}
-
 type SortField =
   | "name"
   | "email"
@@ -240,15 +226,6 @@ export default function UserTable({
       <Badge className={`${colorMap[userType]} font-semibold`}>
         {userType === 0 ? "Admin" : "User"}
       </Badge>
-    );
-  };
-
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortConfig.field !== field) return null;
-    return sortConfig.order === "asc" ? (
-      <ChevronUp className="ml-2 h-4 w-4" />
-    ) : (
-      <ChevronDown className="ml-2 h-4 w-4" />
     );
   };
 
