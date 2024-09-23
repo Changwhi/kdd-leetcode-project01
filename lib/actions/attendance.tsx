@@ -236,24 +236,62 @@ export const forceAttendance = async ({
   attendance_status: number;
 }) => {
   try {
-    console.log(user_id, event_id);
-    const user_event_check: AttendanceType[] = await sql`
-    select attended
-    from attendance
-    where event_id = ${event_id} and user_id = ${user_id}
+    // Fetch the group_id and attendance deduction from the group table
+    const groupDetails = await sql`
+      SELECT g.group_id, g.attendance_deduction
+      FROM "group" g
+      JOIN "event" e ON g.group_id = e.group_id
+      WHERE e.event_id = ${event_id}
     `;
+
+    if (!groupDetails || groupDetails.length === 0) {
+      throw new Error("Group not found for the event.");
+    }
+
+    const { attendance_deduction } = groupDetails[0];
+
+    // Check the current attendance status of the user for the event
+    const user_event_check: AttendanceType[] = await sql`
+      SELECT attended
+      FROM attendance
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
+    `;
+
+    let old_attended_status = user_event_check.length > 0 ? user_event_check[0].attended : null;
+
+    // Determine the impact on curr_amount based on the new attendance status
+    let amount_change = 0;
+
+    if (attendance_status === 1) { // Attended
+      amount_change = attendance_deduction;
+    } else if (attendance_status === 2) { // Late
+      amount_change = -(attendance_deduction / 2);
+    } else if (attendance_status === 0) { // Absent
+      amount_change = -attendance_deduction;
+    }
+
+    // Update curr_amount in user_group even if the user does not exist in attendance
+    await sql`
+      UPDATE user_group
+      SET curr_amount = curr_amount + ${amount_change}
+      WHERE user_id = ${user_id}
+        AND group_id = ${groupDetails[0].group_id}
+    `;
+
+    // Insert or update the attendance status
     if (user_event_check.length == 0) {
       await sql`
-    INSERT INTO attendance (attended, date, user_id, event_id)
-    VALUES (${attendance_status}, NOW(), ${user_id}, ${event_id})
-  `;
+        INSERT INTO attendance (attended, date, user_id, event_id)
+        VALUES (${attendance_status}, NOW(), ${user_id}, ${event_id})
+      `;
     } else {
-      const response: any = await sql`
-      update attendance
-      set attended = ${attendance_status}
-      where event_id = ${event_id} and user_id = ${user_id}
+      await sql`
+        UPDATE attendance
+        SET attended = ${attendance_status}
+        WHERE event_id = ${event_id} AND user_id = ${user_id}
       `;
     }
+
     return true;
   } catch (error: any) {
     console.log(error);
