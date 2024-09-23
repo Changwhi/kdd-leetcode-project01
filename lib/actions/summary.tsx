@@ -4,24 +4,26 @@ import { sql } from "@/utils/db";
 export const retrieveAllUsers = async ({ group_id }: { group_id: number }) => {
   try {
     const response: any[] = await sql`
-            SELECT 
+           SELECT 
     u.user_id, 
     u.name, 
     u.email, 
     ug.curr_amount,
-    json_agg(json_build_object(
-        'event_id', e.event_id,
-        'event_name', e.name,
-        'pullRequest', COALESCE(pr.submitted, false),
-        'attendance', a.attended,
-        'assignments', ARRAY[e.assign1, e.assign2, e.assign3],
-        'deposit', COALESCE(ug.curr_amount, 0)
-    ) ORDER BY e.date) AS events
+    COALESCE(
+        json_agg(json_build_object(
+            'event_id', e.event_id,
+            'event_name', e.name,
+            'pullRequest', COALESCE(pr.submitted, false),
+            'attendance', a.attended,
+            'assignments', ARRAY[e.assign1, e.assign2, e.assign3],
+            'deposit', COALESCE(ug.curr_amount, 0)
+        ) ORDER BY e.date) FILTER (WHERE e.event_id IS NOT NULL), '[]'
+    ) AS events
 FROM 
-    "user" u  -- Use double quotes around user
+    "user" u
 JOIN 
     user_group ug ON u.user_id = ug.user_id AND ug.group_id = ${group_id}
-JOIN 
+LEFT JOIN 
     event e ON ug.group_id = e.group_id
 LEFT JOIN 
     pr ON u.user_id = pr.user_id AND e.event_id = pr.event_id
