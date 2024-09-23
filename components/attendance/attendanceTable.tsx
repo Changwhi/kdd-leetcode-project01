@@ -119,43 +119,78 @@ export const AttendanceTable = ({
   }, [searchTerm, members, attendanceFilter, questionFilter, prFilter]);
 
   const handleAction = async (action: string, user_id: number) => {
-    if (!event_id) {
-      toast({ title: ERROR.ERROR, description: "Event ID is missing." });
-      return;
+  if (!event_id) {
+    toast({ title: ERROR.ERROR, description: "Event ID is missing." });
+    return;
+  }
+
+  // Find the current member's attendance and PR status
+  const currentMember = members.find(member => member.user_id === user_id);
+  if (!currentMember) return;
+
+  // Check if the current state matches the action and return if no change is needed
+  switch (action) {
+    case 'attended':
+      if (currentMember.attended === 1) {
+        toast({ title: "Already attended", description: "This user is already marked as attended." });
+        return;
+      }
+      break;
+    case 'absent':
+      if (currentMember.attended === 0) {
+        toast({ title: "Already absent", description: "This user is already marked as absent." });
+        return;
+      }
+      break;
+    case 'late':
+      if (currentMember.attended === 2) {
+        toast({ title: "Already late", description: "This user is already marked as late." });
+        return;
+      }
+      break;
+    case 'pr':
+      if (currentMember.submitted) {
+        toast({ title: "Already submitted", description: "This user has already submitted a PR." });
+        return;
+      }
+      break;
+    default:
+      throw new Error("Invalid action");
+  }
+
+  setIsLoading(true);
+  try {
+    let response;
+    switch (action) {
+      case 'attended':
+        response = await forceAttendance({ user_id, event_id, attendance_status: 1 });
+        break;
+      case 'absent':
+        response = await forceAttendance({ user_id, event_id, attendance_status: 0 });
+        break;
+      case 'late':
+        response = await forceAttendance({ user_id, event_id, attendance_status: 2 });
+        break;
+      case 'pr':
+        response = await setPR({ user_id, event_id });
+        break;
+      default:
+        throw new Error("Invalid action");
     }
 
-    setIsLoading(true);
-    try {
-      let response;
-      switch (action) {
-        case 'attended':
-          response = await forceAttendance({ user_id, event_id, attendance_status: 1 });
-          break;
-        case 'absent':
-          response = await forceAttendance({ user_id, event_id, attendance_status: 0 });
-          break;
-        case 'late':
-          response = await forceAttendance({ user_id, event_id, attendance_status: 2 });
-          break;
-        case 'pr':
-          response = await setPR({ user_id, event_id });
-          break;
-        default:
-          throw new Error("Invalid action");
-      }
-
-      if (response) {
-        toast({ title: ERROR.SUCCESS, description: ERROR.ACTION_SUCCESS });
-        await fetchAttendance();
-      } else {
-        throw new Error(response || "Action failed");
-      }
-    } catch (error) {
-      toast({ title: ERROR.ERROR, description: error instanceof Error ? error.message : ERROR.ACTION_FAILED });
-    } finally {
-      setIsLoading(false);
+    if (response) {
+      toast({ title: ERROR.SUCCESS, description: ERROR.ACTION_SUCCESS });
+      await fetchAttendance();
+    } else {
+      throw new Error("Action failed");
     }
-  };
+  } catch (error) {
+    toast({ title: ERROR.ERROR, description: error instanceof Error ? error.message : ERROR.ACTION_FAILED });
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const requestSort = (key: keyof AttendanceType) => {
     let direction: 'ascending' | 'descending' = 'ascending';
