@@ -14,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
 /**
  * A card that displays a group's information, with a button to join the group if the user is not already part of it.
  *
@@ -51,9 +52,7 @@ export const GroupCard = ({
     <Card>
       <CardContent className="p-6">
         <div className="mb-4">
-          <h3 className="text-xl font-semibold">
-            {name}
-          </h3>
+          <h3 className="text-xl font-semibold">{name}</h3>
           <p className="text-muted-foreground">{description}</p>
         </div>
         <div className="flex items-center justify-between gap-5">
@@ -65,9 +64,7 @@ export const GroupCard = ({
           </div>
           {isMyCard && (
             <Button variant="outline" size="sm">
-              <a href={`/dashboard/${group_id}/summary`}>
-                {GROUP.GOTO}
-              </a>
+              <a href={`/dashboard/${group_id}/summary`}>{GROUP.GOTO}</a>
             </Button>
           )}
           {!isMyCard && (
@@ -89,7 +86,7 @@ export const GroupCard = ({
                 <form
                   className="space-y-4"
                   action={async (formData: FormData) => {
-                    await joinGroup({ group_id: group_id, email: email });
+                    const response = await joinGroup({ group_id: group_id, email: email });
                   }}
                 >
                   <DialogClose asChild>

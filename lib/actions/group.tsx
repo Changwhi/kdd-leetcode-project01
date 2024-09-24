@@ -189,13 +189,37 @@ export const joinGroup = async ({
   email: string;
 }) => {
   try {
-    const response = await sql`
-    INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
-    VALUES ((SELECT user_id FROM "user" WHERE email = ${email}), ${group_id}, 1, 30, 30)
-    RETURNING group_id
+    // Retrieve total_deposit and init_deduction from the group table
+    const groupData = await sql`
+      SELECT total_deposit, init_deduction
+      FROM "group"
+      WHERE group_id = ${group_id}
     `;
 
-    if (response) {
+    if (groupData.length === 0) {
+      return "Group not found.";
+    }
+
+    const { total_deposit, init_deduction } = groupData[0];
+
+    // Calculate init_amount and curr_amount
+    const init_amount = total_deposit;
+    const curr_amount = total_deposit - init_deduction;
+
+    // Insert user into user_group with the calculated init_amount and curr_amount
+    const response = await sql`
+      INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
+      VALUES (
+        (SELECT user_id FROM "user" WHERE email = ${email}),
+        ${group_id},
+        1, 
+        ${init_amount},
+        ${curr_amount}
+      )
+      RETURNING group_id
+    `;
+
+    if (response.length > 0) {
       revalidatePath("/group");
       return "Joined group successfully.";
     }
@@ -205,3 +229,4 @@ export const joinGroup = async ({
     return "Failed to join group.";
   }
 };
+
