@@ -24,7 +24,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
     user_id: 0,
     name: "",
     email: "",
-    picture: ""
+    picture: "",
   });
 
   const isActive = (path: string) => pathname.startsWith(path);
@@ -37,7 +37,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
           user_id: response.user_id,
           name: response.given_name ? response.given_name : response.username,
           email: response.email,
-          picture: response.picture
+          picture: response.picture,
         });
       }
     };
@@ -49,7 +49,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
       <div>
         <Link
           href={"/group"}
-          className="flex flex-row items-center text-sm text-white"
+          className="flex flex-row items-center text-white text-lg text-muted-foreground pb-2"
         >
           <div>
             <ArrowLeftIcon className="pr-2" />
@@ -58,7 +58,10 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         </Link>
         <div className="py-16 flex flex-col items-start">
           <Avatar className="relative w-24 h-24">
-            <AvatarImage src={user.picture ? user.picture : "/avatar.png"} alt="User Avatar" />
+            <AvatarImage
+              src={user.picture ? user.picture : "/avatar.png"}
+              alt="User Avatar"
+            />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
           <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
@@ -101,7 +104,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
                   : "text-gray-500"
               }`}
             >
-              {SIDEBAR_CONSTANTS.ATTENDANCE}
+              {SIDEBAR_CONSTANTS.ACTIVITIES}
             </a>
             <a
               href={`/dashboard/${groupId}/admin/events`}
