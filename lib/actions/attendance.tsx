@@ -188,29 +188,63 @@ export const setPR = async ({
   event_id: number;
 }) => {
   try {
-    console.log(user_id, event_id);
-    let user_event_check: AttendanceType[] = await sql`
-    select *
-    from pr
-    where event_id = ${event_id} and user_id = ${user_id}
+    // Fetch group_id and pr_deduction from the group table based on event_id
+    const groupDetails = await sql`
+      SELECT g.group_id, g.pr_deduction
+      FROM "group" g
+      JOIN "event" e ON g.group_id = e.group_id
+      WHERE e.event_id = ${event_id}
     `;
-    let desired_submitted_value = undefined;
-    if (user_event_check.length == 0) {
-      await sql`
-      insert into pr (user_id, event_id, submitted)
-      values (${user_id}, ${event_id}, false)
-      `;
-      desired_submitted_value = true;
-    } else {
-      console.log(user_event_check);
-      desired_submitted_value = user_event_check[0].submitted ? false : true;
+
+    if (!groupDetails || groupDetails.length === 0) {
+      throw new Error("Group not found for the event.");
     }
 
-    await sql`
-    update pr
-    set submitted = ${desired_submitted_value}
-    where event_id = ${event_id} and user_id = ${user_id}
+    const { pr_deduction } = groupDetails[0];
+
+    // Check if there is an existing PR submission for this user and event
+    let user_event_check: { submitted: boolean }[] = await sql`
+      SELECT submitted
+      FROM pr
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
     `;
+
+    let desired_submitted_value = undefined;
+    let amount_change = 0;
+
+    if (user_event_check.length == 0) {
+      // No PR record exists, insert a new one with submitted = true, but no deduction change
+      await sql`
+        INSERT INTO pr (user_id, event_id, submitted)
+        VALUES (${user_id}, ${event_id}, true)
+      `;
+      desired_submitted_value = true;  // Set PR as submitted, no deduction change
+    } else if (user_event_check[0].submitted) {
+      // If PR exists and is currently submitted (true), change to false and subtract deduction
+      desired_submitted_value = false;
+      amount_change = -pr_deduction;  // Subtract deduction
+    } else {
+      // If PR exists and is not submitted (false), change to true and add deduction
+      desired_submitted_value = true;
+      amount_change = pr_deduction;  // Add deduction
+    }
+
+    // Update the PR submission status
+    await sql`
+      UPDATE pr
+      SET submitted = ${desired_submitted_value}
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
+    `;
+
+    // Only update curr_amount if there is a deduction change (i.e., PR existed)
+    if (user_event_check.length > 0) {
+      await sql`
+        UPDATE user_group
+        SET curr_amount = curr_amount + ${amount_change}
+        WHERE user_id = ${user_id} AND group_id = ${groupDetails[0].group_id}
+      `;
+    }
+
     return true;
   } catch (error: any) {
     console.log(error);
