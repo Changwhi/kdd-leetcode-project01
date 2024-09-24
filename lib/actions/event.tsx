@@ -2,6 +2,8 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
+import moment from "moment-timezone";
+
 /**
  * Retrieves a list of events from the database.
  *
@@ -9,14 +11,28 @@ import { revalidatePath } from "next/cache";
  */
 export const retrieveEvents = async (group_id: number) => {
   try {
-    const response: EventType[] =
-      await sql`SELECT * FROM event where group_id = ${group_id} ORDER BY date DESC`;
-    if (response) {
-      return response;
+    const events: EventType[] = await sql`
+      SELECT 
+        event_id, 
+        name, 
+        date,
+        assign1, 
+        assign2, 
+        assign3,
+        zoomLink,
+        topic,
+        group_id,
+        processed
+      FROM event
+      WHERE group_id = ${group_id}
+      ORDER BY date DESC;
+    `;
+    if (events) {
+      return events;
     }
     return [];
   } catch (error) {
-    console.log(error);
+    console.error("Failed to retrieve events:", error);
     return [];
   }
 };
@@ -47,24 +63,12 @@ export const addEvent = async ({
   assign3: string;
 }) => {
   try {
-    console.log(
-      group_id,
-      name,
-      date,
-      topic,
-      zoomlink,
-      assign1,
-      assign2,
-      assign3
-    );
-
     await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
     `;
-    revalidatePath(`/dashboard/${group_id}/events`);
   } catch (error) {
-    console.log(error);
+    console.error("Error adding event:", error);
   }
 };
 
