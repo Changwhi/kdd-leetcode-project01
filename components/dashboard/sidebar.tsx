@@ -32,7 +32,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
     ? [
         "summary",
         "instruction",
-        "attendance",
+        "activities",
         "events",
         "assignments",
         "members",
