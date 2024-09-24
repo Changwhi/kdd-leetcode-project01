@@ -1,3 +1,5 @@
+import { Activity } from "lucide-react";
+
 export const SIDEBAR_CONSTANTS = {
   AVATAR_ALT: "User Avatar",
   USER_NAME: "Chul Su",
@@ -5,7 +7,7 @@ export const SIDEBAR_CONSTANTS = {
   USER_EMAIL: "samantha@email.com",
   SUMMARY: "Summary",
   INSTRUCTION: "Instruction",
-  ATTENDANCE: "Attendance",
+  ACTIVITIES: "Activities",
   EVENTS: "Events",
   ASSIGNMENTS: "Assignments",
   MEMBERS: "Members",
@@ -14,5 +16,5 @@ export const SIDEBAR_CONSTANTS = {
   LINK_ACTIVE: "block text-lg font-bold text-white",
   LINK_INACTIVE: "block text-lg font-bold text-gray-500",
   LOGOUT_BUTTON: "Logout",
-  BACK_BUTTON: "Group Page",
+  BACK_BUTTON: "Exit Dashboard",
 };
