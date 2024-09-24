@@ -255,15 +255,16 @@ export const AttendanceTable = ({
 
   const StatusIcon = ({ status }: { status: boolean | number | null }) => {
     if (status === 1) return <Check className="w-4 h-4 text-green-500" />;
+    if (status === true) return <Check className="w-4 h-4 text-green-500" />;
     if (status === 2) return <HelpCircle className="w-4 h-4 text-yellow-500" />;
     if (status === 0) return <X className="w-4 h-4 text-red-500" />;
-    return <HelpCircle className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
+    return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
   };
 
   // New PRStatusIcon component for PR status
   const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
     if (submitted === null)
-      return <HelpCircle className="w-4 h-4 text-gray-500" />; // Unknown status
+      return <X className="w-4 h-4 text-gray-500" />; // Unknownstatus
     return submitted ? (
       <Check className="w-4 h-4 text-green-500" /> // Use ! for submitted
     ) : (
