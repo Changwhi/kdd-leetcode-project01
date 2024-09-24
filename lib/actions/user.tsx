@@ -115,6 +115,7 @@ export const setDepositStatus = async ({
   status: "Received" | "Pending" | "Returned";
 }) => {
   try {
+    console.log(user_id, group_id, status);
     const response: ResponseType[] = await sql`
 UPDATE user_group
 SET deposit_status = ${status}

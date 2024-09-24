@@ -28,4 +28,5 @@ export const GROUP = {
   MARKED_AS_PRESENT: "Marked as Present",
   MARKED_AS_ABSENT: "Marked as Absent",
   MARKED_AS_LATE: "Marked as Late",
+  PR_DEDUCTION: "PR Deduction",
 };

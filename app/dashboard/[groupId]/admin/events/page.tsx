@@ -4,7 +4,6 @@ import { EVENTS } from "@/text/events";
 import { BoxIcon } from "@/components/admin/events/icons/boxIcon";
 import { retrieveEvents } from "@/lib/actions/event";
 import moment from "moment";
-import { revalidatePath } from "next/cache";
 import { CreateEventModal } from "@/components/admin/events/create-event-modal";
 
 export default async function Events({

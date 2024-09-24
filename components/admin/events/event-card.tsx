@@ -1,30 +1,16 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { EventCardProps } from "@/types/event";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
-import Link from "next/link";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { EVENTS } from "@/text/events";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { deleteEvent, updateEvent } from "@/lib/actions/event";
-import { useState } from "react";
-import { ExternalLinkIcon, Trash2 } from "lucide-react";
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { ExternalLinkIcon, Trash2, Calendar, CheckSquare, Edit } from "lucide-react"
+import { EventCardProps } from "@/types/event"
+import { EVENTS } from "@/text/events"
+import { deleteEvent, updateEvent } from "@/lib/actions/event"
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -38,114 +24,102 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
-  const formattedDate = date.toISOString().split("T")[0];
-  const [eventName, setEventName] = useState(name);
-  const [eventDate, setEventDate] = useState(formattedDate);
-  const [eventTopic, setEventTopic] = useState(topic);
-  const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
-  const [eventAssign1, setEventAssign1] = useState(assign1);
-  const [eventAssign2, setEventAssign2] = useState(assign2);
-  const [eventAssign3, setEventAssign3] = useState(assign3);
+  const formattedDate = date.toISOString().split("T")[0]
+  const [eventName, setEventName] = useState(name)
+  const [eventDate, setEventDate] = useState(formattedDate)
+  const [eventTopic, setEventTopic] = useState(topic)
+  const [eventZoomlink, setEventZoomlink] = useState(zoomlink)
+  const [eventAssign1, setEventAssign1] = useState(assign1)
+  const [eventAssign2, setEventAssign2] = useState(assign2)
+  const [eventAssign3, setEventAssign3] = useState(assign3)
 
   const formatDateTime = (date: Date) => {
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "pm" : "am";
-
-    hours = hours % 12 || 12;
-
-    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-  };
+    const options: Intl.DateTimeFormatOptions = {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }
+    return new Intl.DateTimeFormat('en-US', options).format(date)
+  }
 
   return (
-    <Card className="w-80 max-w-md shadow-lg hover:shadow-xl">
-      <CardHeader>
+    <Card className="w-md max-w-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <CardHeader className="bg-primary text-primary-foreground p-6">
         <div className="flex items-center justify-between">
-          <CardTitle>{name}</CardTitle>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="ghost" size={"sm"}>
-                                <Trash2 className="w-5 h-5" />
-
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
-              <DialogHeader>
-                <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
-                <DialogDescription>
-                  {EVENTS.REMOVE_DESCRIPTION}
-                </DialogDescription>
-              </DialogHeader>
-              <form
-                className="space-y-4"
-                action={async (formData: FormData) => {
-                  await deleteEvent(event_id);
-                }}
-              >
-                <DialogClose asChild>
-                  <DialogFooter>
-                    <Button type="submit">{EVENTS.REMOVE_BUTTON}</Button>
-                  </DialogFooter>
-                </DialogClose>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <CardTitle className="text-2xl font-bold">{name}</CardTitle>
+          {admin && (
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/20">
+                  <Trash2 className="w-5 h-5" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
+                  <DialogDescription>{EVENTS.REMOVE_DESCRIPTION}</DialogDescription>
+                </DialogHeader>
+                <form
+                  className="space-y-4"
+                  action={async () => {
+                    await deleteEvent(event_id)
+                  }}
+                >
+                  <DialogClose asChild>
+                    <DialogFooter>
+                      <Button type="submit" variant="destructive">{EVENTS.REMOVE_BUTTON}</Button>
+                    </DialogFooter>
+                  </DialogClose>
+                </form>
+              </DialogContent>
+            </Dialog>
+          )}
         </div>
-        <div className="pt-3 text-sm text-muted-foreground">
+        <div className="flex items-center mt-2 text-sm opacity-90">
+          <Calendar className="w-4 h-4 mr-2" />
           {formatDateTime(new Date(date))}
         </div>
       </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground">{topic}</p>
-        <div className="mt-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <CheckIcon className="h-5 w-5 text-primary" />
-            <span>{assign1}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckIcon className="h-5 w-5 text-primary" />
-            <span>{assign2}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckIcon className="h-5 w-5 text-primary" />
-            <span>{assign3}</span>
-          </div>
-        </div>
+      <CardContent className="p-6">
+        <h3 className="font-semibold text-lg mb-2">Topic</h3>
+        <p className="text-muted-foreground mb-4">{topic}</p>
+        <h3 className="font-semibold text-lg mb-2">Assignments</h3>
+        <ul className="space-y-2">
+          {[assign1, assign2, assign3].map((assignment, index) => (
+            <li key={index} className="flex items-center">
+              <CheckSquare className="w-5 h-5 text-primary mr-2" />
+              <span>{assignment}</span>
+            </li>
+          ))}
+        </ul>
       </CardContent>
-      <CardFooter className="flex justify-center ">
-        {/* <Button
-          className="w-full hover:border-gray-700 hover:text-gray-700 transition-all duration-200"
-          variant="outline"
-        > */}
+      <CardFooter className="flex justify-between items-center p-6 bg-gray-50">
         <Link
-          className="w-full text-base text-primary hover:underline inline-flex items-center"
+          className="text-base text-primary hover:underline inline-flex items-center"
           href={zoomlink}
           target="_blank"
-          prefetch={false}
           rel="noopener noreferrer"
         >
-          {EVENTS.LINK} <ExternalLinkIcon className="ml-1 h-5 w-5" />
+          {EVENTS.LINK} <ExternalLinkIcon className="ml-2 h-5 w-5" />
         </Link>
-        {/* </Button> */}
         {admin && (
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="w-full hover:bg-gray-700 hover:text-white transition-all duration-200">
-                {EVENTS.EDIT}
+              <Button variant="outline">
+                <Edit className="w-4 h-4 mr-2" /> {EVENTS.EDIT}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
-                <DialogTitle>Edit</DialogTitle>
+                <DialogTitle>Edit Event</DialogTitle>
                 <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
               </DialogHeader>
               <form
                 className="space-y-4"
-                action={async (formData: FormData) => {
+                action={async () => {
                   await updateEvent({
                     name: eventName,
                     date: eventDate,
@@ -156,95 +130,57 @@ export const EventCard: React.FC<EventCardProps> = ({
                     assign1: eventAssign1,
                     assign2: eventAssign2,
                     assign3: eventAssign3,
-                  });
+                  })
                 }}
               >
-                <div className="grid gap-4 py-4">
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="title" className="text-right">
-                      {EVENTS.TITLE}
-                    </Label>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">{EVENTS.TITLE}</Label>
                     <Input
                       id="title"
                       value={eventName}
                       onChange={(e) => setEventName(e.target.value)}
-                      className="col-span-3"
                       name="name"
                     />
                   </div>
-
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="date" className="text-right">
-                      {EVENTS.DATE}
-                    </Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="date">{EVENTS.DATE}</Label>
                     <Input
                       id="date"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
-                      className="col-span-3"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="topic" className="text-right">
-                      {EVENTS.TOPIC}
-                    </Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="topic">{EVENTS.TOPIC}</Label>
                     <Input
                       id="topic"
                       value={eventTopic}
                       onChange={(e) => setEventTopic(e.target.value)}
-                      className="col-span-3"
                       name="topic"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="zoomlink" className="text-right">
-                      {EVENTS.ZOOMLINK}
-                    </Label>
+                  <div className="space-y-2">
+                    <Label htmlFor="zoomlink">{EVENTS.ZOOMLINK}</Label>
                     <Input
                       id="zoomlink"
                       value={eventZoomlink}
                       onChange={(e) => setEventZoomlink(e.target.value)}
-                      className="col-span-3"
                       name="zoomlink"
                     />
                   </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="assign1" className="text-right">
-                      {EVENTS.ASSGINMENT_1}
-                    </Label>
-                    <Input
-                      id="assign1"
-                      value={eventAssign1}
-                      onChange={(e) => setEventAssign1(e.target.value)}
-                      className="col-span-3"
-                      name="assign1"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="assign2" className="text-right">
-                      {EVENTS.ASSGINMENT_2}
-                    </Label>
-                    <Input
-                      id="assign2"
-                      value={eventAssign2}
-                      onChange={(e) => setEventAssign2(e.target.value)}
-                      className="col-span-3"
-                      name="assign2"
-                    />
-                  </div>
-                  <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="assign3" className="text-right">
-                      {EVENTS.ASSGINMENT_3}
-                    </Label>
-                    <Input
-                      id="assign3"
-                      value={eventAssign3}
-                      onChange={(e) => setEventAssign3(e.target.value)}
-                      className="col-span-3"
-                      name="assign3"
-                    />
-                  </div>
+                  {[1, 2, 3].map((num) => (
+                    <div key={num} className="space-y-2">
+                      <Label htmlFor={`assign${num}`}>{EVENTS[`ASSGINMENT_${num}` as keyof typeof EVENTS]}</Label>
+                      <Input
+                        id={`assign${num}`}
+                        value={eval(`eventAssign${num}`)}
+                        onChange={(e) => eval(`setEventAssign${num}(e.target.value)`)}
+                        name={`assign${num}`}
+                      />
+                    </div>
+                  ))}
                 </div>
                 <DialogClose asChild>
                   <DialogFooter>
@@ -257,44 +193,5 @@ export const EventCard: React.FC<EventCardProps> = ({
         )}
       </CardFooter>
     </Card>
-  );
-};
-
-function CheckIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M20 6 9 17l-5-5" />
-    </svg>
-  );
-}
-
-function XIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M18 6 6 18" />
-      <path d="m6 6 12 12" />
-    </svg>
-  );
+  )
 }

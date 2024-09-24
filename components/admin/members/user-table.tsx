@@ -3,8 +3,6 @@
 import { useState, useMemo } from "react";
 import {
   MoreHorizontal,
-  ChevronUp,
-  ChevronDown,
   Users,
   Mail,
   Filter,
@@ -48,7 +46,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AttendanceType } from "@/types/attendance";
 import {
   kickOutUserFromGroup,
@@ -59,17 +56,6 @@ import { useToast } from "@/components/ui/use-toast";
 
 type DepositStatus = "Received" | "Pending" | "Returned";
 type UserType = 0 | 1;
-
-interface User {
-  user_id: number;
-  name: string;
-  email: string;
-  deposit_status: DepositStatus;
-  avatar: string;
-  curr_amount: number;
-  user_type: UserType;
-}
-
 type SortField =
   | "name"
   | "email"
@@ -80,8 +66,10 @@ type SortOrder = "asc" | "desc";
 
 export default function UserTable({
   usersInGroup,
+  group_id,
 }: {
   usersInGroup: AttendanceType[];
+  group_id: number;
 }) {
   const [users, setUsers] = useState<AttendanceType[]>(
     usersInGroup.map((user) => ({
@@ -243,15 +231,6 @@ export default function UserTable({
     );
   };
 
-  const SortIcon = ({ field }: { field: SortField }) => {
-    if (sortConfig.field !== field) return null;
-    return sortConfig.order === "asc" ? (
-      <ChevronUp className="ml-2 h-4 w-4" />
-    ) : (
-      <ChevronDown className="ml-2 h-4 w-4" />
-    );
-  };
-
   return (
     <>
       <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-6">
@@ -403,7 +382,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Received"
                           )
                         }
@@ -414,7 +393,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Pending"
                           )
                         }
@@ -425,7 +404,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Returned"
                           )
                         }
@@ -437,7 +416,7 @@ export default function UserTable({
                         onClick={() =>
                           handleUserTypeChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             user.user_type === 0 ? 1 : 0
                           )
                         }
@@ -467,7 +446,7 @@ export default function UserTable({
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() =>
-                                handleKickOut(user.user_id, user.group_id)
+                                handleKickOut(user.user_id, group_id)
                               }
                             >
                               Confirm

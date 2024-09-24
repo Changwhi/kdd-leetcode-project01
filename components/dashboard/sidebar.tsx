@@ -60,7 +60,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
       <div>
         <Link
           href={"/group"}
-          className="flex flex-row items-center text-sm text-white"
+          className="flex flex-row items-center text-white text-lg text-muted-foreground pb-2"
         >
           <div>
             <ArrowLeftIcon className="pr-2" />

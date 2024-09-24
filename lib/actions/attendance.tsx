@@ -188,29 +188,63 @@ export const setPR = async ({
   event_id: number;
 }) => {
   try {
-    console.log(user_id, event_id);
-    let user_event_check: AttendanceType[] = await sql`
-    select *
-    from pr
-    where event_id = ${event_id} and user_id = ${user_id}
+    // Fetch group_id and pr_deduction from the group table based on event_id
+    const groupDetails = await sql`
+      SELECT g.group_id, g.pr_deduction
+      FROM "group" g
+      JOIN "event" e ON g.group_id = e.group_id
+      WHERE e.event_id = ${event_id}
     `;
-    let desired_submitted_value = undefined;
-    if (user_event_check.length == 0) {
-      await sql`
-      insert into pr (user_id, event_id, submitted)
-      values (${user_id}, ${event_id}, false)
-      `;
-      desired_submitted_value = true;
-    } else {
-      console.log(user_event_check);
-      desired_submitted_value = user_event_check[0].submitted ? false : true;
+
+    if (!groupDetails || groupDetails.length === 0) {
+      throw new Error("Group not found for the event.");
     }
 
-    await sql`
-    update pr
-    set submitted = ${desired_submitted_value}
-    where event_id = ${event_id} and user_id = ${user_id}
+    const { pr_deduction } = groupDetails[0];
+
+    // Check if there is an existing PR submission for this user and event
+    let user_event_check: { submitted: boolean }[] = await sql`
+      SELECT submitted
+      FROM pr
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
     `;
+
+    let desired_submitted_value = undefined;
+    let amount_change = 0;
+
+    if (user_event_check.length == 0) {
+      // No PR record exists, insert a new one with submitted = true, but no deduction change
+      await sql`
+        INSERT INTO pr (user_id, event_id, submitted)
+        VALUES (${user_id}, ${event_id}, true)
+      `;
+      desired_submitted_value = true;  // Set PR as submitted, no deduction change
+    } else if (user_event_check[0].submitted) {
+      // If PR exists and is currently submitted (true), change to false and subtract deduction
+      desired_submitted_value = false;
+      amount_change = -pr_deduction;  // Subtract deduction
+    } else {
+      // If PR exists and is not submitted (false), change to true and add deduction
+      desired_submitted_value = true;
+      amount_change = pr_deduction;  // Add deduction
+    }
+
+    // Update the PR submission status
+    await sql`
+      UPDATE pr
+      SET submitted = ${desired_submitted_value}
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
+    `;
+
+    // Only update curr_amount if there is a deduction change (i.e., PR existed)
+    if (user_event_check.length > 0) {
+      await sql`
+        UPDATE user_group
+        SET curr_amount = curr_amount + ${amount_change}
+        WHERE user_id = ${user_id} AND group_id = ${groupDetails[0].group_id}
+      `;
+    }
+
     return true;
   } catch (error: any) {
     console.log(error);
@@ -236,24 +270,62 @@ export const forceAttendance = async ({
   attendance_status: number;
 }) => {
   try {
-    console.log(user_id, event_id);
-    const user_event_check: AttendanceType[] = await sql`
-    select attended
-    from attendance
-    where event_id = ${event_id} and user_id = ${user_id}
+    // Fetch the group_id and attendance deduction from the group table
+    const groupDetails = await sql`
+      SELECT g.group_id, g.attendance_deduction
+      FROM "group" g
+      JOIN "event" e ON g.group_id = e.group_id
+      WHERE e.event_id = ${event_id}
     `;
+
+    if (!groupDetails || groupDetails.length === 0) {
+      throw new Error("Group not found for the event.");
+    }
+
+    const { attendance_deduction } = groupDetails[0];
+
+    // Check the current attendance status of the user for the event
+    const user_event_check: AttendanceType[] = await sql`
+      SELECT attended
+      FROM attendance
+      WHERE event_id = ${event_id} AND user_id = ${user_id}
+    `;
+
+    let old_attended_status = user_event_check.length > 0 ? user_event_check[0].attended : null;
+
+    // Determine the impact on curr_amount based on the new attendance status
+    let amount_change = 0;
+
+    if (attendance_status === 1) { // Attended
+      amount_change = attendance_deduction;
+    } else if (attendance_status === 2) { // Late
+      amount_change = -(attendance_deduction / 2);
+    } else if (attendance_status === 0) { // Absent
+      amount_change = -attendance_deduction;
+    }
+
+    // Update curr_amount in user_group even if the user does not exist in attendance
+    await sql`
+      UPDATE user_group
+      SET curr_amount = curr_amount + ${amount_change}
+      WHERE user_id = ${user_id}
+        AND group_id = ${groupDetails[0].group_id}
+    `;
+
+    // Insert or update the attendance status
     if (user_event_check.length == 0) {
       await sql`
-    INSERT INTO attendance (attended, date, user_id, event_id)
-    VALUES (${attendance_status}, NOW(), ${user_id}, ${event_id})
-  `;
+        INSERT INTO attendance (attended, date, user_id, event_id)
+        VALUES (${attendance_status}, NOW(), ${user_id}, ${event_id})
+      `;
     } else {
-      const response: any = await sql`
-      update attendance
-      set attended = ${attendance_status}
-      where event_id = ${event_id} and user_id = ${user_id}
+      await sql`
+        UPDATE attendance
+        SET attended = ${attendance_status}
+        WHERE event_id = ${event_id} AND user_id = ${user_id}
       `;
     }
+
     return true;
   } catch (error: any) {
     console.log(error);

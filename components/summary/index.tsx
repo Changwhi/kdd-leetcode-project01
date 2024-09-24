@@ -27,32 +27,19 @@ export const Summary = async ({
   return (
     <EventProvider>
       <div className="flex flex-col min-h-full lg:flex-row">
-        <main className="basis-3/4 bg-white lg:w-3/4">
-          <div className="flex justify-between items-center">
-              <h1 className="text-xl font-bold">{SUMMARY.TITLE}</h1>
-          </div>
-          <div className="m-3">
-            <div className="mb-6">
-            <UpcommingEvents events={upcomingEvents} />
-          </div>
+        <main className="basis-3/4 p-6 bg-white lg:pr-6 lg:w-3/4">
+          <UpcommingEvents events={upcomingEvents} />
           <div className="overflow-x-auto mt-5">
-            <h1 className="text-lg font-bold">{SUMMARY.TABLE_TITLE}</h1>
             <SummaryTable usersInGroup={users} />
           </div>
-          </div>
-          
         </main>
         <aside className="basis-1/4 w-1/2 xl:w-80 bg-slate-50 p-6 rounded-xl">
-          <div className="mb-6 w-full">
-            <CalendarTool eventdates={eventdates} />
-          </div>
-          <div className="mt-6">
-            <SelectedEvent
-              givenEvents={events}
-              group_id={group_id}
-              admin={admin}
-            />
-          </div>
+          <CalendarTool eventdates={eventdates} />
+          <SelectedEvent
+            givenEvents={events}
+            group_id={group_id}
+            admin={admin}
+          />
         </aside>
       </div>
     </EventProvider>

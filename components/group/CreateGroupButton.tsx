@@ -139,6 +139,19 @@ export const CreateGroupButton = ({ email }: { email: string }) => {
                 required
               />
             </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="prDeduction" className="text-right">
+                {GROUP.PR_DEDUCTION}
+              </Label>
+              <Input
+                id="prDeduction"
+                className="col-span-3"
+                name="prDeduction"
+                placeholder="e.g. 10 (CAD 10)"
+                type="number"
+                required
+              />
+            </div>
           </div>
           <DialogClose asChild>
             <DialogFooter>

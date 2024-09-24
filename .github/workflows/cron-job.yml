@@ -1,0 +1,14 @@
+name: Trigger Vercel API Cron Job
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This runs the job every day at midnight UTC
+  workflow_dispatch:     # Allows the workflow to be triggered manually
+
+jobs:
+  call-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Vercel API to adjust curr_amount
+        run: |
+          curl -X GET https://kdd-leetcode-project01.vercel.app/api/cron-job

@@ -88,3 +88,63 @@ export const updateSubmission = async (formData: SubmissionCardProps) => {
     console.log(error);
   }
 };
+
+export const adjustCurrAmountForAllUsers = async () => {
+  try {
+    // Get all events that have passed and haven't been processed yet
+    const events = await sql`
+      SELECT event_id, group_id, date
+      FROM event
+      WHERE date < NOW() AND processed = FALSE  -- Only get unprocessed events
+    `;
+
+    if (!events || events.length === 0) {
+      return "No unprocessed events to check.";
+    }
+
+    // Iterate through each unprocessed event
+    for (const event of events) {
+      const { event_id, group_id } = event;
+
+      // Get the assignment deduction from the group for the event
+      const group = await sql`
+        SELECT assignment_deduction
+        FROM "group"
+        WHERE group_id = ${group_id}
+      `;
+
+      if (!group || group.length === 0) {
+        console.log(`Group not found for event_id: ${event_id}`);
+        continue;
+      }
+
+      const assignment_deduction = group[0].assignment_deduction;
+
+      // Deduct curr_amount for all users who haven't submitted their assignments for the event
+      await sql`
+        UPDATE user_group
+        SET curr_amount = curr_amount - ${assignment_deduction}
+        WHERE user_id IN (
+          SELECT u.user_id
+          FROM user_group u
+          LEFT JOIN submission s ON u.user_id = s.user_id AND s.event_id = ${event_id}
+          WHERE u.group_id = ${group_id} AND s.submission_id IS NULL
+        )
+      `;
+
+      // Mark the event as processed
+      await sql`
+        UPDATE event
+        SET processed = TRUE
+        WHERE event_id = ${event_id}
+      `;
+
+      console.log(`curr_amount adjusted by -${assignment_deduction} for users in event_id: ${event_id}`);
+    }
+
+    return "curr_amount adjustments completed for all unprocessed events.";
+  } catch (error) {
+    console.error('Error adjusting curr_amount for all users:', error);
+    throw error;
+  }
+};

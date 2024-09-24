@@ -1,15 +1,11 @@
 "use client";
-import { Card } from "@/components/ui/card";
-import { ATTENDANCE } from "@/text/attendance";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { retrieveEvents } from "@/lib/actions/event";
 import { EventType } from "@/types/event";
 import moment from "moment";
-import { retrieveAttendance } from "@/lib/actions/attendance";
-import { AttendanceType } from "@/types/attendance";
 import Attendance from "@/components/attendance";
-import { SelectEvent } from "@/components/attendance/selectEvents";
+import { SelectEvent } from "@/components/assignments/selectEvents";
 
 /**
  * This component renders a page for viewing attendance of a given event.
@@ -27,54 +23,43 @@ export default function AttendancePage({
   const { toast } = useToast();
   const [selectedEvent, setSelectedEvent] = useState<EventType>();
   const [events, setEvents] = useState<EventType[]>([]);
-  const [attendance, setAttendance] = useState<AttendanceType[]>([]);
-  const handleEvent = (event: EventType) => {
-    setSelectedEvent(event);
-  };
+  const [currEventId, setCurrEventId] = useState<number>(-1);
 
-  useEffect(() => {
-    const fetchData = async ({ event_id }: { event_id: number }) => {
-      try {
-        const response = await retrieveAttendance({
-          event_id: event_id,
-          group_id: Number(params.groupId),
-        });
-        if (!response) {
-          setAttendance([]);
-          return;
-        }
-        setAttendance(response);
-      } catch (error) {
-        toast({ title: "Error", description: "Fail to load data" });
-      }
-    };
-
-    if (selectedEvent) {
-      fetchData({ event_id: selectedEvent?.event_id });
-    }
-  }, [selectedEvent]);
-
+  // Fetch the events on initial load
   useEffect(() => {
     const fetchData = async () => {
       try {
         const eventList = await retrieveEvents(Number(params.groupId));
         setEvents(eventList);
-        setSelectedEvent(eventList[0]);
+        if (eventList.length > 0) {
+          setSelectedEvent(eventList[0]);
+          setCurrEventId(eventList[0].event_id);
+        }
       } catch (error) {
         toast({ title: "Error", description: "Fail to load data" });
       }
     };
 
     fetchData();
-  }, []);
+  }, [params.groupId, toast]);
+
+  // Update selectedEvent when currEventId changes
+  useEffect(() => {
+    if (currEventId !== null) {
+      const newSelectedEvent = events.find(
+        (event) => event.event_id === currEventId
+      );
+      setSelectedEvent(newSelectedEvent);
+    }
+  }, [currEventId, events]);
 
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
       <aside className="block lg:hidden basis-1/3 lg:w-1/2">
         <SelectEvent
-          events={events}
-          selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
+          allEvents={events}
+          currEventId={currEventId}
+          setCurrEventId={setCurrEventId}
         ></SelectEvent>
       </aside>
       <main className="basis-3/4 bg-white lg:w-3/4">
@@ -91,35 +76,12 @@ export default function AttendancePage({
           group_id={Number(params.groupId)}
         />
       </main>
-      <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">
+      <aside className="hidden lg:block basis-1/3 lg:w-1/2">
         <SelectEvent
-          events={events}
-          selectedEvent={selectedEvent}
-          setSelectedEvent={setSelectedEvent}
+          allEvents={events}
+          currEventId={currEventId}
+          setCurrEventId={setCurrEventId}
         ></SelectEvent>
-
-        {/* <div className="mb-6">
-          <div className="space-y-4 mt-4">
-            <h2 className="text-lg font-bold">{ATTENDANCE.SELECT_EVENTS}</h2>
-            {events.map((event, index) => (
-              <Card
-                key={index}
-                className={`p-4 hover:bg-slate-300 hover:cursor-pointer ${
-                  selectedEvent?.event_id === event.event_id
-                    ? "bg-blue-100"
-                    : ""
-                }`}
-                onClick={() => handleEvent(event)}
-              >
-                <h1 className="text-lg font-semibold">{event.name}</h1>
-                <p className="text-sm">{event.topic}</p>
-                <p className="text-xs text-gray-400 text-muted-foreground">
-                  {moment(event.date).format("MMMM Do YYYY, h:mm a")}
-                </p>
-              </Card>
-            ))}
-          </div>
-        </div> */}
       </aside>
     </div>
   );
