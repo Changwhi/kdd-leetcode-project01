@@ -1,165 +1,195 @@
-"use client";
+"use client"
+
+import { useState } from "react"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { GROUP } from "@/text/group";
-import { Label } from "@/components/ui/label";
-import { createGroup } from "@/lib/actions/group";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { createGroup } from "@/lib/actions/group"
+import { GROUP } from "@/text/group"
+import { PlusCircle, Users, DollarSign, Percent } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-/**
- * A dialog that can be used to create a new group.
- *
- * It accepts an `email` prop which is the email of the user creating the group.
- *
- * The dialog has four fields: title, description, max participants, attendance deduction and assignment deduction.
- *
- * When the form is submitted, it will call `createGroup` with the form data and the email of the user creating the group.
- * If the group is created successfully, the dialog will close.
- *
- * @param email - The email of the user creating the group.
- */
+export function CreateGroupButton({ email }: { email: string }) {
+  const charLimits = {
+    name: 50,
+    description: 50,
+  }
 
-export const CreateGroupButton = ({ email }: { email: string }) => {
+  const [groupName, setGroupName] = useState("")
+  const [groupDescription, setGroupDescription] = useState("")
+
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>{GROUP.CREATE_BUTTON}</Button>
+        <Button>
+          <PlusCircle className="mr-2 h-4 w-4" />
+          {GROUP.CREATE_BUTTON}
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>{GROUP.GROUP_TITLE}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">{GROUP.GROUP_TITLE}</DialogTitle>
           <DialogDescription>{GROUP.GROUP_DESCRIPTION}</DialogDescription>
         </DialogHeader>
         <form
-          className="space-y-4"
+          className="space-y-6"
           action={async (formData: FormData) => {
             await createGroup({
               formData: formData,
               email: email,
-            });
+            })
           }}
         >
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="title" className="text-right">
-                {GROUP.TITLE}
-              </Label>
-              <Input
-                id="title"
-                className="col-span-3"
-                name="title"
-                placeholder="Group Title"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="description" className="text-right">
-                {GROUP.DESCRIPTION}
-              </Label>
-              <Input
-                id="description"
-                name="description"
-                className="col-span-3"
-                placeholder="Group Description"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="maxParticipants" className="text-right">
-                {GROUP.MAX_PARTICIPANTS}
-              </Label>
-              <Input
-                id="maxParticipants"
-                className="col-span-3"
-                name="maxParticipants"
-                placeholder="e.g. 10 (participants)"
-                type="number"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="totalDeposit" className="text-right">
-                {GROUP.TOTAL_DEPOSITS}
-              </Label>
-              <Input
-                id="totalDeposit"
-                className="col-span-3"
-                name="totalDeposit"
-                placeholder="e.g. 10 (CAD 10)"
-                type="number"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="initialDeduction" className="text-right">
-                {GROUP.INITIAL_DEDUCTION}
-              </Label>
-              <Input
-                id="initialDeduction"
-                className="col-span-3"
-                name="initialDeduction"
-                placeholder="e.g. 10 (CAD 10)"
-                type="number"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="attendanceDeduction" className="text-right">
-                {GROUP.ATTENDANCE_DEDUCTION}
-              </Label>
-              <Input
-                id="attendanceDeduction"
-                className="col-span-3"
-                name="attendanceDeduction"
-                type="number"
-                placeholder="e.g. 10 (CAD 10)"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="assignmentDeduction" className="text-right">
-                {GROUP.ASSIGNMENT_DEDUCTION}
-              </Label>
-              <Input
-                id="assignmentDeduction"
-                className="col-span-3"
-                name="assignmentDeduction"
-                placeholder="e.g. 10 (CAD 10)"
-                type="number"
-                required
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="prDeduction" className="text-right">
-                {GROUP.PR_DEDUCTION}
-              </Label>
-              <Input
-                id="prDeduction"
-                className="col-span-3"
-                name="prDeduction"
-                placeholder="e.g. 10 (CAD 10)"
-                type="number"
-                required
-              />
-            </div>
-          </div>
-          <DialogClose asChild>
-            <DialogFooter>
-              <Button type="submit">{GROUP.CREATE}</Button>
-            </DialogFooter>
-          </DialogClose>
+          <Tabs defaultValue="details" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="details">Group Details</TabsTrigger>
+              <TabsTrigger value="financials">Financial Settings</TabsTrigger>
+            </TabsList>
+            <TabsContent value="details">
+              <Card>
+                <CardContent className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="title">{GROUP.TITLE}</Label>
+                    <Input
+                      id="title"
+                      name="title"
+                      value={groupName}
+                      onChange={(e) => setGroupName(e.target.value)}
+                      placeholder="Enter group title"
+                      maxLength={charLimits.name}
+                      required
+                    />
+                    <p className="text-sm text-muted-foreground text-right">
+                      {groupName.length}/{charLimits.name}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">{GROUP.DESCRIPTION}</Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      value={groupDescription}
+                      onChange={(e) => setGroupDescription(e.target.value)}
+                      placeholder="Describe your group"
+                      maxLength={charLimits.description}
+                      required
+                    />
+                    <p className="text-sm text-muted-foreground text-right">
+                      {groupDescription.length}/{charLimits.description}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="maxParticipants">{GROUP.MAX_PARTICIPANTS}</Label>
+                    <div className="relative">
+                      <Users className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="maxParticipants"
+                        name="maxParticipants"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="financials">
+              <Card>
+                <CardContent className="space-y-4 pt-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="totalDeposit">{GROUP.TOTAL_DEPOSITS}</Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="totalDeposit"
+                        name="totalDeposit"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="initialDeduction">{GROUP.INITIAL_DEDUCTION}</Label>
+                    <div className="relative">
+                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="initialDeduction"
+                        name="initialDeduction"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="attendanceDeduction">{GROUP.ATTENDANCE_DEDUCTION}</Label>
+                    <div className="relative">
+                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="attendanceDeduction"
+                        name="attendanceDeduction"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="assignmentDeduction">{GROUP.ASSIGNMENT_DEDUCTION}</Label>
+                    <div className="relative">
+                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="assignmentDeduction"
+                        name="assignmentDeduction"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="prDeduction">{GROUP.PR_DEDUCTION}</Label>
+                    <div className="relative">
+                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="prDeduction"
+                        name="prDeduction"
+                        type="number"
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+          <DialogFooter>
+            <Button type="submit" className="w-full">
+              {GROUP.CREATE}
+            </Button>
+          </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

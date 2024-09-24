@@ -1,17 +1,46 @@
-"use client"
-
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { ExternalLinkIcon, Trash2, Calendar, CheckSquare, Edit } from "lucide-react"
-import { EventCardProps } from "@/types/event"
-import { EVENTS } from "@/text/events"
-import { deleteEvent, updateEvent } from "@/lib/actions/event"
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import {
+  ExternalLinkIcon,
+  Trash2,
+  Calendar,
+  CheckSquare,
+  Edit,
+} from "lucide-react";
+import { EventCardProps } from "@/types/event";
+import { EVENTS } from "@/text/events";
+import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import moment from "moment";
+import { Textarea } from "@/components/ui/textarea";
+
+// Character limits for input fields
+const charLimits = {
+  name: 20,
+  topic: 20,
+  zoomlink: 200,
+  assignment: 100,
+};
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -121,23 +150,22 @@ export const EventCard: React.FC<EventCardProps> = ({
                 <Edit className="w-4 h-4 mr-2" /> {EVENTS.EDIT}
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[550px]">
               <DialogHeader>
-                <DialogTitle>Edit Event</DialogTitle>
-                <DialogDescription>
-                  {EVENTS.EDIT_DESCRIPTION}
-                </DialogDescription>
+                <DialogTitle className="text-2xl font-bold">
+                  Edit Event
+                </DialogTitle>
+                <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
               </DialogHeader>
               <form
-                className="space-y-4"
+                className="space-y-6"
                 action={async () => {
                   const updatedDateTime = moment(
                     `${eventDate}T${eventTime}`
                   ).format();
-
                   await updateEvent({
                     name: eventName,
-                    date: updatedDateTime, 
+                    date: updatedDateTime,
                     topic: eventTopic,
                     zoomlink: eventZoomlink,
                     group_id: group_id,
@@ -150,71 +178,114 @@ export const EventCard: React.FC<EventCardProps> = ({
               >
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="title">{EVENTS.TITLE}</Label>
+                    <Label htmlFor="title" className="text-sm font-medium">
+                      {EVENTS.TITLE}
+                    </Label>
                     <Input
                       id="title"
                       value={eventName}
                       onChange={(e) => setEventName(e.target.value)}
                       name="name"
+                      maxLength={charLimits.name}
+                      className="w-full"
                     />
+                    <p className="text-sm text-muted-foreground text-right">
+                      {eventName.length}/{charLimits.name}
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="date" className="text-sm font-medium">
+                        {EVENTS.DATE}
+                      </Label>
+                      <Input
+                        id="date"
+                        type="date"
+                        value={eventDate}
+                        onChange={(e) => setEventDate(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="time" className="text-sm font-medium">
+                        {EVENTS.TIME}
+                      </Label>
+                      <Input
+                        id="time"
+                        type="time"
+                        value={eventTime}
+                        onChange={(e) => setEventTime(e.target.value)}
+                        className="w-full"
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="date">{EVENTS.DATE}</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={eventDate}
-                      onChange={(e) => setEventDate(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="time">{EVENTS.TIME}</Label>
-                    <Input
-                      id="time"
-                      type="time"
-                      value={eventTime}
-                      onChange={(e) => setEventTime(e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="topic">{EVENTS.TOPIC}</Label>
-                    <Input
+                    <Label htmlFor="topic" className="text-sm font-medium">
+                      {EVENTS.TOPIC}
+                    </Label>
+                    <Textarea
                       id="topic"
                       value={eventTopic}
                       onChange={(e) => setEventTopic(e.target.value)}
                       name="topic"
+                      maxLength={charLimits.topic}
+                      className="w-full min-h-[100px]"
                     />
+                    <p className="text-sm text-muted-foreground text-right">
+                      {eventTopic.length}/{charLimits.topic}
+                    </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="zoomlink">{EVENTS.ZOOMLINK}</Label>
+                    <Label htmlFor="zoomlink" className="text-sm font-medium">
+                      {EVENTS.ZOOMLINK}
+                    </Label>
                     <Input
                       id="zoomlink"
                       value={eventZoomlink}
                       onChange={(e) => setEventZoomlink(e.target.value)}
                       name="zoomlink"
+                      maxLength={charLimits.zoomlink}
+                      className="w-full"
                     />
+                    <p className="text-sm text-muted-foreground text-right">
+                      {eventZoomlink.length}/{charLimits.zoomlink}
+                    </p>
                   </div>
-                  {[1, 2, 3].map((num) => (
-                    <div key={num} className="space-y-2">
-                      <Label htmlFor={`assign${num}`}>
-                        {EVENTS[`ASSIGNMENT_${num}` as keyof typeof EVENTS]}
-                      </Label>
-                      <Input
-                        id={`assign${num}`}
-                        value={eval(`eventAssign${num}`)}
-                        onChange={(e) =>
-                          eval(`setEventAssign${num}(e.target.value)`)
-                        }
-                        name={`assign${num}`}
-                      />
-                    </div>
-                  ))}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Assignments</h3>
+                    {[1, 2, 3].map((num) => (
+                      <div key={num} className="space-y-2">
+                        <Label
+                          htmlFor={`assign${num}`}
+                          className="text-sm font-medium"
+                        >
+                          {EVENTS[`ASSIGNMENT_${num}` as keyof typeof EVENTS]}
+                        </Label>
+                        <Input
+                          id={`assign${num}`}
+                          value={eval(`eventAssign${num}`)}
+                          onChange={(e) =>
+                            eval(`setEventAssign${num}(e.target.value)`)
+                          }
+                          name={`assign${num}`}
+                          maxLength={charLimits.assignment}
+                          className="w-full"
+                        />
+                        <p className="text-sm text-muted-foreground text-right">
+                          {eval(`eventAssign${num}`).length}/
+                          {charLimits.assignment}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <DialogClose asChild>
-                  <DialogFooter>
-                    <Button type="submit">{EVENTS.SAVE}</Button>
-                  </DialogFooter>
-                </DialogClose>
+                <DialogFooter>
+                  <DialogClose asChild>
+                    <Button type="submit" className="w-full sm:w-auto">
+                      {EVENTS.SAVE}
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
               </form>
             </DialogContent>
           </Dialog>
