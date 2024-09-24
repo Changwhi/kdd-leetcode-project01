@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { addEvent } from "@/lib/actions/event";
 import { EVENTS } from "@/text/events";
 import { PlusCircle } from "lucide-react";
-import moment from "moment-timezone"; // Import moment-timezone
+import moment from "moment"; // Import moment-timezone
 
 export const CreateEventModal = ({ groupId }: { groupId: number }) => {
   return (
