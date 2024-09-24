@@ -11,6 +11,7 @@ import { ExternalLinkIcon, Trash2, Calendar, CheckSquare, Edit } from "lucide-re
 import { EventCardProps } from "@/types/event"
 import { EVENTS } from "@/text/events"
 import { deleteEvent, updateEvent } from "@/lib/actions/event"
+import moment from "moment";
 
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
@@ -24,25 +25,26 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
-  const [eventName, setEventName] = useState(name)
-  const [eventDate, setEventDate] = useState(date)
-  const [eventTopic, setEventTopic] = useState(topic)
-  const [eventZoomlink, setEventZoomlink] = useState(zoomlink)
-  const [eventAssign1, setEventAssign1] = useState(assign1)
-  const [eventAssign2, setEventAssign2] = useState(assign2)
-  const [eventAssign3, setEventAssign3] = useState(assign3)
+  const [eventName, setEventName] = useState(name);
+  const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD")); // Extract only the date
+  const [eventTime, setEventTime] = useState(moment(date).format("HH:mm")); // Extract only the time
+  const [eventTopic, setEventTopic] = useState(topic);
+  const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
+  const [eventAssign1, setEventAssign1] = useState(assign1);
+  const [eventAssign2, setEventAssign2] = useState(assign2);
+  const [eventAssign3, setEventAssign3] = useState(assign3);
 
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true
-    }
-    return new Intl.DateTimeFormat('en-US', options).format(date)
-  }
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
 
   return (
     <Card className="w-full sm:w-64 lg:w-80 overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -52,24 +54,32 @@ export const EventCard: React.FC<EventCardProps> = ({
           {admin && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="text-primary-foreground hover:bg-primary-foreground/20">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="text-primary-foreground hover:bg-primary-foreground/20"
+                >
                   <Trash2 className="w-5 h-5" />
                 </Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
-                  <DialogDescription>{EVENTS.REMOVE_DESCRIPTION}</DialogDescription>
+                  <DialogDescription>
+                    {EVENTS.REMOVE_DESCRIPTION}
+                  </DialogDescription>
                 </DialogHeader>
                 <form
                   className="space-y-4"
                   action={async () => {
-                    await deleteEvent(event_id)
+                    await deleteEvent(event_id);
                   }}
                 >
                   <DialogClose asChild>
                     <DialogFooter>
-                      <Button type="submit" variant="destructive">{EVENTS.REMOVE_BUTTON}</Button>
+                      <Button type="submit" variant="destructive">
+                        {EVENTS.REMOVE_BUTTON}
+                      </Button>
                     </DialogFooter>
                   </DialogClose>
                 </form>
@@ -79,7 +89,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
         <div className="flex items-center mt-2 text-sm opacity-90">
           <Calendar className="w-4 h-4 mr-2" />
-          {formatDateTime(new Date(eventDate))}
+          {formatDateTime(new Date(date))}
         </div>
       </CardHeader>
       <CardContent className="p-6">
@@ -114,14 +124,21 @@ export const EventCard: React.FC<EventCardProps> = ({
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Edit Event</DialogTitle>
-                <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
+                <DialogDescription>
+                  {EVENTS.EDIT_DESCRIPTION}
+                </DialogDescription>
               </DialogHeader>
               <form
                 className="space-y-4"
                 action={async () => {
+                  // Combine date and time before submitting to backend
+                  const updatedDateTime = moment(
+                    `${eventDate}T${eventTime}`
+                  ).format();
+
                   await updateEvent({
                     name: eventName,
-                    date: eventDate,
+                    date: updatedDateTime, // Send combined date-time
                     topic: eventTopic,
                     zoomlink: eventZoomlink,
                     group_id: group_id,
@@ -129,7 +146,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                     assign1: eventAssign1,
                     assign2: eventAssign2,
                     assign3: eventAssign3,
-                  })
+                  });
                 }}
               >
                 <div className="space-y-4">
@@ -152,6 +169,15 @@ export const EventCard: React.FC<EventCardProps> = ({
                     />
                   </div>
                   <div className="space-y-2">
+                    <Label htmlFor="time">{EVENTS.TIME}</Label>
+                    <Input
+                      id="time"
+                      type="time"
+                      value={eventTime}
+                      onChange={(e) => setEventTime(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor="topic">{EVENTS.TOPIC}</Label>
                     <Input
                       id="topic"
@@ -171,11 +197,15 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   {[1, 2, 3].map((num) => (
                     <div key={num} className="space-y-2">
-                      <Label htmlFor={`assign${num}`}>{EVENTS[`ASSGINMENT_${num}` as keyof typeof EVENTS]}</Label>
+                      <Label htmlFor={`assign${num}`}>
+                        {EVENTS[`ASSIGNMENT_${num}` as keyof typeof EVENTS]}
+                      </Label>
                       <Input
                         id={`assign${num}`}
                         value={eval(`eventAssign${num}`)}
-                        onChange={(e) => eval(`setEventAssign${num}(e.target.value)`)}
+                        onChange={(e) =>
+                          eval(`setEventAssign${num}(e.target.value)`)
+                        }
                         name={`assign${num}`}
                       />
                     </div>
@@ -192,5 +222,5 @@ export const EventCard: React.FC<EventCardProps> = ({
         )}
       </CardFooter>
     </Card>
-  )
-}
+  );
+};

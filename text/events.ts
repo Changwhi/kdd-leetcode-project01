@@ -27,6 +27,7 @@ export const EVENTS = {
   REMOVE: "Delete an event",
   REMOVE_DESCRIPTION: "Are you sure you want to delete this event?",
   REMOVE_BUTTON: "Delete",
+  TIME: "Time",
 };
 
 export const EVENTS_USER = {

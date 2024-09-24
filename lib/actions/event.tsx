@@ -82,15 +82,20 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
     if (!formData) {
       return [];
     }
-    const name = formData.name;
-    const date = formData.date;
-    const topic = formData.topic;
-    const zoomlink = formData.zoomlink;
-    const group_id = formData.group_id;
-    const assign1 = formData.assign1;
-    const assign2 = formData.assign2;
-    const assign3 = formData.assign3;
-    const event_id = formData.event_id;
+
+    const {
+      name,
+      date,
+      topic,
+      zoomlink,
+      group_id,
+      assign1,
+      assign2,
+      assign3,
+      event_id,
+    } = formData;
+
+    // Now `date` contains both date and time
     await sql`
       UPDATE event
       SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}, assign1 = ${assign1}, assign2 = ${assign2}, assign3 = ${assign3}
