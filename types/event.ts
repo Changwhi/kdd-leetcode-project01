@@ -1,19 +1,20 @@
 export interface EventType {
   event_id: number;
   name: string;
-  date: Date;
+  date: string;
   topic: string;
   zoomlink: string;
   group_id: number;
   assign1: string;
   assign2: string;
   assign3: string;
+  processed: boolean;
 }
 
 export interface EventCardProps {
   event_id: number;
   name: string;
-  date: Date;
+  date: string;
   topic: string;
   zoomlink: string;
   group_id: number;
