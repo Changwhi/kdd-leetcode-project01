@@ -48,7 +48,7 @@ export const SelectEvent: React.FC<SelectEventProps> = ({
               {event.name} - {event.topic}
             </Row>
             <Row className="text-xs text-gray-400">
-              {event.date.toLocaleDateString(undefined, options)}
+              {new Date(event.date).toLocaleDateString(undefined, options)}
             </Row>
           </Card>
         ))}
