@@ -24,9 +24,8 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
-  const formattedDate = date.toISOString().split("T")[0]
   const [eventName, setEventName] = useState(name)
-  const [eventDate, setEventDate] = useState(formattedDate)
+  const [eventDate, setEventDate] = useState(date)
   const [eventTopic, setEventTopic] = useState(topic)
   const [eventZoomlink, setEventZoomlink] = useState(zoomlink)
   const [eventAssign1, setEventAssign1] = useState(assign1)
@@ -80,7 +79,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         </div>
         <div className="flex items-center mt-2 text-sm opacity-90">
           <Calendar className="w-4 h-4 mr-2" />
-          {formatDateTime(new Date(date))}
+          {formatDateTime(new Date(eventDate))}
         </div>
       </CardHeader>
       <CardContent className="p-6">
