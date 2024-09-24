@@ -2,7 +2,6 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
-import moment from "moment-timezone";
 
 /**
  * Retrieves a list of events from the database.
