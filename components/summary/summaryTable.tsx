@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { ArrowUpDown, Maximize2 } from "lucide-react";
 import { Event, User } from "@/types/summary";
+import { SUMMARY } from "@/text/summary";
 
 type SortConfig = {
   key: string;
@@ -43,10 +44,11 @@ export default function SummaryTable({
     );
   }, [users, searchTerm]);
 
-  const sortedUsers = useMemo(() => {
+   const sortedUsers = useMemo(() => {
     let sortableUsers = [...filteredUsers];
     if (sortConfig !== null) {
       sortableUsers.sort((a, b) => {
+        // Sorting logic for different columns
         if (sortConfig.key === "name") {
           return sortConfig.direction === "ascending"
             ? a.name.localeCompare(b.name)
@@ -64,10 +66,8 @@ export default function SummaryTable({
             ? aValue - bValue
             : bValue - aValue;
         } else {
-          const aValue =
-            a.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
-          const bValue =
-            b.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
+          const aValue = a.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
+          const bValue = b.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
           if (sortConfig.key === "pullRequest") {
             return sortConfig.direction === "ascending"
               ? Number(aValue) - Number(bValue)
@@ -134,11 +134,11 @@ export default function SummaryTable({
         {event.pullRequest ? "Submitted" : "Not Submitted"}
       </TableCell>
       <TableCell className="h-10 py-0">
-        {event.attendance === 0
+        {event.attendance === 0 || event.attendance === null
           ? "Absent"
           : event.attendance === 1
-          ? "Late"
-          : "Attended"}
+          ? "Attended"
+          : "Late"}
       </TableCell>
       <TableCell className="h-10 py-0 border-r-2 border-gray">
         {event.assignments.length === 0 ? "Not Submitted" : "Submitted"}
@@ -154,13 +154,13 @@ export default function SummaryTable({
             className="border-r-2 border-gray h-10"
             colSpan={2}
           ></TableHead>
-          {users[0]?.events.map((_, index) => (
+          {users[0]?.events.map((event, index) => (
             <TableHead
               key={`event-header-${index}`}
               colSpan={3}
               className="text-center border-r-2 h-10"
             >
-              Event {index + 1}
+            {event.event_name}
             </TableHead>
           ))}
         </TableRow>
@@ -205,23 +205,25 @@ export default function SummaryTable({
   );
 
   return (
-    <div className="container mx-auto pb-10">
-      <div className="flex justify-end items-center mb-4">
+    <div className="container mx-auto pt-5 pb-10 bg-slate-50 rounded-xl w-full">
+      <div className="flex justify-between items-center mb-4">
         <Dialog>
+        <DialogHeader>
+            <h1 className="text-base font-bold md:m-2 lg:m-4">{SUMMARY.TABLE_TITLE}</h1>
+
+        </DialogHeader>
           <DialogTrigger asChild>
             <Button variant="outline">
               <Maximize2 className="mr-2 h-4 w-4" />
               Full Screen View
             </Button>
           </DialogTrigger>
-          <DialogContent
-            className="max-w-full overflow-y-auto"
-          >
+          <DialogContent className="max-w-full overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Full Screen View</DialogTitle>
-              <DialogDescription >
+              <DialogDescription>
                 {" "}
-                 This is a full-screen view of the attendance summary.
+                This is a full-screen view of the attendance summary.
               </DialogDescription>
             </DialogHeader>
             <TableContent />
