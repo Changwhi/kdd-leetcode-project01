@@ -47,35 +47,19 @@ import {
 import { AttendanceCard } from "./attendanceCard";
 
 /**
- * AttendanceTable is a component that displays a table of attendance information for a given event and group.
- * It fetches the attendance data from the server and displays it in a table with the following columns:
- *   - Name
- *   - Attendance
- *   - Individual Question
- *   - Pull Request
- *   - Actions
+ * AttendanceTable component
  *
- * The Attendance column displays the attendance status of each member, which can be one of the following:
- *   - Attended
- *   - Late
- *   - Absent
+ * @description
+ * This component is used to display a table of users with their attendance status.
+ * The table is searchable and sortable.
+ * The component also provides a dropdown menu for each user to mark them as
+ * attended, absent, or late.
+ * Additionally, the component provides a filter for the attendance status.
  *
- * The Individual Question column displays whether the member has submitted a solution to the individual question.
+ * @param {number | undefined} event_id The ID of the event to fetch attendance data for.
+ * @param {number | undefined} group_id The ID of the group to fetch attendance data for.
  *
- * The Pull Request column displays whether the member has submitted a PR.
- *
- * The Actions column displays a dropdown menu with the following options:
- *   - Mark as Attended
- *   - Mark as Absent
- *   - Mark as Late
- *   - Submit PR
- *
- * The component also includes a search bar that allows the user to search for members by name.
- *
- * @param {Object} props
- * @param {number} props.event_id - The ID of the event.
- * @param {number} props.group_id - The ID of the group.
- * @returns {JSX.Element}
+ * @returns {JSX.Element} The AttendanceTable component.
  */
 export const AttendanceTable = ({
   event_id,
@@ -145,11 +129,9 @@ export const AttendanceTable = ({
       return;
     }
 
-    // Find the current member's attendance and PR status
     const currentMember = members.find((member) => member.user_id === user_id);
     if (!currentMember) return;
 
-    // Check if the current state matches the action and return if no change is needed
     switch (action) {
       case "attended":
         if (currentMember.attended === 1) {
@@ -179,13 +161,6 @@ export const AttendanceTable = ({
         }
         break;
       case "pr":
-        if (currentMember.submitted) {
-          toast({
-            title: "Already submitted",
-            description: "This user has already submitted a PR.",
-          });
-          return;
-        }
         break;
       default:
         throw new Error("Invalid action");
@@ -285,6 +260,16 @@ export const AttendanceTable = ({
     return <HelpCircle className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
   };
 
+  // New PRStatusIcon component for PR status
+  const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
+    if (submitted === null) return <HelpCircle className="w-4 h-4 text-gray-500" />; // Unknown status
+    return submitted ? (
+      <Check className="w-4 h-4 text-green-500" /> // Use ! for submitted
+    ) : (
+      <X className="w-4 h-4 text-red-500" /> // Use X for not submitted
+    );
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4">
@@ -372,7 +357,7 @@ export const AttendanceTable = ({
                     ? ATTENDANCE.LATE
                     : info.attended === 0
                     ? ATTENDANCE.ABSENT
-                    : "Unknown"}{" "}
+                    : "Unknown"}
                 </div>
               </TableCell>
 
@@ -384,8 +369,8 @@ export const AttendanceTable = ({
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <StatusIcon status={info.submitted} />
-                  {info.submitted ? "Submitted" : "Not Submitted"}
+                  <PRStatusIcon submitted={info.submitted} />
+                  {info.submitted ? "Submitted" : info.submitted === null ? "Unknown" : "Not Submitted"}
                 </div>
               </TableCell>
               <TableCell>
