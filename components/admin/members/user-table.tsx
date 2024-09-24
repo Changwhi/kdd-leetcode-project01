@@ -66,8 +66,10 @@ type SortOrder = "asc" | "desc";
 
 export default function UserTable({
   usersInGroup,
+  group_id,
 }: {
   usersInGroup: AttendanceType[];
+  group_id: number;
 }) {
   const [users, setUsers] = useState<AttendanceType[]>(
     usersInGroup.map((user) => ({
@@ -380,7 +382,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Received"
                           )
                         }
@@ -391,7 +393,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Pending"
                           )
                         }
@@ -402,7 +404,7 @@ export default function UserTable({
                         onClick={() =>
                           handleDepositStatusChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             "Returned"
                           )
                         }
@@ -414,7 +416,7 @@ export default function UserTable({
                         onClick={() =>
                           handleUserTypeChange(
                             user.user_id,
-                            user.group_id,
+                            group_id,
                             user.user_type === 0 ? 1 : 0
                           )
                         }
@@ -444,7 +446,7 @@ export default function UserTable({
                             <AlertDialogCancel>Cancel</AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() =>
-                                handleKickOut(user.user_id, user.group_id)
+                                handleKickOut(user.user_id, group_id)
                               }
                             >
                               Confirm
