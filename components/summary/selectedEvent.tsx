@@ -1,16 +1,6 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { EventType } from "@/types/event";
-import { EVENTS } from "@/text/events";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { useEventContext } from "@/lib/context/selectedEventContext";
 import { useEffect, useState } from "react";
 import moment from "moment";
@@ -32,7 +22,7 @@ export const SelectedEvent = ({
   useEffect(() => {
     if (selectedDate) {
       const targetEvents = givenEvents.filter((event) =>
-        moment(event.date).isSame(moment(selectedDate), "day")
+        moment(event.date).isSame(moment.utc(selectedDate).local(), "day")
       );
       setEvents(targetEvents);
     }
@@ -42,7 +32,9 @@ export const SelectedEvent = ({
     <>
       <div className="flex flex-col p-4 flex-grow">
         {events && events.length > 0 && (
-          <h1 className="mb-5 text-base font-semibold">{SUMMARY.EVENT_TITLE}</h1>
+          <h1 className="mb-5 text-base font-semibold">
+            {SUMMARY.EVENT_TITLE}
+          </h1>
         )}
         {events &&
           events.map((event) => (
