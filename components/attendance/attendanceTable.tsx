@@ -262,7 +262,8 @@ export const AttendanceTable = ({
 
   // New PRStatusIcon component for PR status
   const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
-    if (submitted === null) return <HelpCircle className="w-4 h-4 text-gray-500" />; // Unknown status
+    if (submitted === null)
+      return <HelpCircle className="w-4 h-4 text-gray-500" />; // Unknown status
     return submitted ? (
       <Check className="w-4 h-4 text-green-500" /> // Use ! for submitted
     ) : (
@@ -355,9 +356,7 @@ export const AttendanceTable = ({
                     ? ATTENDANCE.ATTENDED
                     : info.attended === 2
                     ? ATTENDANCE.LATE
-                    : info.attended === 0
-                    ? ATTENDANCE.ABSENT
-                    : "Unknown"}
+                    : ATTENDANCE.ABSENT}
                 </div>
               </TableCell>
 
@@ -370,7 +369,9 @@ export const AttendanceTable = ({
               <TableCell>
                 <div className="flex items-center gap-2">
                   <PRStatusIcon submitted={info.submitted} />
-                  {info.submitted ? "Submitted" : info.submitted === null ? "Unknown" : "Not Submitted"}
+                  {info.submitted
+                    ? "Submitted"
+                    : "Not Submitted"}
                 </div>
               </TableCell>
               <TableCell>
