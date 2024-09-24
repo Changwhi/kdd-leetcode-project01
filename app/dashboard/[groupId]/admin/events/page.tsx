@@ -20,6 +20,7 @@ export default async function Events({
     moment(event.date).isBefore(currentDate)
   );
 
+
   return (
     <div className="flex flex-col min-h-full lg:flex-row">
       <main className="basis-3/4 bg-white lg:w-3/4">
@@ -28,7 +29,7 @@ export default async function Events({
             {EVENTS.UPCOMINGEVENTS}
           </h2>
           <hr className="w-full border-gray-300" />
-          <div className="flex flex-row items-cneter justify-center flex-wrap mb-6 gap-5 ">
+          <div className="flex flex-row items-start justify-start flex-wrap mb-6 gap-5 ">
             {upcommingEvents.map((event, index) => (
               <EventCard
                 key={event.event_id}
@@ -66,7 +67,6 @@ export default async function Events({
               />
             ))}
           </div>
-          <div className="grid grid-cols-2 xl:grid-cols-3 mb-6 gap-6"></div>
         </div>
       </main>
       <aside className="basis-1/4 xl:w-80 bg-slate-50 p-6 rounded-xl">

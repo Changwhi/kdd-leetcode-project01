@@ -45,10 +45,10 @@ export const EventCard: React.FC<EventCardProps> = ({
   }
 
   return (
-    <Card className="w-md max-w-md overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="w-full sm:w-64 lg:w-80 overflow-hidden transition-all duration-300 hover:shadow-lg">
       <CardHeader className="bg-primary text-primary-foreground p-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold">{name}</CardTitle>
+          <CardTitle className="text-xl font-bold">{name}</CardTitle>
           {admin && (
             <Dialog>
               <DialogTrigger asChild>
