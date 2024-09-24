@@ -131,14 +131,13 @@ export const EventCard: React.FC<EventCardProps> = ({
               <form
                 className="space-y-4"
                 action={async () => {
-                  // Combine date and time before submitting to backend
                   const updatedDateTime = moment(
                     `${eventDate}T${eventTime}`
                   ).format();
 
                   await updateEvent({
                     name: eventName,
-                    date: updatedDateTime, // Send combined date-time
+                    date: updatedDateTime, 
                     topic: eventTopic,
                     zoomlink: eventZoomlink,
                     group_id: group_id,
