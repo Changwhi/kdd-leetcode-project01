@@ -35,7 +35,11 @@ export const UpcommingEvents = ({ events }: { events: EventType[] }) => {
                         {event.name} - {event.topic}
                       </Row>
                       <Row className="text-xs text-gray-400">
-                        {event.date.toLocaleDateString(undefined, options)}
+                        {/* {event.date.toLocaleDateString(undefined, options)} */}
+                        {moment
+                          .utc(event.date)
+                          .local()
+                          .format("MMMM Do YYYY, h:mm a")}
                       </Row>
                       <span className="text-blue-500 text-sm cursor-pointer hover:underline">
                         {SUMMARY.SEE_PROJECT_DETAILS}
