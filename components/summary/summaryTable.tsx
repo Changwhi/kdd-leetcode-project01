@@ -141,7 +141,7 @@ export default function SummaryTable({
           : "Late"}
       </TableCell>
       <TableCell className="h-10 py-0 border-r-2 border-gray">
-        {event.assignments.length === 0 ? "Not Submitted" : "Submitted"}
+        {event.assignments == null ? "Not Submitted" : "Submitted"}
       </TableCell>
     </>
   );
