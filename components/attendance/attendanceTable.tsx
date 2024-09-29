@@ -275,7 +275,7 @@ export const AttendanceTable = ({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4">
-        <AttendanceCard attendance={members} />
+        {/* <AttendanceCard attendance={members} /> */}
         <Input
           placeholder="Search by name..."
           value={searchTerm}
