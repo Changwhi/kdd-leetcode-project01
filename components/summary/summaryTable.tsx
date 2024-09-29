@@ -154,7 +154,7 @@ export default function SummaryTable({
           : ATTENDANCE_STATUS[2]}
       </TableCell>
       <TableCell className="h-10 py-0 border-r-2 border-gray">
-        {event.assignments.length === 0 ? SUBMISSION_STATUS[0] : SUBMISSION_STATUS[1]}
+        {event.assignments ? SUBMISSION_STATUS[1] : SUBMISSION_STATUS[0]}
       </TableCell>
     </>
   );
