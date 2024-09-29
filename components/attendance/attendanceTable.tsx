@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -81,27 +81,27 @@ export const AttendanceTable = ({
   const [prFilter, setPrFilter] = useState("all");
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchAttendance = async () => {
-    if (event_id && group_id) {
-      setIsLoading(true);
-      try {
-        const data = await retrieveAttendance({ event_id, group_id });
-        setMembers(data);
-        setFilteredMembers(data);
-      } catch (error) {
-        toast({
-          title: ERROR.ERROR,
-          description: "Failed to fetch attendance data.",
-        });
-      } finally {
-        setIsLoading(false);
-      }
+  const fetchAttendance = useCallback(async () => {
+  if (event_id && group_id) {
+    setIsLoading(true);
+    try {
+      const data = await retrieveAttendance({ event_id, group_id });
+      setMembers(data);
+      setFilteredMembers(data);
+    } catch (error) {
+      toast({
+        title: ERROR.ERROR,
+        description: "Failed to fetch attendance data.",
+      });
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }
+}, [event_id, group_id, toast]);
 
   useEffect(() => {
     fetchAttendance();
-  }, [event_id, group_id]);
+  }, [event_id, group_id, fetchAttendance]);
 
   useEffect(() => {
     const filtered = members.filter(
@@ -240,7 +240,7 @@ export const AttendanceTable = ({
       });
       setFilteredMembers(sortedMembers);
     }
-  }, [sortConfig]);
+  }, [sortConfig, filteredMembers]);
 
   const SortIcon = ({ columnKey }: { columnKey: keyof AttendanceType }) => {
     if (sortConfig?.key === columnKey) {
