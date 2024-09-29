@@ -16,23 +16,71 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { createGroup } from "@/lib/actions/group"
 import { GROUP } from "@/text/group"
-import { PlusCircle, Users, DollarSign, Percent } from "lucide-react"
+import { PlusCircle, Users, DollarSign } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/components/ui/use-toast"
 
 export function CreateGroupButton({ email }: { email: string }) {
+  const { toast } = useToast()
+  const [open, setOpen] = useState(false)
   const charLimits = {
     name: 50,
     description: 50,
   }
 
-  const [groupName, setGroupName] = useState("")
-  const [groupDescription, setGroupDescription] = useState("")
+  const initialFormData = {
+    title: "",
+    description: "",
+    maxParticipants: "",
+    totalDeposit: "",
+    initialDeduction: "",
+    prDeduction: "",
+    attendanceDeduction: "",
+    assignmentDeduction: "",
+  }
+
+  const [formData, setFormData] = useState(initialFormData)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const resetForm = () => {
+    setFormData(initialFormData)
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formDataToSubmit = new FormData()
+    Object.entries(formData).forEach(([key, value]) => {
+      formDataToSubmit.append(key, value)
+    })
+    try {
+      await createGroup({
+        formData: formDataToSubmit,
+        email: email,
+      })
+      toast({
+        title: "Success",
+        description: "Group created successfully",
+      })
+      resetForm()
+      setOpen(false)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to create group",
+        variant: "destructive",
+      })
+    }
+  }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>
+        <Button onClick={() => setOpen(true)}>
           <PlusCircle className="mr-2 h-4 w-4" />
           {GROUP.CREATE_BUTTON}
         </Button>
@@ -42,15 +90,7 @@ export function CreateGroupButton({ email }: { email: string }) {
           <DialogTitle className="text-2xl font-bold">{GROUP.GROUP_TITLE}</DialogTitle>
           <DialogDescription>{GROUP.GROUP_DESCRIPTION}</DialogDescription>
         </DialogHeader>
-        <form
-          className="space-y-6"
-          action={async (formData: FormData) => {
-            await createGroup({
-              formData: formData,
-              email: email,
-            })
-          }}
-        >
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <Tabs defaultValue="details" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="details">Group Details</TabsTrigger>
@@ -64,14 +104,14 @@ export function CreateGroupButton({ email }: { email: string }) {
                     <Input
                       id="title"
                       name="title"
-                      value={groupName}
-                      onChange={(e) => setGroupName(e.target.value)}
+                      value={formData.title}
+                      onChange={handleInputChange}
                       placeholder="Enter group title"
                       maxLength={charLimits.name}
                       required
                     />
                     <p className="text-sm text-muted-foreground text-right">
-                      {groupName.length}/{charLimits.name}
+                      {formData.title.length}/{charLimits.name}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -79,14 +119,14 @@ export function CreateGroupButton({ email }: { email: string }) {
                     <Textarea
                       id="description"
                       name="description"
-                      value={groupDescription}
-                      onChange={(e) => setGroupDescription(e.target.value)}
+                      value={formData.description}
+                      onChange={handleInputChange}
                       placeholder="Describe your group"
                       maxLength={charLimits.description}
                       required
                     />
                     <p className="text-sm text-muted-foreground text-right">
-                      {groupDescription.length}/{charLimits.description}
+                      {formData.description.length}/{charLimits.description}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -97,6 +137,8 @@ export function CreateGroupButton({ email }: { email: string }) {
                         id="maxParticipants"
                         name="maxParticipants"
                         type="number"
+                        value={formData.maxParticipants}
+                        onChange={handleInputChange}
                         placeholder="e.g. 10"
                         className="pl-10"
                         required
@@ -117,6 +159,8 @@ export function CreateGroupButton({ email }: { email: string }) {
                         id="totalDeposit"
                         name="totalDeposit"
                         type="number"
+                        value={formData.totalDeposit}
+                        onChange={handleInputChange}
                         placeholder="e.g. 10"
                         className="pl-10"
                         required
@@ -126,39 +170,13 @@ export function CreateGroupButton({ email }: { email: string }) {
                   <div className="space-y-2">
                     <Label htmlFor="initialDeduction">{GROUP.INITIAL_DEDUCTION}</Label>
                     <div className="relative">
-                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="initialDeduction"
                         name="initialDeduction"
                         type="number"
-                        placeholder="e.g. 10"
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="attendanceDeduction">{GROUP.ATTENDANCE_DEDUCTION}</Label>
-                    <div className="relative">
-                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="attendanceDeduction"
-                        name="attendanceDeduction"
-                        type="number"
-                        placeholder="e.g. 10"
-                        className="pl-10"
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="assignmentDeduction">{GROUP.ASSIGNMENT_DEDUCTION}</Label>
-                    <div className="relative">
-                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="assignmentDeduction"
-                        name="assignmentDeduction"
-                        type="number"
+                        value={formData.initialDeduction}
+                        onChange={handleInputChange}
                         placeholder="e.g. 10"
                         className="pl-10"
                         required
@@ -168,16 +186,53 @@ export function CreateGroupButton({ email }: { email: string }) {
                   <div className="space-y-2">
                     <Label htmlFor="prDeduction">{GROUP.PR_DEDUCTION}</Label>
                     <div className="relative">
-                      <Percent className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="prDeduction"
                         name="prDeduction"
                         type="number"
+                        value={formData.prDeduction}
+                        onChange={handleInputChange}
                         placeholder="e.g. 10"
                         className="pl-10"
                         required
                       />
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="attendanceDeduction">{GROUP.ATTENDANCE_DEDUCTION}</Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="attendanceDeduction"
+                        name="attendanceDeduction"
+                        type="number"
+                        value={formData.attendanceDeduction}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="assignmentDeduction">{GROUP.ASSIGNMENT_DEDUCTION}</Label>
+                    <div className="relative">
+                      <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="assignmentDeduction"
+                        name="assignmentDeduction"
+                        type="number"
+                        value={formData.assignmentDeduction}
+                        onChange={handleInputChange}
+                        placeholder="e.g. 10"
+                        className="pl-10"
+                        required
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground text-red-500">
+                      Optional: If there are no assignments, set this to 0.
+                    </p>
                   </div>
                 </CardContent>
               </Card>

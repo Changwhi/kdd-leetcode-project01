@@ -25,13 +25,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 export function CreateEventModal({ groupId }: { groupId: number }) {
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [charCount, setCharCount] = useState({
-    name: 0,
-    topic: 0,
-    zoomlink: 0,
-    assign1: 0,
-    assign2: 0,
-    assign3: 0,
+  const [formData, setFormData] = useState({
+    name: '',
+    topic: '',
+    zoomlink: '',
+    assign1: '',
+    assign2: '',
+    assign3: '',
+    date: '',
+    time: ''
   })
 
   const charLimits = {
@@ -41,15 +43,9 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
     assignment: 100,
   }
 
-  const handleSubmit = async (formData: FormData) => {
-    const name = formData.get("name") as string | null
-    const topic = formData.get("topic") as string | null
-    const zoomlink = formData.get("zoomlink") as string | null
-    const assign1 = formData.get("assign1") as string | null
-    const assign2 = formData.get("assign2") as string | null
-    const assign3 = formData.get("assign3") as string | null
-    const date = formData.get("date") as string | null
-    const time = formData.get("time") as string | null
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const { name, topic, zoomlink, assign1, assign2, assign3, date, time } = formData
 
     // Validate required fields
     if (!name || !topic || !date || !time) {
@@ -95,17 +91,24 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
       })
       setError(null)
       setOpen(false)
+      setFormData({
+        name: '',
+        topic: '',
+        zoomlink: '',
+        assign1: '',
+        assign2: '',
+        assign3: '',
+        date: '',
+        time: ''
+      })
     } catch (err) {
       setError("Failed to create event. Please try again.")
     }
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, field: string) => {
-    const value = e.target.value
-    setCharCount((prevCount) => ({
-      ...prevCount,
-      [field]: value.length,
-    }))
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
@@ -120,11 +123,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
           <DialogTitle className="text-2xl font-bold">{EVENTS.DIALOG_TITLE}</DialogTitle>
           <DialogDescription>{EVENTS.DIALOG_DESCRIPTION}</DialogDescription>
         </DialogHeader>
-        <form onSubmit={(e) => {
-          e.preventDefault()
-          const formData = new FormData(e.target as HTMLFormElement)
-          handleSubmit(formData)
-        }}>
+        <form onSubmit={handleSubmit}>
           <Tabs defaultValue="details" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="details">Details</TabsTrigger>
@@ -139,13 +138,14 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                     <Input
                       id="name"
                       name="name"
+                      value={formData.name}
                       placeholder="Enter event title"
                       maxLength={charLimits.name}
-                      onChange={(e) => handleInputChange(e, "name")}
+                      onChange={handleInputChange}
                       required
                     />
                     <p className="text-sm text-muted-foreground text-right">
-                      {charCount.name}/{charLimits.name}
+                      {formData.name.length}/{charLimits.name}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -153,13 +153,14 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                     <Textarea
                       id="topic"
                       name="topic"
+                      value={formData.topic}
                       placeholder="Describe your event"
                       maxLength={charLimits.topic}
-                      onChange={(e) => handleInputChange(e, "topic")}
+                      onChange={handleInputChange}
                       required
                     />
                     <p className="text-sm text-muted-foreground text-right">
-                      {charCount.topic}/{charLimits.topic}
+                      {formData.topic.length}/{charLimits.topic}
                     </p>
                   </div>
                   <div className="space-y-2">
@@ -167,12 +168,13 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                     <Input
                       id="zoomlink"
                       name="zoomlink"
+                      value={formData.zoomlink}
                       placeholder="https://..."
                       maxLength={charLimits.zoomlink}
-                      onChange={(e) => handleInputChange(e, "zoomlink")}
+                      onChange={handleInputChange}
                     />
                     <p className="text-sm text-muted-foreground text-right">
-                      {charCount.zoomlink}/{charLimits.zoomlink}
+                      {formData.zoomlink.length}/{charLimits.zoomlink}
                     </p>
                   </div>
                 </CardContent>
@@ -189,7 +191,9 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                         id="date"
                         name="date"
                         type="date"
+                        value={formData.date}
                         className="pl-10"
+                        onChange={handleInputChange}
                         required
                       />
                     </div>
@@ -202,7 +206,9 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                         id="time"
                         name="time"
                         type="time"
+                        value={formData.time}
                         className="pl-10"
+                        onChange={handleInputChange}
                         required
                       />
                     </div>
@@ -221,14 +227,15 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                         <Input
                           id={`assign${num}`}
                           name={`assign${num}`}
+                          value={formData[`assign${num}` as keyof typeof formData]}
                           placeholder={`Assignment ${num}`}
                           className="pl-10"
                           maxLength={charLimits.assignment}
-                          onChange={(e) => handleInputChange(e, `assign${num}`)}
+                          onChange={handleInputChange}
                         />
                       </div>
                       <p className="text-sm text-muted-foreground text-right">
-                        {charCount[`assign${num}` as keyof typeof charCount]}/{charLimits.assignment}
+                        {formData[`assign${num}` as keyof typeof formData].length}/{charLimits.assignment}
                       </p>
                     </div>
                   ))}
