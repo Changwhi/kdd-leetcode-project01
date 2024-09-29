@@ -36,9 +36,9 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         "events",
         "assignments",
         "members",
-        "settings",
+        // "settings",
       ]
-    : ["summary", "instruction", "events", "assignments", "settings"];
+    : ["summary", "instruction", "events", "assignments"];
 
   useEffect(() => {
     const getCurrentUser = async () => {

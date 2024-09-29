@@ -7,10 +7,6 @@ import Col from "react-bootstrap/Col";
 import { SubmitAssignmentModal } from "./submit-assignment-modal";
 import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
-import {
-  createAttendanceWithUserEmail,
-  deleteAttendanceWithUserEmail,
-} from "@/lib/actions/attendance";
 import { EventDetailModal } from "./event-detail-modal";
 import { useUser } from "@auth0/nextjs-auth0/client";
 
@@ -33,25 +29,10 @@ const options: Intl.DateTimeFormatOptions = {
   day: "numeric",
 };
 
-const ATTENDANCE_STATUS: Record<0 | 1 | 2 | 3, JSX.Element> = {
+const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
   0: <XToolTip text="Absent" />,
-  1: <XToolTip text="Self_checkin" />,
+  1: <CheckToolTip text="Attend" />,
   2: <ExclamationToolTip text="Late" />,
-  3: <CheckToolTip text="Attend" />,
-};
-
-const onClickSelfCheckin = async (
-  exist: number,
-  user_email: string | null | undefined,
-  event_id: number
-) => {
-  if (user_email) {
-    if (exist) {
-      await deleteAttendanceWithUserEmail(user_email, event_id);
-    } else {
-      await createAttendanceWithUserEmail(user_email, event_id);
-    }
-  }
 };
 
 export const EventTableBody: React.FC<Props> = ({
@@ -105,7 +86,7 @@ export const EventTableBody: React.FC<Props> = ({
         )}
       </TableCell>
       <TableCell>
-        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2 | 3]}
+        {ATTENDANCE_STATUS[attendance_attended as 0 | 1 | 2]}
       </TableCell>
       <TableCell>
         <div className="flex items-center justify-center text-center">
@@ -122,22 +103,6 @@ export const EventTableBody: React.FC<Props> = ({
               submitted={assignment_submitted}
             ></SubmitAssignmentModal>
           )}
-        </div>
-      </TableCell>
-      <TableCell>
-        {" "}
-        <div className="flex items-center justify-center text-center">
-          <Button
-            className="bg-violet-900 w-20"
-            disabled={isPast || [2, 3].includes(attendance_attended)}
-            onClick={() => {
-              onClickSelfCheckin(attendance_attended, userEmail, event_id);
-            }}
-          >
-            {attendance_attended === 1 && !isPast
-              ? BUTTONS.BUTTON_UNCHECK
-              : BUTTONS.BUTTON_CHECK}
-          </Button>
         </div>
       </TableCell>
       <TableCell>

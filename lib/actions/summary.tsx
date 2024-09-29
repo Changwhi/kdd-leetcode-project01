@@ -15,7 +15,7 @@ export const retrieveAllUsers = async ({ group_id }: { group_id: number }) => {
               'event_name', e.name,
               'pullRequest', COALESCE(pr.submitted, false),
               'attendance', a.attended,
-              'assignments', s.submission_id,
+              'assignments', COALESCE(s.submission_id, 0),
               'deposit', COALESCE(ug.curr_amount, 0)
             ) 
             ORDER BY e.date

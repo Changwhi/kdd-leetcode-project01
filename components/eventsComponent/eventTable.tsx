@@ -45,9 +45,6 @@ export const EventTable = async ({
               {EVENTS_USER.ASSIGNMENT}
             </TableHead>
             <TableHead className="w-1/12 text-center">
-              {EVENTS_USER.SELF_CHECKIN}
-            </TableHead>
-            <TableHead className="w-1/12 text-center">
               {EVENTS_USER.ZOOM_LINK}
             </TableHead>
           </TableRow>
