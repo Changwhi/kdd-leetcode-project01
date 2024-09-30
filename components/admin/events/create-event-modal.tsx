@@ -21,8 +21,10 @@ import moment from "moment"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useToast } from "@/components/ui/use-toast"
 
 export function CreateEventModal({ groupId }: { groupId: number }) {
+  const { toast } = useToast()
   const [open, setOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
@@ -79,7 +81,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
     const utcDateTime = moment(localDateTime).utc().format()
 
     try {
-      await addEvent({
+      const response = await addEvent({
         name,
         date: utcDateTime,
         topic,
@@ -101,6 +103,12 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
         date: '',
         time: ''
       })
+      if (!response) {
+        toast({
+          description: "Failed to create event. Please try again.",
+        })
+      }
+
     } catch (err) {
       setError("Failed to create event. Please try again.")
     }

@@ -62,12 +62,21 @@ export const addEvent = async ({
   assign3: string;
 }) => {
   try {
-    await sql`
+    const response = await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
     `;
+    if(response) {
+      revalidatePath("/dashboard/events");
+      return true
+    }
+    else{
+      return false
+    }
+
   } catch (error) {
-    console.error("Error adding event:", error);
+    console.log(error);
+    return false;
   }
 };
 
