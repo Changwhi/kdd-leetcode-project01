@@ -3,9 +3,7 @@ import { usePathname } from "next/navigation";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { SIDEBAR_CONSTANTS } from "@/text/sideBar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { getLoggedInUser } from "@/lib/actions/user";
-import { UserType } from "@/types/user";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 /**
  * Sidebar component for the dashboard.
@@ -20,40 +18,12 @@ import { UserType } from "@/types/user";
  */
 const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
   const pathname = usePathname();
-  const [user, setUser] = useState<UserType>({
-    user_id: 0,
-    name: "",
-    email: "",
-    picture: "",
-  });
-
-  const isActive = (path: string) => pathname.startsWith(path);
   const sideBarOptions = admin
-    ? [
-        "summary",
-        "instruction",
-        "activities",
-        "events",
-        "assignments",
-        "members",
-        // "settings",
-      ]
+    ? ["summary", "instruction", "activities", "events", "assignments", "members"]
     : ["summary", "instruction", "events", "assignments"];
+  const isActive = (path: string) => pathname.startsWith(path);
 
-  useEffect(() => {
-    const getCurrentUser = async () => {
-      const response = await getLoggedInUser();
-      if (response) {
-        setUser({
-          user_id: response.user_id,
-          name: response.given_name ? response.given_name : response.username,
-          email: response.email,
-          picture: response.picture,
-        });
-      }
-    };
-    getCurrentUser();
-  }, []);
+  const { user, error, isLoading } = useUser();
 
   return (
     <aside className="flex flex-col justify-between w-1/5 2xl:w-2/12 bg-black text-white p-6">
@@ -70,36 +40,34 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
         <div className="py-16 flex flex-col items-start">
           <Avatar className="relative w-24 h-24">
             <AvatarImage
-              src={user.picture ? user.picture : "/avatar.png"}
+              src={user?.picture ? user.picture : "/avatar.png"}
               alt="User Avatar"
             />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl font-bold">{user.name}</h2>
+          <h2 className="mt-4 text-2xl font-bold">{user?.name}</h2>
           <p className="mt-2 text-base"></p>
           <a
             className="text-muted-foreground text-sm underline"
-            href={"mailto:" + user.email}
+            href={"mailto:" + user?.email}
             target="_blank"
           >
-            {user.email}
+            {user?.email}
           </a>
         </div>
         <nav className=" space-y-6">
           {sideBarOptions.map((option, index) => (
-            <a
+            <Link
               key={index}
               href={`/dashboard/${groupId}/${option}`}
               className={`block text-lg font-bold ${
-                isActive(
-                  `/dashboard/${groupId}/${option}`
-                )
+                isActive(`/dashboard/${groupId}/${option}`)
                   ? "text-white"
                   : "text-gray-500"
               }`}
             >
               {option.charAt(0).toUpperCase() + option.slice(1)}
-            </a>
+            </Link>
           ))}
         </nav>
       </div>
