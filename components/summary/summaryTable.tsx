@@ -204,7 +204,7 @@ export default function SummaryTable({
               </div>
             </TableCell>
             <TableCell className="h-10 py-0 border-r-2 border-gray">
-              ${user.curr_amount === null ? 0 : user.curr_amount} CAD
+              ${user.curr_amount === null || user.curr_amount < 0 ? 0 : user.curr_amount} CAD
             </TableCell>
             {user.events.map((event, index) => (
               <React.Fragment key={`${user.user_id}-event-${index}`}>
