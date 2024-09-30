@@ -183,9 +183,11 @@ export const setAttendance = async ({
 export const setPR = async ({
   user_id,
   event_id,
+  submitted, // New parameter to indicate the desired submission status (true or false)
 }: {
   user_id: number;
   event_id: number;
+  submitted: boolean; // True for creating PR, false for marking PR as not created
 }) => {
   try {
     // Fetch group_id and pr_deduction from the group table based on event_id
@@ -200,7 +202,7 @@ export const setPR = async ({
       throw new Error("Group not found for the event.");
     }
 
-    const { pr_deduction } = groupDetails[0];
+    const { group_id, pr_deduction } = groupDetails[0];
 
     // Check if there is an existing PR submission for this user and event
     let user_event_check: { submitted: boolean }[] = await sql`
@@ -209,39 +211,55 @@ export const setPR = async ({
       WHERE event_id = ${event_id} AND user_id = ${user_id}
     `;
 
-    let desired_submitted_value = undefined;
     let amount_change = 0;
 
     if (user_event_check.length == 0) {
-      // No PR record exists, insert a new one with submitted = true, but no deduction change
-      await sql`
-        INSERT INTO pr (user_id, event_id, submitted)
-        VALUES (${user_id}, ${event_id}, true)
-      `;
-      desired_submitted_value = true;  // Set PR as submitted, no deduction change
-    } else if (user_event_check[0].submitted) {
-      // If PR exists and is currently submitted (true), change to false and subtract deduction
-      desired_submitted_value = false;
-      amount_change = -pr_deduction;  // Subtract deduction
+      // No PR record exists
+      if (submitted) {
+        // If submitted = true, just insert the PR without any deduction
+        await sql`
+          INSERT INTO pr (user_id, event_id, submitted)
+          VALUES (${user_id}, ${event_id}, true)
+        `;
+      } else {
+        // If submitted = false, insert the PR and deduct the deposit
+        await sql`
+          INSERT INTO pr (user_id, event_id, submitted)
+          VALUES (${user_id}, ${event_id}, false)
+        `;
+        amount_change = -pr_deduction; // Deduct deposit
+      }
     } else {
-      // If PR exists and is not submitted (false), change to true and add deduction
-      desired_submitted_value = true;
-      amount_change = pr_deduction;  // Add deduction
+      // PR record exists
+      const currentStatus = user_event_check[0].submitted;
+
+      if (currentStatus !== submitted) {
+        // If status is changing
+        await sql`
+          UPDATE pr
+          SET submitted = ${submitted}
+          WHERE event_id = ${event_id} AND user_id = ${user_id}
+        `;
+
+        if (submitted) {
+          // If changing from false to true, add back the deduction
+          amount_change = pr_deduction; // Add the deduction back
+        } else {
+          // If changing from true to false, deduct the deposit
+          amount_change = -pr_deduction; // Deduct deposit
+        }
+      } else {
+        // Status is already the same, no need to update
+        throw new Error("PR status is already set to this value.");
+      }
     }
 
-    // Update the PR submission status
-    await sql`
-      UPDATE pr
-      SET submitted = ${desired_submitted_value}
-      WHERE event_id = ${event_id} AND user_id = ${user_id}
-    `;
-
-    // Only update curr_amount if there is a deduction change (i.e., PR existed)
-    if (user_event_check.length > 0) {
+    // Update the deposit (curr_amount) if there's an amount change
+    if (amount_change !== 0) {
       await sql`
         UPDATE user_group
         SET curr_amount = curr_amount + ${amount_change}
-        WHERE user_id = ${user_id} AND group_id = ${groupDetails[0].group_id}
+        WHERE user_id = ${user_id} AND group_id = ${group_id}
       `;
     }
 
@@ -251,6 +269,7 @@ export const setPR = async ({
     return false;
   }
 };
+
 
 /**
  * Force attendance status for a user in a specific event.

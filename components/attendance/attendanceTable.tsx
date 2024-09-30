@@ -20,11 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { AttendanceType } from "@/types/attendance";
-import {
-  retrieveAttendance,
-  forceAttendance,
-  setPR,
-} from "@/lib/actions/attendance";
+import { retrieveAttendance, forceAttendance, setPR } from "@/lib/actions/attendance";
 import { ATTENDANCE } from "@/text/attendance";
 import { ERROR } from "@/text/error";
 import { GROUP } from "@/text/group";
@@ -44,22 +40,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AttendanceCard } from "./attendanceCard";
 
 /**
  * AttendanceTable component
- *
- * @description
- * This component is used to display a table of users with their attendance status.
- * The table is searchable and sortable.
- * The component also provides a dropdown menu for each user to mark them as
- * attended, absent, or late.
- * Additionally, the component provides a filter for the attendance status.
- *
- * @param {number | undefined} event_id The ID of the event to fetch attendance data for.
- * @param {number | undefined} group_id The ID of the group to fetch attendance data for.
- *
- * @returns {JSX.Element} The AttendanceTable component.
  */
 export const AttendanceTable = ({
   event_id,
@@ -82,22 +65,22 @@ export const AttendanceTable = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAttendance = useCallback(async () => {
-  if (event_id && group_id) {
-    setIsLoading(true);
-    try {
-      const data = await retrieveAttendance({ event_id, group_id });
-      setMembers(data);
-      setFilteredMembers(data);
-    } catch (error) {
-      toast({
-        title: ERROR.ERROR,
-        description: "Failed to fetch attendance data.",
-      });
-    } finally {
-      setIsLoading(false);
+    if (event_id && group_id) {
+      setIsLoading(true);
+      try {
+        const data = await retrieveAttendance({ event_id, group_id });
+        setMembers(data);
+        setFilteredMembers(data);
+      } catch (error) {
+        toast({
+          title: ERROR.ERROR,
+          description: "Failed to fetch attendance data.",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
-}, [event_id, group_id, toast]);
+  }, [event_id, group_id, toast]);
 
   useEffect(() => {
     fetchAttendance();
@@ -160,7 +143,23 @@ export const AttendanceTable = ({
           return;
         }
         break;
-      case "pr":
+      case "pr_created":
+        if (currentMember.submitted === true) {
+          toast({
+            title: "PR Already Created",
+            description: "This user's PR has already been created.",
+          });
+          return;
+        }
+        break;
+      case "pr_not_created":
+        if (currentMember.submitted === false) {
+          toast({
+            title: "PR Already Not Created",
+            description: "This user's PR is already marked as not created.",
+          });
+          return;
+        }
         break;
       default:
         throw new Error("Invalid action");
@@ -191,8 +190,11 @@ export const AttendanceTable = ({
             attendance_status: 2,
           });
           break;
-        case "pr":
-          response = await setPR({ user_id, event_id });
+        case "pr_created":
+          response = await setPR({ user_id, event_id, submitted: true });
+          break;
+        case "pr_not_created":
+          response = await setPR({ user_id, event_id, submitted: false });
           break;
         default:
           throw new Error("Invalid action");
@@ -261,26 +263,23 @@ export const AttendanceTable = ({
     return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
   };
 
-  // New PRStatusIcon component for PR status
   const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
     if (submitted === null)
-      return <X className="w-4 h-4 text-gray-500" />; // Unknownstatus
+      return <HelpCircle className="w-4 h-4 text-gray-500" />; // Undecided
     return submitted ? (
-      <Check className="w-4 h-4 text-green-500" /> // Use ! for submitted
+      <Check className="w-4 h-4 text-green-500" />
     ) : (
-      <X className="w-4 h-4 text-red-500" /> // Use X for not submitted
+      <X className="w-4 h-4 text-red-500" />
     );
   };
 
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-4">
-        {/* <AttendanceCard attendance={members} /> */}
         <Input
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className=""
         />
         <Select onValueChange={setAttendanceFilter}>
           <SelectTrigger className="w-[180px]">
@@ -309,8 +308,8 @@ export const AttendanceTable = ({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All PRs</SelectItem>
-            <SelectItem value="submitted">Submitted</SelectItem>
-            <SelectItem value="notSubmitted">Not Submitted</SelectItem>
+            <SelectItem value="submitted">Created PR</SelectItem>
+            <SelectItem value="notSubmitted">Not Created PR</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -370,9 +369,11 @@ export const AttendanceTable = ({
               <TableCell>
                 <div className="flex items-center gap-2">
                   <PRStatusIcon submitted={info.submitted} />
-                  {info.submitted
-                    ? "Submitted"
-                    : "Not Submitted"}
+                  {info.submitted === null
+                    ? "Undecided"
+                    : info.submitted
+                    ? "Created PR"
+                    : "Not Created PR"}
                 </div>
               </TableCell>
               <TableCell>
@@ -409,11 +410,18 @@ export const AttendanceTable = ({
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
-                      onClick={() => handleAction("pr", info.user_id)}
+                      onClick={() => handleAction("pr_created", info.user_id)}
+                      disabled={info.submitted === true}
                     >
-                      {info.submitted
-                        ? "Remove PR Submission"
-                        : "Mark PR as Submitted"}
+                      {info.submitted ? "PR Already Created" : "Marked PR as Submitted"}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleAction("pr_not_created", info.user_id)}
+                      disabled={info.submitted === false}
+                    >
+                      {info.submitted === false
+                        ? "PR Not Created"
+                        : "Marked PR as Not Submission"}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
