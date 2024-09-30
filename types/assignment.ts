@@ -1,15 +1,15 @@
 export interface AssignmentType {
   assignment_id: number;
-  title: string;
   content: string;
+  number: number;
   event_id: number;
   user_id: number;
 }
 
 export interface AssignmentProps {
-  title: string;
   content: string;
   event_id: number;
+  number: number;
   user_email: string | null | undefined;
-  assignmentId: number | null | undefined;
+  assignment_id: number | null | undefined;
 }

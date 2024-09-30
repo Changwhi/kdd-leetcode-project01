@@ -21,15 +21,15 @@ export const createAssignment = async (formData: AssignmentProps) => {
       return [];
     }
     console.log(formData);
-    const title = formData.title;
     const content = formData.content;
     const event_id = formData.event_id;
+    const number = formData.number;
     const user_email = formData.user_email;
     if (!user_email) throw new Error(`User email is not entered`);
 
     await sql`
-      INSERT INTO assignment (title, content, event_id, user_id)
-      VALUES (${title}, ${content}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${user_email}))
+      INSERT INTO assignment (content, number, event_id, user_id)
+      VALUES (${content}, ${number}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${user_email}))
     `;
   } catch (error) {
     console.log(error);
@@ -42,13 +42,12 @@ export const updateAssignment = async (formData: AssignmentProps) => {
       return [];
     }
     console.log(formData);
-    const assignmentId = formData.assignmentId
-    const title = formData.title;
+    const assignmentId = formData.assignment_id;
     const content = formData.content;
-    if (!assignmentId) throw new Error('Submission id is not entered');
+    if (!assignmentId) throw new Error("Submission id is not entered");
     await sql`
       UPDATE assignment
-      SET title=${title}, content=${content}
+      SET content=${content}
       WHERE assignment_id = ${assignmentId}
     `;
   } catch (error) {
