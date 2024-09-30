@@ -22,6 +22,7 @@ import {
 import { ArrowUpDown, Maximize2 } from "lucide-react";
 import { Event, User } from "@/types/summary";
 import { SUMMARY } from "@/text/summary";
+import { CheckToolTip, ExclamationToolTip, XToolTip  } from "./icons/toolTip";
 
 type SortConfig = {
   key: string;
@@ -34,6 +35,7 @@ export default function SummaryTable({
 }: {
   usersInGroup: User[];
 }) {
+ console.log(usersInGroup);
   const [users, setUsers] = useState<User[]>(usersInGroup);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
@@ -44,7 +46,7 @@ export default function SummaryTable({
     );
   }, [users, searchTerm]);
 
-   const sortedUsers = useMemo(() => {
+  const sortedUsers = useMemo(() => {
     let sortableUsers = [...filteredUsers];
     if (sortConfig !== null) {
       sortableUsers.sort((a, b) => {
@@ -108,7 +110,7 @@ export default function SummaryTable({
     <Button
       variant="ghost"
       onClick={() => requestSort(key, eventIndex)}
-      className="h-full w-full justify-start font-normal"
+      className="h-full w-full justify-start font-normal pl-2 pr-2"
     >
       {label} <ArrowUpDown className="h-4 w-4 ml-1" />
     </Button>
@@ -117,31 +119,42 @@ export default function SummaryTable({
   const renderEventHeader = (eventIndex: number) => (
     <>
       <TableHead className="p-0 h-10">
-        {renderSortButton("Pull Request", "pullRequest", eventIndex)}
+        {renderSortButton("PR", "pullRequest", eventIndex)}
       </TableHead>
       <TableHead className="p-0 h-10">
-        {renderSortButton("Attendance", "attendance", eventIndex)}
+        {renderSortButton("Attend", "attendance", eventIndex)}
       </TableHead>
       <TableHead className="p-0 h-10 border-r-2 border-gray">
-        {renderSortButton("Assignment", "assignment", eventIndex)}
+        {renderSortButton("Asgmt", "assignment", eventIndex)}
       </TableHead>
     </>
   );
 
+  const ATTENDANCE_STATUS: Record<0 | 1 | 2, JSX.Element> = {
+    0: <XToolTip text="Absent" />,
+    1: <CheckToolTip text="Attend" />,
+    2: <ExclamationToolTip text="Late" />,
+  };
+
+  const SUBMISSION_STATUS: Record<0 | 1, JSX.Element> = {
+    0: <XToolTip text="Not Submitted" />,
+    1: <CheckToolTip text="Submitted" />,
+  };
+
   const renderEventData = (event: Event) => (
     <>
       <TableCell className="h-10 py-0">
-        {event.pullRequest ? "Submitted" : "Not Submitted"}
+        {event.pullRequest ? SUBMISSION_STATUS[1] : SUBMISSION_STATUS[0]}
       </TableCell>
       <TableCell className="h-10 py-0">
         {event.attendance === 0 || event.attendance === null
-          ? "Absent"
+          ? ATTENDANCE_STATUS[0]
           : event.attendance === 1
-          ? "Attended"
-          : "Late"}
+          ? ATTENDANCE_STATUS[1]
+          : ATTENDANCE_STATUS[2]}
       </TableCell>
       <TableCell className="h-10 py-0 border-r-2 border-gray">
-        {event.assignments == null ? "Not Submitted" : "Submitted"}
+        {event.assignments ? SUBMISSION_STATUS[1] : SUBMISSION_STATUS[0]}
       </TableCell>
     </>
   );
