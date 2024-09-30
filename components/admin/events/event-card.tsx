@@ -48,9 +48,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   date,
   topic,
   zoomlink,
-  assign1,
-  assign2,
-  assign3,
+  assignments,
   group_id,
   admin,
 }) => {
@@ -59,9 +57,11 @@ export const EventCard: React.FC<EventCardProps> = ({
   const [eventTime, setEventTime] = useState(moment(date).format("HH:mm")); // Extract only the time
   const [eventTopic, setEventTopic] = useState(topic);
   const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
-  const [eventAssign1, setEventAssign1] = useState(assign1);
-  const [eventAssign2, setEventAssign2] = useState(assign2);
-  const [eventAssign3, setEventAssign3] = useState(assign3);
+  //TODO: Delete start
+  const [eventAssign1, setEventAssign1] = useState("");
+  const [eventAssign2, setEventAssign2] = useState("");
+  const [eventAssign3, setEventAssign3] = useState("");
+  //TODO: Delete end
 
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -126,10 +126,10 @@ export const EventCard: React.FC<EventCardProps> = ({
         <p className="text-muted-foreground mb-4">{topic}</p>
         <h3 className="font-semibold text-lg mb-2">Assignments</h3>
         <ul className="space-y-2">
-          {[assign1, assign2, assign3].map((assignment, index) => (
-            <li key={index} className="flex items-center">
+          {assignments.map((assignment, index) => (
+            assignment && <li key={index} className="flex items-center">
               <CheckSquare className="w-5 h-5 text-primary mr-2" />
-              <span>{assignment}</span>
+              <span>{assignment.content}</span>
             </li>
           ))}
         </ul>

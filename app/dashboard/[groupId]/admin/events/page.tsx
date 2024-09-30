@@ -38,10 +38,8 @@ export default async function Events({
                 date={event.date}
                 topic={event.topic}
                 zoomlink={event.zoomlink}
+                assignments={event.assignments}
                 group_id={Number(params.groupId)}
-                assign1={event.assign1}
-                assign2={event.assign2}
-                assign3={event.assign3}
                 admin={true}
               />
             ))}
@@ -59,10 +57,8 @@ export default async function Events({
                 date={event.date}
                 topic={event.topic}
                 zoomlink={event.zoomlink}
+                assignments={event.assignments}
                 group_id={Number(params.groupId)}
-                assign1={event.assign1}
-                assign2={event.assign2}
-                assign3={event.assign3}
                 admin={true}
               />
             ))}

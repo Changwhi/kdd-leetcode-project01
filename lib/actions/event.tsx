@@ -13,20 +13,23 @@ export const retrieveEvents = async (group_id: number) => {
   try {
     const events: EventType[] = await sql`
       SELECT 
-        event_id, 
-        name, 
-        date,
-        assign1, 
-        assign2, 
-        assign3,
-        zoomLink,
-        topic,
-        group_id,
-        processed
-      FROM event
+        e.event_id, 
+        e.name, 
+        e.date,
+        e.zoomLink,
+        e.topic,
+        e.group_id,
+        e.processed,
+        json_agg(a) AS assignments
+      FROM event e
+      LEFT JOIN 
+        assignment a ON e.event_id = a.event_id
       WHERE group_id = ${group_id}
+      GROUP BY 
+        e.event_id
       ORDER BY date DESC;
     `;
+    console.log(events[0].assignments)
     if (events) {
       return events;
     }

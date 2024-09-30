@@ -1,3 +1,5 @@
+import { AssignmentType } from "./assignment";
+
 export interface EventType {
   event_id: number;
   name: string;
@@ -5,10 +7,8 @@ export interface EventType {
   topic: string;
   zoomlink: string;
   group_id: number;
-  assign1: string;
-  assign2: string;
-  assign3: string;
   processed: boolean;
+  assignments: AssignmentType[];
 }
 
 export interface EventCardProps {
@@ -19,9 +19,7 @@ export interface EventCardProps {
   zoomlink: string;
   group_id: number;
   admin: boolean;
-  assign1: string;
-  assign2: string;
-  assign3: string;
+  assignments: AssignmentType[];
 }
 export interface EventCardPropsForDB {
   event_id: number;
