@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -9,76 +9,78 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { addEvent } from "@/lib/actions/event"
-import { EVENTS } from "@/text/events"
-import { PlusCircle, Calendar, Clock, Link, BookOpen } from "lucide-react"
-import { useState } from "react"
-import moment from "moment"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useToast } from "@/components/ui/use-toast"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { addEvent } from "@/lib/actions/event";
+import { EVENTS } from "@/text/events";
+import { PlusCircle, Calendar, Clock, Link, BookOpen } from "lucide-react";
+import { useState } from "react";
+import moment from "moment";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Card, CardContent } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/components/ui/use-toast";
 
 export function CreateEventModal({ groupId }: { groupId: number }) {
-  const { toast } = useToast()
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    topic: '',
-    zoomlink: '',
-    assign1: '',
-    assign2: '',
-    assign3: '',
-    date: '',
-    time: ''
-  })
+    name: "",
+    topic: "",
+    zoomlink: "",
+    assign: ["", "", ""],
+    date: "",
+    time: "",
+  });
 
   const charLimits = {
     name: 20,
     topic: 20,
     zoomlink: 200,
-    assignment: 100,
-  }
+    assignment: 200,
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const { name, topic, zoomlink, assign1, assign2, assign3, date, time } = formData
+    e.preventDefault();
+    const { name, topic, zoomlink, assign, date, time } = formData;
 
     // Validate required fields
     if (!name || !topic || !date || !time) {
-      setError("Please fill in all required fields.")
-      return
+      setError("Please fill in all required fields.");
+      return;
     }
 
     // Validate character limits
     if (name.length > charLimits.name) {
-      setError(`Event title must be less than ${charLimits.name} characters.`)
-      return
+      setError(`Event title must be less than ${charLimits.name} characters.`);
+      return;
     }
     if (topic.length > charLimits.topic) {
-      setError(`Event description must be less than ${charLimits.topic} characters.`)
-      return
+      setError(
+        `Event description must be less than ${charLimits.topic} characters.`
+      );
+      return;
     }
     if (zoomlink && zoomlink.length > charLimits.zoomlink) {
-      setError(`Event link must be less than ${charLimits.zoomlink} characters.`)
-      return
+      setError(
+        `Event link must be less than ${charLimits.zoomlink} characters.`
+      );
+      return;
     }
-    if (
-      (assign1 && assign1.length > charLimits.assignment) ||
-      (assign2 && assign2.length > charLimits.assignment) ||
-      (assign3 && assign3.length > charLimits.assignment)
-    ) {
-      setError(`Assignments must be less than ${charLimits.assignment} characters each.`)
-      return
-    }
+    // if (
+    //   (assign1 && assign1.length > charLimits.assignment) ||
+    //   (assign2 && assign2.length > charLimits.assignment) ||
+    //   (assign3 && assign3.length > charLimits.assignment)
+    // ) {
+    //   setError(`Assignments must be less than ${charLimits.assignment} characters each.`)
+    //   return
+    // }
 
-    const localDateTime = new Date(`${date}T${time}`)
-    const utcDateTime = moment(localDateTime).utc().format()
+    const localDateTime = new Date(`${date}T${time}`);
+    const utcDateTime = moment(localDateTime).utc().format();
 
     try {
       const response = await addEvent({
@@ -87,37 +89,47 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
         topic,
         zoomlink: zoomlink || "",
         group_id: groupId,
-        assign1: assign1 || "",
-        assign2: assign2 || "",
-        assign3: assign3 || "",
-      })
-      setError(null)
-      setOpen(false)
+        assign,
+      });
+      setError(null);
+      setOpen(false);
       setFormData({
-        name: '',
-        topic: '',
-        zoomlink: '',
-        assign1: '',
-        assign2: '',
-        assign3: '',
-        date: '',
-        time: ''
-      })
+        name: "",
+        topic: "",
+        zoomlink: "",
+        assign: [],
+        date: "",
+        time: "",
+      });
       if (!response) {
         toast({
           description: "Failed to create event. Please try again.",
-        })
+        });
       }
-
     } catch (err) {
-      setError("Failed to create event. Please try again.")
+      setError("Failed to create event. Please try again.");
     }
-  }
+  };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  
+  const handleAssignInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    index: number
+  ) => {
+    const { value } = e.target;
+    
+    setFormData((prev) => {
+      const updatedAssign = [...prev.assign];
+      updatedAssign[index] = value;
+      return { ...prev, assign: updatedAssign };
+    });
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -128,7 +140,9 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{EVENTS.DIALOG_TITLE}</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">
+            {EVENTS.DIALOG_TITLE}
+          </DialogTitle>
           <DialogDescription>{EVENTS.DIALOG_DESCRIPTION}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
@@ -235,16 +249,17 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                         <Input
                           id={`assign${num}`}
                           name={`assign${num}`}
-                          value={formData[`assign${num}` as keyof typeof formData]}
+                          value={formData.assign[num - 1]}
                           placeholder={`Assignment ${num}`}
                           className="pl-10"
                           maxLength={charLimits.assignment}
-                          onChange={handleInputChange}
+                          onChange={(e) => handleAssignInputChange(e, num - 1)}
                         />
                       </div>
-                      <p className="text-sm text-muted-foreground text-right">
-                        {formData[`assign${num}` as keyof typeof formData].length}/{charLimits.assignment}
-                      </p>
+                      {/* <p className="text-sm text-muted-foreground text-right">
+                        {formData.assign[num - 1].length}/
+                        {charLimits.assignment}
+                      </p> */}
                     </div>
                   ))}
                 </CardContent>
@@ -264,5 +279,5 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

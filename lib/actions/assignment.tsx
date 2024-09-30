@@ -1,5 +1,6 @@
 import { AssignmentType, AssignmentProps } from "@/types/assignment";
 import { sql } from "@/utils/db";
+import { getSession } from '@auth0/nextjs-auth0';
 
 export const retrieveassignmentsByEventID = async (eventID: number) => {
   try {
@@ -15,21 +16,14 @@ export const retrieveassignmentsByEventID = async (eventID: number) => {
   }
 };
 
-export const createAssignment = async (formData: AssignmentProps) => {
+export const createAssignment = async (content:string, event_id:number, number:number) => {
   try {
-    if (!formData) {
-      return [];
-    }
-    console.log(formData);
-    const content = formData.content;
-    const event_id = formData.event_id;
-    const number = formData.number;
-    const user_email = formData.user_email;
-    if (!user_email) throw new Error(`User email is not entered`);
+    const session = await getSession();
+    if(!session) throw new Error("User is not logged in")
 
     await sql`
       INSERT INTO assignment (content, number, event_id, user_id)
-      VALUES (${content}, ${number}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${user_email}))
+      VALUES (${content}, ${number}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${session.user.email}))
     `;
   } catch (error) {
     console.log(error);

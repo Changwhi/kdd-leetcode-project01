@@ -39,7 +39,7 @@ const charLimits = {
   name: 20,
   topic: 20,
   zoomlink: 200,
-  assignment: 100,
+  assignment: 200,
 };
 
 export const EventCard: React.FC<EventCardProps> = ({

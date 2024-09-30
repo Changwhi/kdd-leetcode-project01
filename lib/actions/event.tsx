@@ -2,6 +2,7 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
+import { createAssignment } from "./assignment";
 
 /**
  * Retrieves a list of events from the database.
@@ -48,32 +49,38 @@ export const addEvent = async ({
   topic,
   zoomlink,
   group_id,
-  assign1,
-  assign2,
-  assign3,
+  assign,
 }: {
   name: string;
   date: string;
   topic: string;
   zoomlink: string;
   group_id: number;
-  assign1: string;
-  assign2: string;
-  assign3: string;
+  assign: string[];
 }) => {
+  //TODO: Delete these assignments
+  const assign1 = "";
+  const assign2 = "";
+  const assign3 = "";
+  //TODO: Delete until this
   try {
     const response = await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
+      RETURNING event_id;
     `;
-    if(response) {
-      revalidatePath("/dashboard/events");
-      return true
-    }
-    else{
-      return false
+    const eventId = response[0].event_id;
+    const NumAssignments = assign.length;
+    for (let i = 0; i < NumAssignments; i++) {
+      await createAssignment(assign[i], eventId, i);
     }
 
+    if (response) {
+      revalidatePath("/dashboard/events");
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log(error);
     return false;
