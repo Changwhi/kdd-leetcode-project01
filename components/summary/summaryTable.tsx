@@ -35,7 +35,6 @@ export default function SummaryTable({
 }: {
   usersInGroup: User[];
 }) {
- console.log(usersInGroup);
   const [users, setUsers] = useState<User[]>(usersInGroup);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
@@ -222,7 +221,7 @@ export default function SummaryTable({
       <div className="flex justify-between items-center mb-4">
         <Dialog>
         <DialogHeader>
-            <h1 className="text-base font-bold md:m-2 lg:m-4">{SUMMARY.TABLE_TITLE}</h1>
+            <h1 className="text-base font-bold md:m-2 lg:m-4">{SUMMARY.TABLE_TITLE} - {usersInGroup.length} {usersInGroup.length ===1 ?"member":"members"}</h1>
 
         </DialogHeader>
           <DialogTrigger asChild>
