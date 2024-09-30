@@ -35,7 +35,6 @@ export default function SummaryTable({
 }: {
   usersInGroup: User[];
 }) {
- console.log(usersInGroup);
   const [users, setUsers] = useState<User[]>(usersInGroup);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
