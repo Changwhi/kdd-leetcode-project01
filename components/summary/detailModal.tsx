@@ -40,21 +40,17 @@ export function EventModal({ event, trigger }: EventModalProps) {
           </div>
           <div className="space-y-2">
             <span className="font-semibold">Assignments:</span>
-            <ul>
-              {event.assignments.map(
+            <ul className="list-disc pl-5 space-y-1">
+            {event.assignments.map(
                 (assignment, index) =>
-                  assignment && (
-                    <li key={index}>
-                      <span>{assignment.content}</span>
-                    </li>
-                  )
+                  assignment && <li key={index}>{assignment.content}</li>
               )}
             </ul>
           </div>
         </div>
         <div className="p-6 pt-0">
-          <Button 
-            onClick={() => setIsOpen(false)} 
+          <Button
+            onClick={() => setIsOpen(false)}
             className="w-full bg-gray-900 text-white hover:bg-gray-800"
           >
             Close
@@ -62,5 +58,5 @@ export function EventModal({ event, trigger }: EventModalProps) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

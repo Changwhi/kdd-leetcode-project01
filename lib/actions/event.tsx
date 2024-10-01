@@ -75,7 +75,9 @@ export const addEvent = async ({
     const eventId = response[0].event_id;
     const NumAssignments = assign.length;
     for (let i = 0; i < NumAssignments; i++) {
-      await createAssignment(assign[i], eventId, i);
+      if(assign[i]) {
+        await createAssignment(assign[i], eventId, i);
+      }
     }
 
     if (response) {
