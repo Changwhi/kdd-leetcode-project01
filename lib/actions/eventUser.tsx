@@ -83,31 +83,22 @@ export const retrieveEventsbyEventAndUser = async (
     e.date,
     e.topic,
     e.zoomlink,
-    e.assign1,
-    e.assign2,
-    e.assign3,
+    json_agg(a) AS assignments,
+    BOOL_OR(s.event_id IS NOT NULL) AS assignment_submitted,
     CASE
-        WHEN s.event_id IS NOT NULL THEN TRUE
-        ELSE FALSE
-    END AS assignment_submitted,
-    CASE
-        WHEN at.event_id IS NULL THEN 0
-        ELSE at.attended
+        WHEN MAX(at.event_id) IS NULL THEN 0
+        ELSE MAX(at.attended)
     END AS attendance_attended,
-    CASE
-        WHEN PR.submitted = TRUE THEN TRUE
-        ELSE FALSE
-    END AS pr_submitted
+    BOOL_OR(PR.submitted = TRUE) AS pr_submitted      
     FROM event e
-    LEFT JOIN
-        Submission s ON s.user_id= ${userID} AND e.event_id = s.event_id
-    LEFT JOIN
-        Attendance at ON at.user_id = ${userID} AND e.event_id = at.event_id
-    LEFT JOIN
-        PR ON PR.user_id = ${userID} AND e.event_id = PR.event_id
-    WHERE
-        e.event_id IN ${sql(eventIds)}
+    LEFT JOIN Submission s ON s.user_id= ${userID} AND e.event_id = s.event_id
+    LEFT JOIN Attendance at ON at.user_id = ${userID} AND e.event_id = at.event_id
+    LEFT JOIN PR ON PR.user_id = ${userID} AND e.event_id = PR.event_id
+    LEFT JOIN assignment a ON e.event_id = a.event_id
+    WHERE e.event_id IN ${sql(eventIds)}
+    GROUP BY e.event_id
     ORDER BY date DESC`;
+
     if (response) {
       return response;
     }
@@ -136,31 +127,21 @@ export const retrieveEventsbyEventAndUserEmail = async (
     e.date,
     e.topic,
     e.zoomlink,
-    e.assign1,
-    e.assign2,
-    e.assign3,
+    json_agg(a) AS assignments,
+    BOOL_OR(s.event_id IS NOT NULL) AS assignment_submitted,
     CASE
-        WHEN s.event_id IS NOT NULL THEN TRUE
-        ELSE FALSE
-    END AS assignment_submitted,
-    CASE
-        WHEN at.event_id IS NULL THEN 0
-        ELSE at.attended
+        WHEN MAX(at.event_id) IS NULL THEN 0
+        ELSE MAX(at.attended)
     END AS attendance_attended,
-    CASE
-        WHEN PR.submitted = TRUE THEN TRUE
-        ELSE FALSE
-    END AS pr_submitted
+    BOOL_OR(PR.submitted = TRUE) AS pr_submitted
     FROM event e
     LEFT JOIN "user" u ON u.email = ${userEmail}
-    LEFT JOIN
-        Submission s ON s.user_id= u.user_id AND e.event_id = s.event_id
-    LEFT JOIN
-        Attendance at ON at.user_id = u.user_id AND e.event_id = at.event_id
-    LEFT JOIN
-        PR ON PR.user_id = u.user_id AND e.event_id = PR.event_id
-    WHERE
-        e.event_id IN ${sql(eventIds)}
+    LEFT JOIN Submission s ON s.user_id= u.user_id AND e.event_id = s.event_id
+    LEFT JOIN Attendance at ON at.user_id = u.user_id AND e.event_id = at.event_id
+    LEFT JOIN PR ON PR.user_id = u.user_id AND e.event_id = PR.event_id
+    LEFT JOIN assignment a ON e.event_id = a.event_id
+    WHERE e.event_id IN ${sql(eventIds)}
+    GROUP BY e.event_id
     ORDER BY date DESC`;
     if (response) {
       return response;

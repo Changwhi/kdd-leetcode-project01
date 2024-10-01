@@ -2,6 +2,7 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
+import { createAssignment, deleteAllAssignmentsInEvent, updateAssignment } from "./assignment";
 
 /**
  * Retrieves a list of events from the database.
@@ -12,18 +13,20 @@ export const retrieveEvents = async (group_id: number) => {
   try {
     const events: EventType[] = await sql`
       SELECT 
-        event_id, 
-        name, 
-        date,
-        assign1, 
-        assign2, 
-        assign3,
-        zoomLink,
-        topic,
-        group_id,
-        processed
-      FROM event
+        e.event_id, 
+        e.name, 
+        e.date,
+        e.zoomLink,
+        e.topic,
+        e.group_id,
+        e.processed,
+        json_agg(a) AS assignments
+      FROM event e
+      LEFT JOIN 
+        assignment a ON e.event_id = a.event_id
       WHERE group_id = ${group_id}
+      GROUP BY 
+        e.event_id
       ORDER BY date DESC;
     `;
     if (events) {
@@ -48,32 +51,40 @@ export const addEvent = async ({
   topic,
   zoomlink,
   group_id,
-  assign1,
-  assign2,
-  assign3,
+  assign,
 }: {
   name: string;
   date: string;
   topic: string;
   zoomlink: string;
   group_id: number;
-  assign1: string;
-  assign2: string;
-  assign3: string;
+  assign: string[];
 }) => {
+  //TODO: Delete these assignments
+  const assign1 = "";
+  const assign2 = "";
+  const assign3 = "";
+  //TODO: Delete until this
   try {
     const response = await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
       VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
+      RETURNING event_id;
     `;
-    if(response) {
-      revalidatePath("/dashboard/events");
-      return true
-    }
-    else{
-      return false
+    const eventId = response[0].event_id;
+    const NumAssignments = assign.length;
+    for (let i = 0; i < NumAssignments; i++) {
+      if(assign[i]) {
+        await createAssignment(assign[i], eventId, i);
+      }
     }
 
+    if (response) {
+      revalidatePath("/dashboard/events");
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.log(error);
     return false;
@@ -98,18 +109,22 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       topic,
       zoomlink,
       group_id,
-      assign1,
-      assign2,
-      assign3,
+      assignments,
       event_id,
     } = formData;
-
+    console.log(formData)
     // Now `date` contains both date and time
     await sql`
       UPDATE event
-      SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}, assign1 = ${assign1}, assign2 = ${assign2}, assign3 = ${assign3}
+      SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}
       WHERE event_id = ${event_id}
     `;
+
+    for (let i = 0; i < assignments.length; i++) {
+      if(assignments[i]) {
+        await updateAssignment(assignments[i].id, assignments[i].content);
+      }
+    }
     revalidatePath("/dashboard/events");
   } catch (error) {
     console.log(error);
@@ -118,6 +133,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
 
 export const deleteEvent = async (event_id: number) => {
   try {
+    await deleteAllAssignmentsInEvent(event_id);
     await sql`
       DELETE FROM event
       WHERE event_id = ${event_id}

@@ -47,9 +47,7 @@ export const SelectedEvent = ({
               zoomlink={event.zoomlink}
               group_id={group_id}
               admin={admin}
-              assign1={event.assign1}
-              assign2={event.assign2}
-              assign3={event.assign3}
+              assignments={event.assignments}
             />
           ))}
         {!events && <p>{SUMMARY.NO_EVENT}</p>}

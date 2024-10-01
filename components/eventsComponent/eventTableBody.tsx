@@ -9,6 +9,7 @@ import { BUTTONS } from "@/text/buttons";
 import { CheckToolTip, ExclamationToolTip, XToolTip } from "./Icons/toolTip";
 import { EventDetailModal } from "./event-detail-modal";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { AssignmentType } from "@/types/assignment";
 
 interface Props {
   event_id: number;
@@ -16,9 +17,7 @@ interface Props {
   date: Date;
   topic: String;
   zoomLink: String;
-  assign1: String;
-  assign2: String;
-  assign3: String;
+  assign: AssignmentType[];
   assignment_submitted: boolean;
   attendance_attended: number;
   pr_submitted: boolean;
@@ -41,9 +40,7 @@ export const EventTableBody: React.FC<Props> = ({
   date,
   topic,
   zoomLink,
-  assign1,
-  assign2,
-  assign3,
+  assign,
   assignment_submitted,
   attendance_attended,
   pr_submitted,
@@ -71,9 +68,7 @@ export const EventTableBody: React.FC<Props> = ({
               topic={topic}
               date={date}
               zoomLink={zoomLink}
-              assign1={assign1}
-              assign2={assign2}
-              assign3={assign3}
+              assign={assign}
             />
           </Row>
         </Col>

@@ -1,27 +1,33 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-import { EventType } from "@/types/event"
-import moment from "moment"
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { EventType } from "@/types/event";
+import moment from "moment";
 
 interface EventModalProps {
-  event: EventType
-  trigger: React.ReactNode
+  event: EventType;
+  trigger: React.ReactNode;
 }
 
 export function EventModal({ event, trigger }: EventModalProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        {trigger}
-      </DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px] p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl font-bold">{event.name}</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
         <div className="p-6 space-y-4">
           <div className="flex justify-between">
@@ -34,22 +40,43 @@ export function EventModal({ event, trigger }: EventModalProps) {
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Zoom Link:</span>
-            <a href={event.zoomlink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+            <a
+              href={event.zoomlink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
               Join Meeting
             </a>
           </div>
           <div className="space-y-2">
             <span className="font-semibold">Assignments:</span>
             <ul className="list-disc pl-5 space-y-1">
-              <li>{event.assign1}</li>
-              <li>{event.assign2}</li>
-              <li>{event.assign3}</li>
+              {event.assignments.map(
+                (assignment, index) =>
+                  assignment && (
+                    <li key={index}>
+                      {assignment.content.startsWith("http") ? (
+                        <a
+                          href={assignment.content}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          {`Assignment ${index + 1} Link`}
+                        </a>
+                      ) : (
+                        assignment.content
+                      )}
+                    </li>
+                  )
+              )}
             </ul>
           </div>
         </div>
         <div className="p-6 pt-0">
-          <Button 
-            onClick={() => setIsOpen(false)} 
+          <Button
+            onClick={() => setIsOpen(false)}
             className="w-full bg-gray-900 text-white hover:bg-gray-800"
           >
             Close
@@ -57,5 +84,5 @@ export function EventModal({ event, trigger }: EventModalProps) {
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
