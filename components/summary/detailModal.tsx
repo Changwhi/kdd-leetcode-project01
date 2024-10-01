@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -26,6 +27,7 @@ export function EventModal({ event, trigger }: EventModalProps) {
       <DialogContent className="sm:max-w-[425px] p-0">
         <DialogHeader className="p-6 pb-0">
           <DialogTitle className="text-xl font-bold">{event.name}</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
         <div className="p-6 space-y-4">
           <div className="flex justify-between">
