@@ -20,7 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { AttendanceType } from "@/types/attendance";
-import { retrieveAttendance, forceAttendance, setPR } from "@/lib/actions/attendance";
+import {
+  retrieveAttendance,
+  forceAttendance,
+  setPR,
+} from "@/lib/actions/attendance";
 import { ATTENDANCE } from "@/text/attendance";
 import { ERROR } from "@/text/error";
 import { GROUP } from "@/text/group";
@@ -255,13 +259,16 @@ export const AttendanceTable = ({
     return null;
   };
 
-  const StatusIcon = ({ status }: { status: boolean | number | null }) => {
-    if (status === 1) return <Check className="w-4 h-4 text-green-500" />;
-    if (status === true) return <Check className="w-4 h-4 text-green-500" />;
-    if (status === 2) return <HelpCircle className="w-4 h-4 text-yellow-500" />;
-    if (status === 0) return <X className="w-4 h-4 text-red-500" />;
-    return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
-  };
+ const StatusIcon = ({ status }: { status: boolean | number | null }) => {
+  if (status === null) {
+    return <HelpCircle className="w-4 h-4 text-gray-500" />; // Question mark icon for not checked
+  }
+  if (status === 1) return <Check className="w-4 h-4 text-green-500" />;
+  if (status === 2) return <HelpCircle className="w-4 h-4 text-yellow-500" />;
+  if (status === 0) return <X className="w-4 h-4 text-red-500" />;
+  return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
+};
+
 
   const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
     if (submitted === null)
@@ -352,7 +359,9 @@ export const AttendanceTable = ({
               <TableCell>
                 <div className="flex items-center gap-2">
                   <StatusIcon status={info.attended} />
-                  {info.attended === 1
+                  {info.attended === null
+                    ? ATTENDANCE.UNCHECKED
+                    : info.attended === 1
                     ? ATTENDANCE.ATTENDED
                     : info.attended === 2
                     ? ATTENDANCE.LATE
@@ -370,10 +379,10 @@ export const AttendanceTable = ({
                 <div className="flex items-center gap-2">
                   <PRStatusIcon submitted={info.submitted} />
                   {info.submitted === null
-                    ? "Undecided"
+                    ? ATTENDANCE.UNCHECKED
                     : info.submitted
-                    ? "Created PR"
-                    : "Not Created PR"}
+                    ? ATTENDANCE.CREATED_PR
+                    : ATTENDANCE.NOT_CREATED_PR}
                 </div>
               </TableCell>
               <TableCell>
@@ -395,33 +404,46 @@ export const AttendanceTable = ({
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem
                       onClick={() => handleAction("attended", info.user_id)}
+                      disabled={info.attended === 1} // Disable if already marked as attended
                     >
-                      {GROUP.MARKED_AS_ATTENDED}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleAction("absent", info.user_id)}
-                    >
-                      {GROUP.MARKED_AS_ABSENT}
+                      {info.attended === 1
+                        ? "Already Attended"
+                        : GROUP.MARKED_AS_ATTENDED}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleAction("late", info.user_id)}
+                      disabled={info.attended === 2} // Disable if already marked as late
                     >
-                      {GROUP.MARKED_AS_LATE}
+                      {info.attended === 2
+                        ? "Already Late"
+                        : GROUP.MARKED_AS_LATE}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleAction("absent", info.user_id)}
+                      disabled={info.attended === 0} // Disable if already marked as absent
+                    >
+                      {info.attended === 0
+                        ? "Already Absent"
+                        : GROUP.MARKED_AS_ABSENT}
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => handleAction("pr_created", info.user_id)}
-                      disabled={info.submitted === true}
+                      disabled={info.submitted === true} // Disable if PR is already created
                     >
-                      {info.submitted ? "PR Already Created" : "Marked PR as Submitted"}
+                      {info.submitted
+                        ? "PR Already Created"
+                        : "Mark PR as Submitted"}
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => handleAction("pr_not_created", info.user_id)}
-                      disabled={info.submitted === false}
+                      onClick={() =>
+                        handleAction("pr_not_created", info.user_id)
+                      }
+                      disabled={info.submitted === false} // Disable if PR is already not created
                     >
                       {info.submitted === false
                         ? "PR Not Created"
-                        : "Marked PR as Not Submission"}
+                        : "Mark PR as Not Submitted"}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

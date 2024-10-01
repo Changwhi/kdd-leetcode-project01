@@ -238,6 +238,7 @@ export const setPR = async ({
         await sql`
           UPDATE pr
           SET submitted = ${submitted}
+
           WHERE event_id = ${event_id} AND user_id = ${user_id}
         `;
 
@@ -289,7 +290,7 @@ export const forceAttendance = async ({
   attendance_status: number;
 }) => {
   try {
-    // Fetch the group_id and attendance deduction from the group table
+    // Fetch the group_id and attendance_deduction from the group table
     const groupDetails = await sql`
       SELECT g.group_id, g.attendance_deduction
       FROM "group" g
@@ -301,47 +302,73 @@ export const forceAttendance = async ({
       throw new Error("Group not found for the event.");
     }
 
-    const { attendance_deduction } = groupDetails[0];
+    const { group_id, attendance_deduction } = groupDetails[0];
 
-    // Check the current attendance status of the user for the event
-    const user_event_check: AttendanceType[] = await sql`
+    // Check if there's a current attendance record for the user in the event
+    const user_event_check: { attended: number }[] = await sql`
       SELECT attended
       FROM attendance
       WHERE event_id = ${event_id} AND user_id = ${user_id}
     `;
 
-    let old_attended_status = user_event_check.length > 0 ? user_event_check[0].attended : null;
-
-    // Determine the impact on curr_amount based on the new attendance status
     let amount_change = 0;
 
-    if (attendance_status === 1) { // Attended
-      amount_change = attendance_deduction;
-    } else if (attendance_status === 2) { // Late
-      amount_change = -(attendance_deduction / 2);
-    } else if (attendance_status === 0) { // Absent
-      amount_change = -attendance_deduction;
-    }
+    if (user_event_check.length === 0) {
+      // No previous attendance record
+      if (attendance_status === 1) {
+        // Attended, no change to the deposit
+        amount_change = 0;
+      } else if (attendance_status === 2) {
+        // Late, deduct half of attendance_deduction
+        amount_change = -(attendance_deduction / 2);
+      } else if (attendance_status === 0) {
+        // Absent, deduct the full attendance_deduction
+        amount_change = -attendance_deduction;
+      }
 
-    // Update curr_amount in user_group even if the user does not exist in attendance
-    await sql`
-      UPDATE user_group
-      SET curr_amount = curr_amount + ${amount_change}
-      WHERE user_id = ${user_id}
-        AND group_id = ${groupDetails[0].group_id}
-    `;
-
-    // Insert or update the attendance status
-    if (user_event_check.length == 0) {
+      // Insert the new attendance record
       await sql`
         INSERT INTO attendance (attended, date, user_id, event_id)
         VALUES (${attendance_status}, NOW(), ${user_id}, ${event_id})
       `;
     } else {
+      // Previous attendance record exists, get the old status
+      const old_attended_status = user_event_check[0].attended;
+
+      if (old_attended_status !== attendance_status) {
+        // If the status is changing, adjust the deposit
+        if (old_attended_status === 1) {
+          // Previously attended (1), now changing to late (2) or absent (0)
+          amount_change = attendance_status === 2 
+            ? -(attendance_deduction / 2) // Late
+            : -attendance_deduction; // Absent
+        } else if (old_attended_status === 2) {
+          // Previously late (2), now changing to attended (1) or absent (0)
+          amount_change = attendance_status === 1 
+            ? attendance_deduction / 2 // Attended
+            : -(attendance_deduction / 2); // Absent
+        } else if (old_attended_status === 0) {
+          // Previously absent (0), now changing to attended (1) or late (2)
+          amount_change = attendance_status === 1 
+            ? attendance_deduction // Attended
+            : attendance_deduction / 2; // Late
+        }
+
+        // Update the attendance record
+        await sql`
+          UPDATE attendance
+          SET attended = ${attendance_status}
+          WHERE event_id = ${event_id} AND user_id = ${user_id}
+        `;
+      }
+    }
+
+    // Update the deposit (curr_amount) if there's an amount change
+    if (amount_change !== 0) {
       await sql`
-        UPDATE attendance
-        SET attended = ${attendance_status}
-        WHERE event_id = ${event_id} AND user_id = ${user_id}
+        UPDATE user_group
+        SET curr_amount = curr_amount + ${amount_change}
+        WHERE user_id = ${user_id} AND group_id = ${group_id}
       `;
     }
 

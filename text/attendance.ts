@@ -17,4 +17,7 @@ export const ATTENDANCE = {
   ATTENDANCE: "Attendance",
   ACTIONS: "Actions",
   LATE: "Late",
+  UNCHECKED: "Unchecked",
+  CREATED_PR: "Created PR",
+  NOT_CREATED_PR: "Not created PR",
 };

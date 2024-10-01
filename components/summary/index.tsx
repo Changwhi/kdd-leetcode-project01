@@ -1,6 +1,4 @@
 "use server";
-import { Button } from "@/components/ui/button";
-import { SUMMARY } from "@/text/summary";
 import { UpcommingEvents } from "./upcommingEvents";
 import moment from "moment";
 import { retrieveEvents } from "@/lib/actions/event";
