@@ -60,3 +60,15 @@ export const deleteAssignment = async (assignmentId: number) => {
     return "Failed to delete assignment.";
   }
 };
+
+export const deleteAllAssignmentsInEvent = async (eventId: number) => {
+  try {
+    await sql`
+    DELETE FROM "assignment" WHERE event_id = ${eventId}
+    `;
+    return "Assignments deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete assignments.";
+  }
+};
