@@ -7,12 +7,12 @@ import { EventType } from "@/types/event"
 import moment from "moment"
 
 interface EventModalProps {
-  event: EventType
-  trigger: React.ReactNode
+  event: EventType;
+  trigger: React.ReactNode;
 }
 
 export function EventModal({ event, trigger }: EventModalProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -40,10 +40,15 @@ export function EventModal({ event, trigger }: EventModalProps) {
           </div>
           <div className="space-y-2">
             <span className="font-semibold">Assignments:</span>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>{event.assign1}</li>
-              <li>{event.assign2}</li>
-              <li>{event.assign3}</li>
+            <ul>
+              {event.assignments.map(
+                (assignment, index) =>
+                  assignment && (
+                    <li key={index}>
+                      <span>{assignment.content}</span>
+                    </li>
+                  )
+              )}
             </ul>
           </div>
         </div>
