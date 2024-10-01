@@ -106,7 +106,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
         name: "",
         topic: "",
         zoomlink: "",
-        assign: [],
+        assign: ["","",""],
         date: "",
         time: "",
       });
