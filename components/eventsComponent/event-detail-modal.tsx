@@ -11,15 +11,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { BUTTONS } from "@/text/buttons";
 import moment from "moment";
+import { AssignmentType } from "@/types/assignment";
 
 interface SubmitAssignmentModalProps {
   name: String;
   topic: String;
   date: Date;
   zoomLink: String;
-  assign1: String;
-  assign2: String;
-  assign3: String;
+  assign: AssignmentType[];
 }
 
 export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
@@ -27,9 +26,7 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
   topic,
   date,
   zoomLink,
-  assign1,
-  assign2,
-  assign3,
+  assign,
 }) => {
   return (
     <Dialog>
@@ -53,16 +50,22 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
           </div>
           <div className="flex justify-between">
             <span className="font-semibold">Zoom Link:</span>
-            <a href={zoomLink.toString()} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
-            Join Meeting
+            <a
+              href={zoomLink.toString()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              Join Meeting
             </a>
           </div>
           <div className="space-y-2">
             <span className="font-semibold">Assignments:</span>
             <ul className="list-disc pl-5 space-y-1">
-              <li>{assign1}</li>
-              <li>{assign2}</li>
-              <li>{assign3}</li>
+              {assign.map(
+                (assignment, index) =>
+                  assignment && <li key={index}>{assignment.content}</li>
+              )}
             </ul>
           </div>
         </div>
