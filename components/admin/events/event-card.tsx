@@ -126,12 +126,28 @@ export const EventCard: React.FC<EventCardProps> = ({
         <p className="text-muted-foreground mb-4">{topic}</p>
         <h3 className="font-semibold text-lg mb-2">Assignments</h3>
         <ul className="space-y-2">
-          {assignments.map((assignment, index) => (
-            assignment && <li key={index} className="flex items-center">
-              <CheckSquare className="w-5 h-5 text-primary mr-2" />
-              <span>{assignment.content}</span>
-            </li>
-          ))}
+          {assignments.map(
+            (assignment, index) =>
+              assignment && (
+                <li key={index} className="flex items-center">
+                  <CheckSquare className="w-5 h-5 text-primary mr-2" />
+                  <span>
+                    {assignment.content.startsWith("http") ? (
+                      <a
+                        href={assignment.content}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        {`Assignment ${index + 1} Link`}
+                      </a>
+                    ) : (
+                      assignment.content
+                    )}
+                  </span>
+                </li>
+              )
+          )}
         </ul>
       </CardContent>
       <CardFooter className="flex justify-between items-center p-6 bg-gray-50">

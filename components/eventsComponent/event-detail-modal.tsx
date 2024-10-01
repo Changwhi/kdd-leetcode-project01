@@ -64,7 +64,22 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
             <ul className="list-disc pl-5 space-y-1">
               {assign.map(
                 (assignment, index) =>
-                  assignment && <li key={index}>{assignment.content}</li>
+                  assignment && (
+                    <li key={index}>
+                      {assignment.content.startsWith("http") ? (
+                        <a
+                          href={assignment.content}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          {`Assignment ${index+1} Link`}
+                        </a>
+                      ) : (
+                        assignment.content
+                      )}
+                    </li>
+                  )
               )}
             </ul>
           </div>
