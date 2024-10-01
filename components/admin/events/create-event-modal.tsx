@@ -70,14 +70,15 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
       );
       return;
     }
-    // if (
-    //   (assign1 && assign1.length > charLimits.assignment) ||
-    //   (assign2 && assign2.length > charLimits.assignment) ||
-    //   (assign3 && assign3.length > charLimits.assignment)
-    // ) {
-    //   setError(`Assignments must be less than ${charLimits.assignment} characters each.`)
-    //   return
-    // }
+
+    if (
+      assign.some((assign) => assign && assign.length > charLimits.assignment)
+    ) {
+      setError(
+        `Assignments must be less than ${charLimits.assignment} characters each.`
+      );
+      return;
+    }
 
     const localDateTime = new Date(`${date}T${time}`);
     const utcDateTime = moment(localDateTime).utc().format();
@@ -117,13 +118,13 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
+
   const handleAssignInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     index: number
   ) => {
     const { value } = e.target;
-    
+
     setFormData((prev) => {
       const updatedAssign = [...prev.assign];
       updatedAssign[index] = value;
@@ -256,10 +257,10 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                           onChange={(e) => handleAssignInputChange(e, num - 1)}
                         />
                       </div>
-                      {/* <p className="text-sm text-muted-foreground text-right">
-                        {formData.assign[num - 1].length}/
+                      <p className="text-sm text-muted-foreground text-right">
+                        {formData.assign[num - 1]?.length || 0}/
                         {charLimits.assignment}
-                      </p> */}
+                      </p>
                     </div>
                   ))}
                 </CardContent>
