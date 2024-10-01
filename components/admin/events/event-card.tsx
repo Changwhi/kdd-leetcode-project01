@@ -169,7 +169,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                 <Edit className="w-4 h-4 mr-2" /> {EVENTS.EDIT}
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px]">
+            <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-scroll">
               <DialogHeader>
                 <DialogTitle className="text-2xl font-bold">
                   Edit Event
