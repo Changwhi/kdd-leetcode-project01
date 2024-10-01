@@ -106,7 +106,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
         name: "",
         topic: "",
         zoomlink: "",
-        assign: ["","",""],
+        assign: ["", "", ""],
         date: "",
         time: "",
       });
@@ -268,6 +268,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                             onChange={(e) => handleAssignInputChange(e, index)}
                           />
                           <button
+                            type="button"
                             onClick={() => {
                               setFormData((prev) => {
                                 const updatedAssign = [...prev.assign];
@@ -288,6 +289,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                   ))}
                   <div className="flex justify-center mt-4">
                     <button
+                      type="button"
                       onClick={() => {
                         setFormData((prev) => {
                           const updatedAssign = [...prev.assign];
