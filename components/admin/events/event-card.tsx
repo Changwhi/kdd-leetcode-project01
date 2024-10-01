@@ -33,6 +33,7 @@ import { EVENTS } from "@/text/events";
 import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import moment from "moment";
 import { Textarea } from "@/components/ui/textarea";
+import { deleteAssignment } from "@/lib/actions/assignment";
 
 // Character limits for input fields
 const charLimits = {
@@ -278,18 +279,24 @@ export const EventCard: React.FC<EventCardProps> = ({
                         >
                           {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
                         </Label>
-                        <Input
-                          id={`assign${index}`}
-                          value={eventAssignments[index].content}
-                          onChange={(e) => {
-                            const newAssignments = [...eventAssignments];
-                            newAssignments[index].content = e.target.value;
-                            setEventAssignments(newAssignments);
-                          }}
-                          name={`assign${index}`}
-                          maxLength={charLimits.assignment}
-                          className="w-full"
-                        />
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            id={`assign${index}`}
+                            value={eventAssignments[index].content}
+                            onChange={(e) => {
+                              const newAssignments = [...eventAssignments];
+                              newAssignments[index].content = e.target.value;
+                              setEventAssignments(newAssignments);
+                            }}
+                            name={`assign${index}`}
+                            maxLength={charLimits.assignment}
+                            className="w-full"
+                          />
+                          <button onClick={() => console.log("hi")}>
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                        </div>
+
                         <p className="text-sm text-muted-foreground text-right">
                           {eventAssignments[index]?.content.length || 0}/
                           {charLimits.assignment}
