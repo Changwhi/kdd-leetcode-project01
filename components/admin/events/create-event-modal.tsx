@@ -15,7 +15,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { addEvent } from "@/lib/actions/event";
 import { EVENTS } from "@/text/events";
-import { PlusCircle, Calendar, Clock, Link, BookOpen } from "lucide-react";
+import {
+  PlusCircle,
+  Calendar,
+  Clock,
+  Link,
+  BookOpen,
+  CirclePlus,
+} from "lucide-react";
 import { useState } from "react";
 import moment from "moment";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -242,27 +249,42 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
             <TabsContent value="assignments">
               <Card>
                 <CardContent className="space-y-4 pt-4">
-                  {[1, 2, 3].map((num) => (
-                    <div key={num} className="space-y-2">
-                      <Label htmlFor={`assign${num}`}>Assignment {num}</Label>
+                  {formData.assign.map((item, index) => (
+                    <div key={index} className="space-y-2">
+                      <Label htmlFor={`assign${index + 1}`}>
+                        Assignment {index + 1}
+                      </Label>
                       <div className="relative">
                         <BookOpen className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                         <Input
-                          id={`assign${num}`}
-                          name={`assign${num}`}
-                          value={formData.assign[num - 1]}
-                          placeholder={`Assignment ${num}`}
+                          id={`assign${index + 1}`}
+                          name={`assign${index + 1}`}
+                          value={formData.assign[index]}
+                          placeholder={`Assignment ${index + 1}`}
                           className="pl-10"
                           maxLength={charLimits.assignment}
-                          onChange={(e) => handleAssignInputChange(e, num - 1)}
+                          onChange={(e) => handleAssignInputChange(e, index)}
                         />
                       </div>
                       <p className="text-sm text-muted-foreground text-right">
-                        {formData.assign[num - 1]?.length || 0}/
+                        {formData.assign[index]?.length || 0}/
                         {charLimits.assignment}
                       </p>
                     </div>
                   ))}
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => {
+                        setFormData((prev) => {
+                          const updatedAssign = [...prev.assign];
+                          updatedAssign.push("");
+                          return { ...prev, assign: updatedAssign };
+                        });
+                      }}
+                    >
+                      <CirclePlus />
+                    </button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
