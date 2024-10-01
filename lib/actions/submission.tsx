@@ -88,7 +88,6 @@ export const updateSubmission = async (formData: SubmissionCardProps) => {
     console.log(error);
   }
 };
-
 export const adjustCurrAmountForAllUsers = async () => {
   try {
     // Get all events that have passed and haven't been processed yet
@@ -120,11 +119,12 @@ export const adjustCurrAmountForAllUsers = async () => {
 
       const assignment_deduction = group[0].assignment_deduction;
 
-      // Deduct curr_amount for all users who haven't submitted their assignments for the event
+      // Deduct curr_amount for users in the specific group who haven't submitted their assignments for the event
       await sql`
         UPDATE user_group
         SET curr_amount = curr_amount - ${assignment_deduction}
-        WHERE user_id IN (
+        WHERE group_id = ${group_id}  -- Make sure we update only the user's balance for this group
+        AND user_id IN (
           SELECT u.user_id
           FROM user_group u
           LEFT JOIN submission s ON u.user_id = s.user_id AND s.event_id = ${event_id}
