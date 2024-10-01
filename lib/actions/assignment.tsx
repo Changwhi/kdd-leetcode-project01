@@ -30,15 +30,8 @@ export const createAssignment = async (content:string, event_id:number, number:n
   }
 };
 
-export const updateAssignment = async (formData: AssignmentProps) => {
+export const updateAssignment = async (assignmentId: number, content: string) => {
   try {
-    if (!formData) {
-      return [];
-    }
-    console.log(formData);
-    const assignmentId = formData.assignment_id;
-    const content = formData.content;
-    if (!assignmentId) throw new Error("Submission id is not entered");
     await sql`
       UPDATE assignment
       SET content=${content}

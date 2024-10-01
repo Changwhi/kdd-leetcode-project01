@@ -57,11 +57,14 @@ export const EventCard: React.FC<EventCardProps> = ({
   const [eventTime, setEventTime] = useState(moment(date).format("HH:mm")); // Extract only the time
   const [eventTopic, setEventTopic] = useState(topic);
   const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
-  //TODO: Delete start
-  const [eventAssign1, setEventAssign1] = useState("");
-  const [eventAssign2, setEventAssign2] = useState("");
-  const [eventAssign3, setEventAssign3] = useState("");
-  //TODO: Delete end
+  const [eventAssignments, setEventAssignments] = useState(
+    assignments[0]
+      ? assignments.map((assignment) => ({
+          id: assignment.assignment_id,
+          content: assignment.content,
+        }))
+      : []
+  );
 
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
@@ -186,9 +189,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                     zoomlink: eventZoomlink,
                     group_id: group_id,
                     event_id: event_id,
-                    assign1: eventAssign1,
-                    assign2: eventAssign2,
-                    assign3: eventAssign3,
+                    assignments: eventAssignments,
                   });
                 }}
               >
@@ -269,26 +270,28 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
-                    {[1, 2, 3].map((num) => (
-                      <div key={num} className="space-y-2">
+                    {eventAssignments.map((assignment, index) => (
+                      <div key={index} className="space-y-2">
                         <Label
-                          htmlFor={`assign${num}`}
+                          htmlFor={`assign${index}`}
                           className="text-sm font-medium"
                         >
-                          {EVENTS[`ASSIGNMENT_${num}` as keyof typeof EVENTS]}
+                          {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
                         </Label>
                         <Input
-                          id={`assign${num}`}
-                          value={eval(`eventAssign${num}`)}
-                          onChange={(e) =>
-                            eval(`setEventAssign${num}(e.target.value)`)
-                          }
-                          name={`assign${num}`}
+                          id={`assign${index}`}
+                          value={eventAssignments[index].content}
+                          onChange={(e) => {
+                            const newAssignments = [...eventAssignments];
+                            newAssignments[index].content = e.target.value;
+                            setEventAssignments(newAssignments);
+                          }}
+                          name={`assign${index}`}
                           maxLength={charLimits.assignment}
                           className="w-full"
                         />
                         <p className="text-sm text-muted-foreground text-right">
-                          {eval(`eventAssign${num}`).length}/
+                          {eventAssignments[index]?.content.length || 0}/
                           {charLimits.assignment}
                         </p>
                       </div>

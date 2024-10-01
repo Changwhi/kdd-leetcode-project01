@@ -2,7 +2,7 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
-import { createAssignment, deleteAllAssignmentsInEvent } from "./assignment";
+import { createAssignment, deleteAllAssignmentsInEvent, updateAssignment } from "./assignment";
 
 /**
  * Retrieves a list of events from the database.
@@ -29,7 +29,6 @@ export const retrieveEvents = async (group_id: number) => {
         e.event_id
       ORDER BY date DESC;
     `;
-    console.log(events[0].assignments)
     if (events) {
       return events;
     }
@@ -110,18 +109,22 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       topic,
       zoomlink,
       group_id,
-      assign1,
-      assign2,
-      assign3,
+      assignments,
       event_id,
     } = formData;
-
+    console.log(formData)
     // Now `date` contains both date and time
     await sql`
       UPDATE event
-      SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}, assign1 = ${assign1}, assign2 = ${assign2}, assign3 = ${assign3}
+      SET name = ${name}, date = ${date}, topic = ${topic}, zoomlink = ${zoomlink}, group_id = ${group_id}
       WHERE event_id = ${event_id}
     `;
+
+    for (let i = 0; i < assignments.length; i++) {
+      if(assignments[i]) {
+        await updateAssignment(assignments[i].id, assignments[i].content);
+      }
+    }
     revalidatePath("/dashboard/events");
   } catch (error) {
     console.log(error);

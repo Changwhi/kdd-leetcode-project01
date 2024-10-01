@@ -28,9 +28,7 @@ export interface EventCardPropsForDB {
   topic: string;
   zoomlink: string;
   group_id: number;
-  assign1: string;
-  assign2: string;
-  assign3: string;
+  assignments: {id:number, content:string}[];
 }
 export interface EventIdType {
   event_id: number;
