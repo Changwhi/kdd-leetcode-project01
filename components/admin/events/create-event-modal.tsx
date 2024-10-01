@@ -22,6 +22,7 @@ import {
   Link,
   BookOpen,
   CirclePlus,
+  Trash2,
 } from "lucide-react";
 import { useState } from "react";
 import moment from "moment";
@@ -256,15 +257,28 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                       </Label>
                       <div className="relative">
                         <BookOpen className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <Input
-                          id={`assign${index + 1}`}
-                          name={`assign${index + 1}`}
-                          value={formData.assign[index]}
-                          placeholder={`Assignment ${index + 1}`}
-                          className="pl-10"
-                          maxLength={charLimits.assignment}
-                          onChange={(e) => handleAssignInputChange(e, index)}
-                        />
+                        <div className="flex">
+                          <Input
+                            id={`assign${index + 1}`}
+                            name={`assign${index + 1}`}
+                            value={formData.assign[index]}
+                            placeholder={`Assignment ${index + 1}`}
+                            className="pl-10"
+                            maxLength={charLimits.assignment}
+                            onChange={(e) => handleAssignInputChange(e, index)}
+                          />
+                          <button
+                            onClick={() => {
+                              setFormData((prev) => {
+                                const updatedAssign = [...prev.assign];
+                                updatedAssign.splice(index, 1);
+                                return { ...prev, assign: updatedAssign };
+                              });
+                            }}
+                          >
+                            <Trash2 className="w-5 h-5 ml-2" />
+                          </button>
+                        </div>
                       </div>
                       <p className="text-sm text-muted-foreground text-right">
                         {formData.assign[index]?.length || 0}/
