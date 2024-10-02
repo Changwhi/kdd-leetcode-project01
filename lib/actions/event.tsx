@@ -3,6 +3,8 @@ import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
 import { createAssignment, deleteAllAssignmentsInEvent, updateAssignment } from "./assignment";
+import { deleteAllSubmissionsInEvent } from "./submission";
+import { deleteAllAttendanceInEvent } from "./attendance";
 
 /**
  * Retrieves a list of events from the database.
@@ -134,6 +136,8 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
 export const deleteEvent = async (event_id: number) => {
   try {
     await deleteAllAssignmentsInEvent(event_id);
+    await deleteAllSubmissionsInEvent(event_id);
+    await deleteAllAttendanceInEvent(event_id);
     await sql`
       DELETE FROM event
       WHERE event_id = ${event_id}

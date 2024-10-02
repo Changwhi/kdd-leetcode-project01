@@ -378,3 +378,15 @@ export const forceAttendance = async ({
     return false;
   }
 };
+
+export const deleteAllAttendanceInEvent = async (eventId: number) => {
+  try {
+    await sql`
+    DELETE FROM attendance WHERE event_id = ${eventId}
+    `;
+    return "Attendance deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete attendance.";
+  }
+};

@@ -148,3 +148,16 @@ export const adjustCurrAmountForAllUsers = async () => {
     throw error;
   }
 };
+
+
+export const deleteAllSubmissionsInEvent = async (eventId: number) => {
+  try {
+    await sql`
+    DELETE FROM "submission" WHERE event_id = ${eventId}
+    `;
+    return "Submissions deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete submission.";
+  }
+};
