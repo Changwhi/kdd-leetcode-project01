@@ -79,7 +79,3 @@ Fork the repository.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
-
-
-
-](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHRqM25pZWlvb2xzOTg3ZDl4Zm9rMXkxN2sxdmt0a3NnMmdyYnE1biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif)
