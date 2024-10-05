@@ -1,12 +1,13 @@
-[# AI Mock Interview
+# Study Session Management Platform
 
-[![Website](https://img.shields.io/badge/Website-Live-brightgreen)](https://ai-mock-interview-navy.vercel.app/)  URL : https://ai-mock-interview-navy.vercel.app/  
+[![Website](https://img.shields.io/badge/Website-Live-brightgreen)]( https://kdd-leetcode-project01.vercel.app/) URL : https://kdd-leetcode-project01.vercel.app/
+
 Developed a web app for the Korean Developer Community in Vancouver to efficiently manage group study activities. Designed the database and implemented backend logic to handle records across multiple tables, providing a more organized and streamlined solution for the community.
 
 ## Features
-- **Create Study Groups**: Users can set up and manage groups with customizable settings.  
-- **Manage Participants**: Attendance, assignments, and deposits are tracked for each participant.  
-- **Deposit System**: Participants pay a refundable deposit based on meeting participation and assignment completion.  
+- **Study Groups Creation**: Users can set up a new study group and manage it with customizable settings.  
+- **Participantion Management**: Attendance, assignments, and deposits are tracked for each participant.  
+- **Deposit System**: Members make a refundable deposit, which can be partially deducted based on attendance and assignment completion. 
 
 ## Demo
 ### Create Event - Admin
@@ -56,6 +57,19 @@ Before you begin, ensure you have the following installed:
     npm install
    ```
 3. Set up environment variables for the project, including PostgreSQL and Auth0 configurations.
+   ```
+   NEXT_PUBLIC_DATABASE_URL=
+
+   #Auth0
+   AUTH0_SECRET=
+   AUTH0_BASE_URL=
+   AUTH0_ISSUER_BASE_URL=
+   AUTH0_CLIENT_ID=
+   AUTH0_CLIENT_SECRET=
+   AUTH0_NAMESPACE=
+
+   USERINFO_API_URL=
+   ```
 4. Run the application locally:
    ```bash
     npm run dev
