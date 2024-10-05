@@ -45,7 +45,7 @@ const Sidebar = ({ groupId, admin }: { groupId: string; admin: boolean }) => {
             />
             <AvatarFallback>CS</AvatarFallback>
           </Avatar>
-          <h2 className="mt-4 text-2xl font-bold">{user?.name}</h2>
+          <h2 className="mt-4 text-2xl font-bold">{(user?.given_name as string) || (user?.username as string)}</h2>
           <p className="mt-2 text-base"></p>
           <a
             className="text-muted-foreground text-sm underline"

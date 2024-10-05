@@ -4,7 +4,7 @@ import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
 import { createAssignment, deleteAllAssignmentsInEvent, updateAssignment } from "./assignment";
 import { deleteAllSubmissionsInEvent } from "./submission";
-import { deleteAllAttendanceInEvent } from "./attendance";
+import { deleteAllAttendanceInEvent, deleteAllPRsInEvent } from "./attendance";
 
 /**
  * Retrieves a list of events from the database.
@@ -138,6 +138,7 @@ export const deleteEvent = async (event_id: number) => {
     await deleteAllAssignmentsInEvent(event_id);
     await deleteAllSubmissionsInEvent(event_id);
     await deleteAllAttendanceInEvent(event_id);
+    await deleteAllPRsInEvent(event_id);
     await sql`
       DELETE FROM event
       WHERE event_id = ${event_id}

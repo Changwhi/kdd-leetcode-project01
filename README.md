@@ -1,37 +1,95 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Study Session Management Platform
+
+[![Website](https://img.shields.io/badge/Website-Live-brightgreen)]( https://kdd-leetcode-project01.vercel.app/) URL : https://kdd-leetcode-project01.vercel.app/
+
+Developed a web app for the Korean Developer Community in Vancouver to efficiently manage group study activities. Designed the database and implemented backend logic to handle records across multiple tables, providing a more organized and streamlined solution for the community.
+
+## Features
+- **Study Groups Creation**: Users can set up a new study group and manage it with customizable settings.  
+- **Participantion Management**: Attendance, assignments, and deposits are tracked for each participant.  
+- **Deposit System**: Members make a refundable deposit, which can be partially deducted based on attendance and assignment completion. 
+
+## Demo
+### Create Event - Admin
+![Create Event - Admin](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif)
+
+### Summary - Admin
+![Summary - Admin](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExaGNtN2xtNXA5eWJlenFtMG9lN3Zpa2IyOWN1ZDMzY2t0bDQxdnpuOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/7vMSf7t7jZM6QQYL93/giphy.gif)
+
+### Activities - Admin
+![Activities - Admin](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExZWw4YWk1ZTF3dWo5MHg0cHptZXlvaHB3dXM2dndzZXUzMGFtcGtleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/0rrqBG0Ch5JfP8jg0I/giphy.gif)
+
+### Members - Admin
+![Members - Admin](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2lhbWQzczBnbTJ3cG9xNms4eGgxM3l5b3Vja3Vpb2huaWlzM2J2aSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rH81RRkRwJda5453BW/giphy.gif)
+
+### Assignment - All
+![Assignment - All](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmdpZjEzMHhkN3JseXE0Mmoxem5qNGMxcXB6eGQ2eHA0MnRtd2hqYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5REags7lnyRPF6cVAP/giphy.gif)
+
+### Submission - User
+![Submission - User](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHZrNjRxMzMzdXMxd3BlbGY0aHBtYTc2dDI5MW5ocjVveGdwdWJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pim1eL3RGSckLNk0va/giphy.gif)
+
+
+## Tech Stack  
+
+- **Frontend**: Next.js (TypeScript), TailwindCSS, ShadCN
+- **Backend**: Node.js, Auth0 for authentication
+- **Database**: PostgreSQL
+- **Hosting**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Before you begin, ensure you have the following installed:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js (version 14 or higher)
+- PostgreSQL
+- Auth0 account for authentication setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Changwhi/kdd-leetcode-project01.git
+   ```
+2. Install dependencies:
+   ```bash
+    npm install
+   ```
+3. Set up environment variables for the project, including PostgreSQL and Auth0 configurations.
+   ```
+   NEXT_PUBLIC_DATABASE_URL=
 
-## Learn More
+   #Auth0
+   AUTH0_SECRET=
+   AUTH0_BASE_URL=
+   AUTH0_ISSUER_BASE_URL=
+   AUTH0_CLIENT_ID=
+   AUTH0_CLIENT_SECRET=
+   AUTH0_NAMESPACE=
 
-To learn more about Next.js, take a look at the following resources:
+   USERINFO_API_URL=
+   ```
+4. Run the application locally:
+   ```bash
+    npm run dev
+   ```
+5. Access the app in your browser at http://localhost:3000.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
+The project is deployed using Vercel. To deploy your version, follow these steps:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Link your repository to Vercel.
+Set up the necessary environment variables on Vercel.
+Deploy the application directly from your GitHub repository.
 
-## Deploy on Vercel
+## Contributing
+Contributions are welcome! Please follow these steps to contribute:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Fork the repository.
+1. Create a new branch for your feature or bugfix.
+2. Commit your changes with clear and concise messages.
+3. Push your branch and submit a pull request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-"# kdd-leetcode-project01" 
+## License
+This project is licensed under the MIT License. See the LICENSE file for details.

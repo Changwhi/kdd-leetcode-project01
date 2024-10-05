@@ -271,6 +271,19 @@ export const setPR = async ({
   }
 };
 
+export const deleteAllPRsInEvent = async (eventId: number) => {
+  try {
+    await sql`
+    DELETE FROM pr WHERE event_id = ${eventId}
+    `;
+    return "PRs deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete PRs.";
+  }
+};
+
+
 
 /**
  * Force attendance status for a user in a specific event.

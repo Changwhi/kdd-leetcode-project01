@@ -11,7 +11,7 @@ import { revalidatePath } from "next/cache";
 export const getAllGroups = async () => {
   try {
     const response: MyGroup[] = await sql`
-        SELECT group_id, name, description FROM "group";`;
+        SELECT group_id, name, description FROM "group" WHERE NOT private;`;
     return response ? response : [];
   } catch (error) {
     console.log(error);
@@ -79,6 +79,7 @@ export const getOtherGroups = async ({ email }: { email: string }) => {
           JOIN "user" ON user_group.user_id = "user".user_id
           WHERE "user".email = ${email}
       )
+      AND NOT "group".private
   GROUP BY 
       "group".group_id, 
       "group".name, 
