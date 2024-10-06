@@ -1,13 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import {
-  MoreHorizontal,
-  Users,
-  Mail,
-  Filter,
-  ArrowUpDown,
-} from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { MoreHorizontal, Users, Mail, Filter, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -71,10 +65,14 @@ export default function UserTable({
   usersInGroup: AttendanceType[];
   group_id: number;
 }) {
+
   const [users, setUsers] = useState<AttendanceType[]>(
     usersInGroup.map((user) => ({
       ...user,
-      deposit_status: user.deposit_status || "Pending",
+      deposit_status:
+        user.deposit_status !== null && user.deposit_status !== undefined
+          ? user.deposit_status
+          : "Pending",
     }))
   );
 
