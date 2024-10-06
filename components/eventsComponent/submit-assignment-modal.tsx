@@ -95,7 +95,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
           {!submitted ? BUTTONS.BUTTON_SUBMIT : BUTTONS.BUTTON_SUBMITTED}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[90vh] h-[70vh]">
+      <DialogContent className="sm:max-w-[90vh] h-fit">
         <div className="relative">
           <DialogHeader className="text-center">
             <DialogTitle className="text-xl font-bold text-gray-700">
@@ -124,7 +124,7 @@ export const SubmitAssignmentModal: React.FC<SubmitAssignmentModalProps> = ({
                 name="content"
                 placeholder={EVENTS_USER.ASSIGNMENT_CONTENT_DESCRIPTION}
                 defaultValue={originalSubmission?.content || ""}
-                className="w-full h-56 px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-black resize-none"
+                className="w-full h-[55vh] px-3 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-black resize-none"
               />
             </div>
           </div>
