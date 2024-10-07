@@ -1,4 +1,3 @@
-// app/api/cron-job/route.ts (Next.js 13+ with app directory)
 import { NextResponse } from 'next/server';
 import { adjustCurrAmountForAllUsers } from '@/lib/actions/submission';
 
