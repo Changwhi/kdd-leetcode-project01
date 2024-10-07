@@ -2,7 +2,12 @@
 import { sql } from "@/utils/db";
 import { EventCardPropsForDB, EventType } from "@/types/event";
 import { revalidatePath } from "next/cache";
-import { createAssignment, deleteAllAssignmentsInEvent, updateAssignment } from "./assignment";
+import {
+  createAssignment,
+  deleteAllAssignmentsInEvent,
+  updateAssignment,
+  deleteMultipleAssignment,
+} from "./assignment";
 import { deleteAllSubmissionsInEvent } from "./submission";
 import { deleteAllAttendanceInEvent, deleteAllPRsInEvent } from "./attendance";
 
@@ -76,7 +81,7 @@ export const addEvent = async ({
     const eventId = response[0].event_id;
     const NumAssignments = assign.length;
     for (let i = 0; i < NumAssignments; i++) {
-      if(assign[i]) {
+      if (assign[i]) {
         await createAssignment(assign[i], eventId, i);
       }
     }
@@ -113,8 +118,9 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       group_id,
       assignments,
       event_id,
+      deleteAssignmentIds,
     } = formData;
-    console.log(formData)
+    console.log(formData);
     // Now `date` contains both date and time
     await sql`
       UPDATE event
@@ -123,10 +129,12 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
     `;
 
     for (let i = 0; i < assignments.length; i++) {
-      if(assignments[i]) {
+      if (assignments[i]) {
         await updateAssignment(assignments[i].id, assignments[i].content);
       }
     }
+    await deleteMultipleAssignment(deleteAssignmentIds);
+
     revalidatePath("/dashboard/events");
   } catch (error) {
     console.log(error);

@@ -27,6 +27,7 @@ import {
   Calendar,
   CheckSquare,
   Edit,
+  Undo2,
 } from "lucide-react";
 import { EventCardProps } from "@/types/event";
 import { EVENTS } from "@/text/events";
@@ -34,6 +35,7 @@ import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import moment from "moment";
 import { Textarea } from "@/components/ui/textarea";
 import { deleteAssignment } from "@/lib/actions/assignment";
+import { useToast } from "@/components/ui/use-toast";
 
 // Character limits for input fields
 const charLimits = {
@@ -53,6 +55,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
+  const { toast } = useToast();
   const [eventName, setEventName] = useState(name);
   const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD")); // Extract only the date
   const [eventTime, setEventTime] = useState(moment(date).format("HH:mm")); // Extract only the time
@@ -66,7 +69,7 @@ export const EventCard: React.FC<EventCardProps> = ({
         }))
       : []
   );
-
+  const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([]);
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -190,8 +193,12 @@ export const EventCard: React.FC<EventCardProps> = ({
                     zoomlink: eventZoomlink,
                     group_id: group_id,
                     event_id: event_id,
-                    assignments: eventAssignments,
+                    deleteAssignmentIds: deleteAssignmentIds,
+                    assignments: eventAssignments.filter(
+                      (assignment) => !deleteAssignmentIds.includes(assignment.id)
+                    ),
                   });
+                  setDeleteAssignmentIds([]);
                 }}
               >
                 <div className="space-y-4">
@@ -290,13 +297,42 @@ export const EventCard: React.FC<EventCardProps> = ({
                             }}
                             name={`assign${index}`}
                             maxLength={charLimits.assignment}
-                            className="w-full"
+                            className={`w-full ${
+                              deleteAssignmentIds.includes(assignment.id)
+                                ? "opacity-50"
+                                : ""
+                            }`}
+                            disabled={deleteAssignmentIds.includes(assignment.id)}
                           />
-                          <button onClick={() => console.log("hi")}>
-                            <Trash2 className="w-5 h-5" />
-                          </button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => {
+                              if (deleteAssignmentIds.includes(assignment.id)) {
+                                setDeleteAssignmentIds((ids) =>
+                                  ids.filter((id) => id !== assignment.id)
+                              );
+                            } else {
+                              setDeleteAssignmentIds((ids) => [
+                                ...ids,
+                                assignment.id,
+                              ]);
+                            }
+                            }}
+                            aria-label={
+                              deleteAssignmentIds.includes(assignment.id)
+                                ? "Undo delete assignment"
+                                : "Delete assignment"
+                            }
+                          >
+                            {deleteAssignmentIds.includes(assignment.id) ? (
+                              <Undo2 className="w-5 h-5 text-green-500" />
+                            ) : (
+                              <Trash2 className="w-5 h-5 text-red-500" />
+                            )}
+                          </Button>
                         </div>
-
                         <p className="text-sm text-muted-foreground text-right">
                           {eventAssignments[index]?.content.length || 0}/
                           {charLimits.assignment}

@@ -1,6 +1,6 @@
 import { AssignmentType, AssignmentProps } from "@/types/assignment";
 import { sql } from "@/utils/db";
-import { getSession } from '@auth0/nextjs-auth0';
+import { getSession } from "@auth0/nextjs-auth0";
 
 export const retrieveassignmentsByEventID = async (eventID: number) => {
   try {
@@ -16,10 +16,14 @@ export const retrieveassignmentsByEventID = async (eventID: number) => {
   }
 };
 
-export const createAssignment = async (content:string, event_id:number, number:number) => {
+export const createAssignment = async (
+  content: string,
+  event_id: number,
+  number: number
+) => {
   try {
     const session = await getSession();
-    if(!session) throw new Error("User is not logged in")
+    if (!session) throw new Error("User is not logged in");
 
     await sql`
       INSERT INTO assignment (content, number, event_id, user_id)
@@ -30,7 +34,10 @@ export const createAssignment = async (content:string, event_id:number, number:n
   }
 };
 
-export const updateAssignment = async (assignmentId: number, content: string) => {
+export const updateAssignment = async (
+  assignmentId: number,
+  content: string
+) => {
   try {
     await sql`
       UPDATE assignment
@@ -47,10 +54,28 @@ export const deleteAssignment = async (assignmentId: number) => {
     await sql`
     DELETE FROM "assignment" WHERE assignment_id = ${assignmentId}
     `;
-    return "Assignment deleted successfully.";
+    console.log("Assignment deleted successfully.");
+    return true;
   } catch (error) {
     console.log(error);
-    return "Failed to delete assignment.";
+    return false;
+  }
+};
+
+export const deleteMultipleAssignment = async (assignmentIds: number[]) => {
+  try {
+    if (!assignmentIds || assignmentIds.length === 0) {
+      return "No event IDs provided.";
+    }
+    await sql`
+      DELETE FROM "assignment"
+      WHERE assignment_id = ANY(${assignmentIds})
+    `;
+    console.log("Assignments deleted successfully." + assignmentIds);
+    return true;
+  } catch (error) {
+    console.error("Error deleting assignments:", error);
+    return false;
   }
 };
 
