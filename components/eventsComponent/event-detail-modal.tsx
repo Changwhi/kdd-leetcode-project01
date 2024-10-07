@@ -31,8 +31,8 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <span className="ml-7">
-          <button>{BUTTONS.BUTTON_SEE_PROJECT_DETAIL}</button>
+        <span className="ml-7 text-blue-500 text-sm cursor-pointer hover:underline">
+          {BUTTONS.BUTTON_SEE_PROJECT_DETAIL}
         </span>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] p-0">
@@ -73,7 +73,7 @@ export const EventDetailModal: React.FC<SubmitAssignmentModalProps> = ({
                           rel="noopener noreferrer"
                           className="text-blue-500 hover:underline"
                         >
-                          {`Assignment ${index+1} Link`}
+                          {`Assignment ${index + 1} Link`}
                         </a>
                       ) : (
                         assignment.content
