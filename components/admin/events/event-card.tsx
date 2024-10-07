@@ -164,7 +164,7 @@ export const EventCard: React.FC<EventCardProps> = ({
           target="_blank"
           rel="noopener noreferrer"
         >
-          {EVENTS.LINK} <ExternalLinkIcon className="ml-2 h-5 w-5" />
+          {EVENTS.ZOOMLINK} <ExternalLinkIcon className="ml-2 h-5 w-5" />
         </Link>
         {admin && (
           <Dialog>
