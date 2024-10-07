@@ -180,12 +180,12 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
                     </p>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="topic">Description *</Label>
+                    <Label htmlFor="topic">Topic*</Label>
                     <Textarea
                       id="topic"
                       name="topic"
                       value={formData.topic}
-                      placeholder="Describe your event"
+                      placeholder="Enter the topic for this week"
                       maxLength={charLimits.topic}
                       onChange={handleInputChange}
                       required
