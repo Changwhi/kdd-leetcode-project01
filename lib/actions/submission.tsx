@@ -96,6 +96,7 @@ export const adjustCurrAmountForAllUsers = async () => {
       FROM event
       WHERE date < NOW() AND processed = FALSE  -- Only get unprocessed events
     `;
+    console.log("Fetched events:", events);
 
     if (!events || events.length === 0) {
       return "No unprocessed events to check.";
@@ -139,16 +140,17 @@ export const adjustCurrAmountForAllUsers = async () => {
         WHERE event_id = ${event_id}
       `;
 
-      console.log(`curr_amount adjusted by -${assignment_deduction} for users in event_id: ${event_id}`);
+      console.log(
+        `curr_amount adjusted by -${assignment_deduction} for users in event_id: ${event_id}`
+      );
     }
 
     return "curr_amount adjustments completed for all unprocessed events.";
   } catch (error) {
-    console.error('Error adjusting curr_amount for all users:', error);
+    console.error("Error adjusting curr_amount for all users:", error);
     throw error;
   }
 };
-
 
 export const deleteAllSubmissionsInEvent = async (eventId: number) => {
   try {
