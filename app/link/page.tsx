@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import JoinButton from "@/components/link/join-button";
 import { getGroup, getMyGroups } from "@/lib/actions/group";
@@ -9,8 +9,15 @@ import { getLoggedInUser } from "@/lib/actions/user";
 function decodeGroupId(encodedGroupId: string) {
   return parseInt(Buffer.from(encodedGroupId, "base64").toString("utf-8"), 10);
 }
-
 export default function JoinPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <JoinPageContent />
+    </Suspense>
+  );
+}
+
+function JoinPageContent() {
   const searchParams = useSearchParams();
   const encodedGroupId = searchParams.get("group_id") as string;
   const groupId = decodeGroupId(encodedGroupId);
@@ -26,7 +33,9 @@ export default function JoinPage() {
 
       if (user) {
         const myGroups = await getMyGroups({ email: user.email });
-        const memberStatus = myGroups.some((group) => group.group_id === groupId);
+        const memberStatus = myGroups.some(
+          (group) => group.group_id === groupId
+        );
         setIsMember(memberStatus);
       }
 
@@ -43,10 +52,10 @@ export default function JoinPage() {
         {group ? <h1 className="text-6xl font-bold mb-6">{group.name}</h1> : ""}
         <h1 className="text-2xl font-bold mb-6">Join Our Community</h1>
         <p className="text-xl mb-8">
-          Welcome to our vibrant community! We&apos;re excited to have you join us on
-          this journey. Our platform offers a space for collaboration, learning,
-          and growth. Whether you&apos;re a seasoned professional or just starting
-          out, there&apos;s a place for you here.
+          Welcome to our vibrant community! We&apos;re excited to have you join
+          us on this journey. Our platform offers a space for collaboration,
+          learning, and growth. Whether you&apos;re a seasoned professional or
+          just starting out, there&apos;s a place for you here.
         </p>
         {isMember ? (
           <button
