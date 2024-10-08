@@ -40,7 +40,7 @@ export const Summary = async ({
             group_id={group_id}
             admin={admin}
           />
-          <InvitationButton group_id={group_id} />
+          {admin && <InvitationButton group_id={group_id} />}
         </aside>
       </div>
     </EventProvider>
