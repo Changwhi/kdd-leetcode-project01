@@ -19,6 +19,20 @@ export const getAllGroups = async () => {
   }
 };
 
+export const getGroup = async ({ group_id }: { group_id: number }) => {
+  try {
+    const response: MyGroup[] = await sql`
+        SELECT group_id, name, description FROM "group" WHERE group_id = ${group_id};`;
+    if (response) {
+      return response[0];
+    }
+    return null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
 /**
  * Retrieve all groups that the user with the given email is a member of
  *
