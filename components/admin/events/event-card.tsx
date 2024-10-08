@@ -70,6 +70,7 @@ export const EventCard: React.FC<EventCardProps> = ({
       : []
   );
   const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([]);
+  const [newAssignments, setNewAssignments] = useState<string[]>([]);
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -289,6 +290,19 @@ export const EventCard: React.FC<EventCardProps> = ({
                         setDeleteAssignmentIds={setDeleteAssignmentIds}
                       />
                     ))}
+                    <div className="flex justify-center mt-4">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setNewAssignments((prevArray) => [...prevArray, ""]);
+                          console.log(newAssignments);
+                        }}
+                      >
+                        <CirclePlus />
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <DialogFooter>
