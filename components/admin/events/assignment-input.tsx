@@ -30,7 +30,9 @@ export const AssignmentInput = ({
   setEventAssignments: (assignments: { id: number; content: string }[]) => void;
   deleteAssignmentIds: number[];
   assignment: { id: number; content: string };
-  setDeleteAssignmentIds: (ids: number[]) => void;
+  // setDeleteAssignmentIds: (ids: number[]) => void;
+  setDeleteAssignmentIds: React.Dispatch<React.SetStateAction<number[]>>;
+
 }) => {
   return (
     <div className="space-y-2">
