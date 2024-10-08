@@ -19,15 +19,14 @@ export const retrieveassignmentsByEventID = async (eventID: number) => {
 export const createAssignment = async (
   content: string,
   event_id: number,
-  number: number
 ) => {
   try {
     const session = await getSession();
     if (!session) throw new Error("User is not logged in");
 
     await sql`
-      INSERT INTO assignment (content, number, event_id, user_id)
-      VALUES (${content}, ${number}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${session.user.email}))
+      INSERT INTO assignment (content, event_id, user_id)
+      VALUES (${content}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${session.user.email}))
     `;
   } catch (error) {
     console.log(error);

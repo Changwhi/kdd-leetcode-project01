@@ -67,22 +67,18 @@ export const addEvent = async ({
   group_id: number;
   assign: string[];
 }) => {
-  //TODO: Delete these assignments
-  const assign1 = "";
-  const assign2 = "";
-  const assign3 = "";
-  //TODO: Delete until this
+
   try {
     const response = await sql`
-      INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
-      VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
+      INSERT INTO event (name, date, topic, zoomlink, group_id)
+      VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id})
       RETURNING event_id;
     `;
     const eventId = response[0].event_id;
     const NumAssignments = assign.length;
     for (let i = 0; i < NumAssignments; i++) {
       if (assign[i]) {
-        await createAssignment(assign[i], eventId, i);
+        await createAssignment(assign[i], eventId);
       }
     }
 
@@ -138,7 +134,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
     
     for (let i = 0; i < newAssignments.length; i++) {
       if (newAssignments[i]) {
-        await createAssignment(newAssignments[i], event_id, 1);
+        await createAssignment(newAssignments[i], event_id);
       }
     }
 
