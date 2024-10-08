@@ -30,7 +30,7 @@ export const CalendarTool = ({ eventdates }: { eventdates: Date[] }) => {
       mode="single"
       selected={selectedDate}
       onSelect={setSelectedDate}
-      className="border rounded-md"
+      className="border rounded-md bg-white"
       modifiers={modifiers}
       modifiersStyles={modifiersStyles}
     />
