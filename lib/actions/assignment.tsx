@@ -25,7 +25,7 @@ export const createAssignment = async (
     if (!session) throw new Error("User is not logged in");
 
     await sql`
-      INSERT INTO assignment (content, event_id, user_id)
+       INSERT INTO assignment (content, event_id, user_id)
       VALUES (${content}, ${event_id}, (SELECT user_id FROM "user" WHERE email = ${session.user.email}))
     `;
   } catch (error) {

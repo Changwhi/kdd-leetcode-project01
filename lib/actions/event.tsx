@@ -67,7 +67,6 @@ export const addEvent = async ({
   group_id: number;
   assign: string[];
 }) => {
-
   try {
     const response = await sql`
       INSERT INTO event (name, date, topic, zoomlink, group_id)
@@ -115,7 +114,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       assignments,
       event_id,
       deleteAssignmentIds,
-      newAssignments
+      newAssignments,
     } = formData;
     console.log(formData);
     // Now `date` contains both date and time
@@ -131,14 +130,15 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       }
     }
     await deleteMultipleAssignment(deleteAssignmentIds);
-    
+
     for (let i = 0; i < newAssignments.length; i++) {
       if (newAssignments[i]) {
         await createAssignment(newAssignments[i], event_id);
       }
     }
 
-    revalidatePath(`/dashboard/${group_id}/events`);
+        revalidatePath(`/dashboard/${group_id}/events`);
+
   } catch (error) {
     console.log(error);
   }

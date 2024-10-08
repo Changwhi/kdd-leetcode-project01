@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import {
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -18,35 +19,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea"
-import { ScrollArea } from "@/components/ui/scroll-area"
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   ExternalLinkIcon,
   Trash2,
   Calendar,
   CheckSquare,
   Edit,
+  Undo2,
   CirclePlus,
 } from "lucide-react";
 import { EventCardProps } from "@/types/event";
 import { EVENTS } from "@/text/events";
 import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import moment from "moment";
-import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { AssignmentInput } from "./assignment-input";
 import { NewAssignmentInput } from "./new-assignment-input";
 
-// Character limits for input fields
 const charLimits = {
   name: 20,
   topic: 20,
   zoomlink: 200,
   assignment: 200,
-}
+};
 
 /**
  * A single event card component.
@@ -72,12 +72,12 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
-  const { toast } = useToast()
-  const [eventName, setEventName] = useState(name)
-  const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD"))
-  const [eventTime, setEventTime] = useState(moment(date).format("HH:mm"))
-  const [eventTopic, setEventTopic] = useState(topic)
-  const [eventZoomlink, setEventZoomlink] = useState(zoomlink)
+  const { toast } = useToast();
+  const [eventName, setEventName] = useState(name);
+  const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD"));
+  const [eventTime, setEventTime] = useState(moment(date).format("HH:mm"));
+  const [eventTopic, setEventTopic] = useState(topic);
+  const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
   const [eventAssignments, setEventAssignments] = useState(
     assignments[0]
       ? assignments.map((assignment) => ({
@@ -88,6 +88,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   );
   const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([]);
   const [newAssignments, setNewAssignments] = useState<string[]>([]);
+
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -99,6 +100,7 @@ export const EventCard: React.FC<EventCardProps> = ({
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
+
   useEffect(() => {
     setEventAssignments(
       assignments[0]
@@ -129,12 +131,14 @@ export const EventCard: React.FC<EventCardProps> = ({
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
-                  <DialogDescription>{EVENTS.REMOVE_DESCRIPTION}</DialogDescription>
+                  <DialogDescription>
+                    {EVENTS.REMOVE_DESCRIPTION}
+                  </DialogDescription>
                 </DialogHeader>
                 <form
                   className="space-y-4"
                   action={async () => {
-                    await deleteEvent(event_id)
+                    await deleteEvent(event_id);
                   }}
                 >
                   <DialogClose asChild>
@@ -203,13 +207,17 @@ export const EventCard: React.FC<EventCardProps> = ({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold">Edit Event</DialogTitle>
+                <DialogTitle className="text-2xl font-bold">
+                  Edit Event
+                </DialogTitle>
                 <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
               </DialogHeader>
               <form
                 className="space-y-6"
                 action={async () => {
-                  const updatedDateTime = moment(`${eventDate}T${eventTime}`).format()
+                  const updatedDateTime = moment(
+                    `${eventDate}T${eventTime}`
+                  ).format();
                   await updateEvent({
                     name: eventName,
                     date: updatedDateTime,
@@ -305,18 +313,19 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
-                    {eventAssignments.map((assignment, index) => (
-                      <AssignmentInput
-                        key={index}
-                        index={index}
-                        eventAssignments={eventAssignments}
-                        setEventAssignments={setEventAssignments}
-                        deleteAssignmentIds={deleteAssignmentIds}
-                        assignment={assignment}
-                        setDeleteAssignmentIds={setDeleteAssignmentIds}
-                      />
-                    ))}
-                    {newAssignments.map((assignment, index) => (
+                    <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                      {eventAssignments.map((assignment, index) => (
+                        <AssignmentInput
+                          key={index}
+                          index={index}
+                          eventAssignments={eventAssignments}
+                          setEventAssignments={setEventAssignments}
+                          deleteAssignmentIds={deleteAssignmentIds}
+                          assignment={assignment}
+                          setDeleteAssignmentIds={setDeleteAssignmentIds}
+                        />
+                      ))}
+                        {newAssignments.map((assignment, index) => (
                       <NewAssignmentInput
                         key={index}
                         index={index}
@@ -325,18 +334,23 @@ export const EventCard: React.FC<EventCardProps> = ({
                         currAssignment={assignment}
                       />
                     ))}
-                    <div className="flex justify-center mt-4">
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => {
-                          setNewAssignments((prevArray) => [...prevArray, ""]);
-                        }}
-                      >
-                        <CirclePlus />
-                      </Button>
-                    </div>
+                      <div className="flex justify-center mt-4">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setNewAssignments((prevArray) => [
+                              ...prevArray,
+                              "",
+                            ]);
+                            console.log(newAssignments);
+                          }}
+                        >
+                          <CirclePlus />
+                        </Button>
+                      </div>
+                    </ScrollArea>
                   </div>
                 </div>
                 <DialogFooter>
@@ -352,5 +366,5 @@ export const EventCard: React.FC<EventCardProps> = ({
         )}
       </CardFooter>
     </Card>
-  )
-}
+  );
+};
