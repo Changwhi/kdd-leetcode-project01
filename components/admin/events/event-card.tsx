@@ -159,7 +159,7 @@ export const EventCard: React.FC<EventCardProps> = ({
       </CardContent>
       <CardFooter className="flex justify-between items-center p-6 bg-gray-50">
         <Link
-          className="text-base text-primary hover:underline inline-flex items-center"
+          className="text-sm text-primary hover:underline inline-flex items-center text-blue-500"
           href={zoomlink}
           target="_blank"
           rel="noopener noreferrer"
