@@ -18,7 +18,7 @@ export default function JoinButton({ user }: { user: any }) {
       return null;
     } else {
       try {
-        const join = await joinGroup({ email: user.email, group_id: 10 });
+        const join = await joinGroup({ email: user.email, group_id: 19 });
         setIsJoining(false);
 
         if (!join) {
