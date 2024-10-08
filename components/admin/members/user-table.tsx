@@ -438,7 +438,7 @@ export default function UserTable({
                           <span className="font-semibold">Warning: Deposit Status Change</span>
                         </div>
                         <p className="text-sm text-amber-700 mb-2">
-                          This action  will set the deposit status to "Received" for {user.name}.
+                          This action  will set the deposit status to &quot;Received&quot; for {user.name}.
                           This will override the current deposit status and reset the deposit amount.
                         </p>
                         <p className="text-sm text-amber-700 mb-2">
