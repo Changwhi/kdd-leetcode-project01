@@ -5,7 +5,7 @@ import { getLoggedInUser } from "@/lib/actions/user";
 export default async function JoinPage() {
   const currentUser = await getLoggedInUser();
     const myGroups = await getMyGroups({ email: currentUser ? currentUser.email : '' });
-    const isMember = myGroups.some((group) => group.group_id === 10);
+    const isMember = myGroups.some((group) => group.group_id === 19);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
