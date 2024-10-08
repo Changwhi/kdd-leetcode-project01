@@ -1,8 +1,7 @@
-"use client"
-
-import { useState } from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
+"use client";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardHeader,
@@ -30,14 +29,18 @@ import {
   Calendar,
   CheckSquare,
   Edit,
-  Undo2,
-} from "lucide-react"
-import { EventCardProps } from "@/types/event"
-import { EVENTS } from "@/text/events"
-import { deleteEvent, updateEvent } from "@/lib/actions/event"
-import moment from "moment"
-import { useToast } from "@/components/ui/use-toast"
+  CirclePlus,
+} from "lucide-react";
+import { EventCardProps } from "@/types/event";
+import { EVENTS } from "@/text/events";
+import { deleteEvent, updateEvent } from "@/lib/actions/event";
+import moment from "moment";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
+import { AssignmentInput } from "./assignment-input";
+import { NewAssignmentInput } from "./new-assignment-input";
 
+// Character limits for input fields
 const charLimits = {
   name: 20,
   topic: 20,
@@ -82,9 +85,9 @@ export const EventCard: React.FC<EventCardProps> = ({
           content: assignment.content,
         }))
       : []
-  )
-  const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([])
-
+  );
+  const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([]);
+  const [newAssignments, setNewAssignments] = useState<string[]>([]);
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -93,9 +96,19 @@ export const EventCard: React.FC<EventCardProps> = ({
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-    }
-    return new Intl.DateTimeFormat("en-US", options).format(date)
-  }
+    };
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  };
+  useEffect(() => {
+    setEventAssignments(
+      assignments[0]
+        ? assignments.map((assignment) => ({
+            id: assignment.assignment_id,
+            content: assignment.content,
+          }))
+        : []
+    );
+  }, [assignments]);
 
   return (
     <Card className="w-full sm:w-64 lg:w-72 flex flex-col h-[500px]">
@@ -206,10 +219,13 @@ export const EventCard: React.FC<EventCardProps> = ({
                     event_id: event_id,
                     deleteAssignmentIds: deleteAssignmentIds,
                     assignments: eventAssignments.filter(
-                      (assignment) => !deleteAssignmentIds.includes(assignment.id)
+                      (assignment) =>
+                        !deleteAssignmentIds.includes(assignment.id)
                     ),
-                  })
-                  setDeleteAssignmentIds([])
+                    newAssignments: newAssignments,
+                  });
+                  setDeleteAssignmentIds([]);
+                  setNewAssignments([]);
                 }}
               >
                 <div className="space-y-4">
@@ -289,69 +305,38 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
-                    <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                      {eventAssignments.map((assignment, index) => (
-                        <div key={index} className="space-y-2 mb-4">
-                          <Label
-                            htmlFor={`assign${index}`}
-                            className="text-sm font-medium"
-                          >
-                            {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
-                          </Label>
-                          <div className="flex items-center space-x-2">
-                            <Input
-                              id={`assign${index}`}
-                              value={eventAssignments[index].content}
-                              onChange={(e) => {
-                                const newAssignments = [...eventAssignments]
-                                newAssignments[index].content = e.target.value
-                                setEventAssignments(newAssignments)
-                              }}
-                              name={`assign${index}`}
-                              maxLength={charLimits.assignment}
-                              className={`w-full ${
-                                deleteAssignmentIds.includes(assignment.id)
-                                  ? "opacity-50"
-                                  : ""
-                              }`}
-                              disabled={deleteAssignmentIds.includes(assignment.id)}
-                            />
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                if (deleteAssignmentIds.includes(assignment.id)) {
-                                  setDeleteAssignmentIds((ids) =>
-                                    ids.filter((id) => id !== assignment.id)
-                                  )
-                                } else {
-                                  setDeleteAssignmentIds((ids) => [
-                                    ...ids,
-                                    assignment.id,
-                                  ])
-                                }
-                              }}
-                              aria-label={
-                                deleteAssignmentIds.includes(assignment.id)
-                                  ? "Undo delete assignment"
-                                  : "Delete assignment"
-                              }
-                            >
-                              {deleteAssignmentIds.includes(assignment.id) ? (
-                                <Undo2 className="w-5 h-5 text-green-500" />
-                              ) : (
-                                <Trash2 className="w-5 h-5 text-red-500" />
-                              )}
-                            </Button>
-                          </div>
-                          <p className="text-sm text-muted-foreground text-right">
-                            {eventAssignments[index]?.content.length || 0}/
-                            {charLimits.assignment}
-                          </p>
-                        </div>
-                      ))}
-                    </ScrollArea>
+                    {eventAssignments.map((assignment, index) => (
+                      <AssignmentInput
+                        key={index}
+                        index={index}
+                        eventAssignments={eventAssignments}
+                        setEventAssignments={setEventAssignments}
+                        deleteAssignmentIds={deleteAssignmentIds}
+                        assignment={assignment}
+                        setDeleteAssignmentIds={setDeleteAssignmentIds}
+                      />
+                    ))}
+                    {newAssignments.map((assignment, index) => (
+                      <NewAssignmentInput
+                        key={index}
+                        index={index}
+                        newAssignments={newAssignments}
+                        setNewAssignments={setNewAssignments}
+                        currAssignment={assignment}
+                      />
+                    ))}
+                    <div className="flex justify-center mt-4">
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => {
+                          setNewAssignments((prevArray) => [...prevArray, ""]);
+                        }}
+                      >
+                        <CirclePlus />
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <DialogFooter>
