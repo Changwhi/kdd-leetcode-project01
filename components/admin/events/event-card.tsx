@@ -27,15 +27,15 @@ import {
   Calendar,
   CheckSquare,
   Edit,
-  Undo2,
+  CirclePlus,
 } from "lucide-react";
 import { EventCardProps } from "@/types/event";
 import { EVENTS } from "@/text/events";
 import { deleteEvent, updateEvent } from "@/lib/actions/event";
 import moment from "moment";
 import { Textarea } from "@/components/ui/textarea";
-import { deleteAssignment } from "@/lib/actions/assignment";
 import { useToast } from "@/components/ui/use-toast";
+import { AssignmentInput } from "./assignment-input";
 
 // Character limits for input fields
 const charLimits = {
@@ -279,65 +279,15 @@ export const EventCard: React.FC<EventCardProps> = ({
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
                     {eventAssignments.map((assignment, index) => (
-                      <div key={index} className="space-y-2">
-                        <Label
-                          htmlFor={`assign${index}`}
-                          className="text-sm font-medium"
-                        >
-                          {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
-                        </Label>
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            id={`assign${index}`}
-                            value={eventAssignments[index].content}
-                            onChange={(e) => {
-                              const newAssignments = [...eventAssignments];
-                              newAssignments[index].content = e.target.value;
-                              setEventAssignments(newAssignments);
-                            }}
-                            name={`assign${index}`}
-                            maxLength={charLimits.assignment}
-                            className={`w-full ${
-                              deleteAssignmentIds.includes(assignment.id)
-                                ? "opacity-50"
-                                : ""
-                            }`}
-                            disabled={deleteAssignmentIds.includes(assignment.id)}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              if (deleteAssignmentIds.includes(assignment.id)) {
-                                setDeleteAssignmentIds((ids) =>
-                                  ids.filter((id) => id !== assignment.id)
-                              );
-                            } else {
-                              setDeleteAssignmentIds((ids) => [
-                                ...ids,
-                                assignment.id,
-                              ]);
-                            }
-                            }}
-                            aria-label={
-                              deleteAssignmentIds.includes(assignment.id)
-                                ? "Undo delete assignment"
-                                : "Delete assignment"
-                            }
-                          >
-                            {deleteAssignmentIds.includes(assignment.id) ? (
-                              <Undo2 className="w-5 h-5 text-green-500" />
-                            ) : (
-                              <Trash2 className="w-5 h-5 text-red-500" />
-                            )}
-                          </Button>
-                        </div>
-                        <p className="text-sm text-muted-foreground text-right">
-                          {eventAssignments[index]?.content.length || 0}/
-                          {charLimits.assignment}
-                        </p>
-                      </div>
+                      <AssignmentInput
+                        key={index}
+                        index={index}
+                        eventAssignments={eventAssignments}
+                        setEventAssignments={setEventAssignments}
+                        deleteAssignmentIds={deleteAssignmentIds}
+                        assignment={assignment}
+                        setDeleteAssignmentIds={setDeleteAssignmentIds}
+                      />
                     ))}
                   </div>
                 </div>
