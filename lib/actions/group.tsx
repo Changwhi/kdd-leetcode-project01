@@ -156,14 +156,16 @@ export const createGroup = async ({
   const total_deposit = formData.get("totalDeposit");
   const initial_deduction = formData.get("initialDeduction");
   const pr_deduction = formData.get("prDeduction");
+  const private_group = formData.get("private") === "true"; // Convert to boolean
+
   try {
     const response = await sql`
-    INSERT INTO "group" (name, description, max_participants, attendance_deduction, assignment_deduction, total_deposit, init_deduction, pr_deduction)
+    INSERT INTO "group" (name, description, max_participants, attendance_deduction, assignment_deduction, total_deposit, init_deduction, pr_deduction, private)
     VALUES (${name as string}, ${description as string}, ${
       max_participants as string
     }, ${attendance_deduction as string}, ${assignment_deduction as string}, ${
       total_deposit as string
-    }, ${initial_deduction as string}, ${pr_deduction as string})
+    }, ${initial_deduction as string}, ${pr_deduction as string}, ${private_group})
     RETURNING group_id
     `;
     const newGroupId = response[0]?.group_id;

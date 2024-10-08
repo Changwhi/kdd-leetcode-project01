@@ -16,10 +16,11 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { createGroup } from "@/lib/actions/group"
 import { GROUP } from "@/text/group"
-import { PlusCircle, Users, DollarSign } from "lucide-react"
+import { PlusCircle, Users, DollarSign, Lock, Unlock } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useToast } from "@/components/ui/use-toast"
+import { Switch } from "@/components/ui/switch"
 
 export function CreateGroupButton({ email }: { email: string }) {
   const { toast } = useToast()
@@ -38,6 +39,7 @@ export function CreateGroupButton({ email }: { email: string }) {
     prDeduction: "",
     attendanceDeduction: "",
     assignmentDeduction: "",
+    private: false,
   }
 
   const [formData, setFormData] = useState(initialFormData)
@@ -45,6 +47,10 @@ export function CreateGroupButton({ email }: { email: string }) {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSwitchChange = (checked: boolean) => {
+    setFormData(prev => ({ ...prev, private: checked }))
   }
 
   const resetForm = () => {
@@ -55,7 +61,7 @@ export function CreateGroupButton({ email }: { email: string }) {
     e.preventDefault()
     const formDataToSubmit = new FormData()
     Object.entries(formData).forEach(([key, value]) => {
-      formDataToSubmit.append(key, value)
+      formDataToSubmit.append(key, value.toString())
     })
     try {
       await createGroup({
@@ -145,6 +151,31 @@ export function CreateGroupButton({ email }: { email: string }) {
                       />
                     </div>
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="private"
+                      checked={formData.private}
+                      onCheckedChange={handleSwitchChange}
+                    />
+                    <Label htmlFor="private" className="flex items-center space-x-2">
+                      {formData.private ? (
+                        <>
+                          <Lock className="h-4 w-4" />
+                          <span>Private Group</span>
+                        </>
+                      ) : (
+                        <>
+                          <Unlock className="h-4 w-4" />
+                          <span>Public Group</span>
+                        </>
+                      )}
+                    </Label>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {formData.private
+                      ? "Private groups are only visible to invited members."
+                      : "Public groups can be discovered and joined by anyone."}
+                  </p>
                 </CardContent>
               </Card>
             </TabsContent>
