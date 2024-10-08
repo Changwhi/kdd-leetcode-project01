@@ -36,6 +36,7 @@ import moment from "moment";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { AssignmentInput } from "./assignment-input";
+import { NewAssignmentInput } from "./new-assignment-input";
 
 // Character limits for input fields
 const charLimits = {
@@ -288,6 +289,15 @@ export const EventCard: React.FC<EventCardProps> = ({
                         deleteAssignmentIds={deleteAssignmentIds}
                         assignment={assignment}
                         setDeleteAssignmentIds={setDeleteAssignmentIds}
+                      />
+                    ))}
+                    {newAssignments.map((assignment, index) => (
+                      <NewAssignmentInput
+                        key={index}
+                        index={index}
+                        newAssignments={newAssignments}
+                        setNewAssignments={setNewAssignments}
+                        currAssignment={assignment}
                       />
                     ))}
                     <div className="flex justify-center mt-4">
