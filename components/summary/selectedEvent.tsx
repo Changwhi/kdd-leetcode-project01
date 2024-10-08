@@ -30,9 +30,9 @@ export const SelectedEvent = ({
 
   return (
     <>
-      <div className="flex flex-col p-4 flex-grow">
+      <div className="flex flex-col  flex-grow">
         {events && events.length > 0 && (
-          <h1 className="mb-5 text-base font-semibold">
+          <h1 className="my-6 text-base font-semibold">
             {SUMMARY.EVENT_TITLE}
           </h1>
         )}
