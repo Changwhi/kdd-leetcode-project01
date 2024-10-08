@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,6 +83,16 @@ export const EventCard: React.FC<EventCardProps> = ({
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   };
+  useEffect(() => {
+    setEventAssignments(
+      assignments[0]
+        ? assignments.map((assignment) => ({
+            id: assignment.assignment_id,
+            content: assignment.content,
+          }))
+        : []
+    );
+  }, [assignments]);
 
   return (
     <Card className="w-full sm:w-64 lg:w-80 overflow-hidden transition-all duration-300 hover:shadow-lg">
@@ -197,10 +207,13 @@ export const EventCard: React.FC<EventCardProps> = ({
                     event_id: event_id,
                     deleteAssignmentIds: deleteAssignmentIds,
                     assignments: eventAssignments.filter(
-                      (assignment) => !deleteAssignmentIds.includes(assignment.id)
+                      (assignment) =>
+                        !deleteAssignmentIds.includes(assignment.id)
                     ),
+                    newAssignments: newAssignments,
                   });
                   setDeleteAssignmentIds([]);
+                  setNewAssignments([]);
                 }}
               >
                 <div className="space-y-4">
@@ -307,7 +320,6 @@ export const EventCard: React.FC<EventCardProps> = ({
                         size="icon"
                         onClick={() => {
                           setNewAssignments((prevArray) => [...prevArray, ""]);
-                          console.log(newAssignments);
                         }}
                       >
                         <CirclePlus />

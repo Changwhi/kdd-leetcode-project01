@@ -119,6 +119,7 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       assignments,
       event_id,
       deleteAssignmentIds,
+      newAssignments
     } = formData;
     console.log(formData);
     // Now `date` contains both date and time
@@ -134,8 +135,14 @@ export const updateEvent = async (formData: EventCardPropsForDB) => {
       }
     }
     await deleteMultipleAssignment(deleteAssignmentIds);
+    
+    for (let i = 0; i < newAssignments.length; i++) {
+      if (newAssignments[i]) {
+        await createAssignment(newAssignments[i], event_id, 1);
+      }
+    }
 
-    revalidatePath("/dashboard/events");
+    revalidatePath(`/dashboard/${group_id}/events`);
   } catch (error) {
     console.log(error);
   }
