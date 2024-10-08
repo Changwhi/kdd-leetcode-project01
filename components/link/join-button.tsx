@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';
 import { joinGroup } from "@/lib/actions/group";
 
-export default function JoinButton({ user }: { user: any }) {
+export default function JoinButton({ user, groupId }: { user: any, groupId: number }) {
   const [isJoining, setIsJoining] = useState(false);
   const router = useRouter();
 
@@ -18,7 +18,7 @@ export default function JoinButton({ user }: { user: any }) {
       return null;
     } else {
       try {
-        const join = await joinGroup({ email: user.email, group_id: 10 });
+        const join = await joinGroup({ email: user.email, group_id: groupId});
         setIsJoining(false);
 
         if (!join) {
