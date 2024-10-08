@@ -1,14 +1,15 @@
-"use client";
-import { useState } from "react";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
+"use client"
+
+import { useState } from "react"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
   CardFooter,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 import {
   Dialog,
   DialogClose,
@@ -18,9 +19,11 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   ExternalLinkIcon,
   Trash2,
@@ -28,23 +31,34 @@ import {
   CheckSquare,
   Edit,
   Undo2,
-} from "lucide-react";
-import { EventCardProps } from "@/types/event";
-import { EVENTS } from "@/text/events";
-import { deleteEvent, updateEvent } from "@/lib/actions/event";
-import moment from "moment";
-import { Textarea } from "@/components/ui/textarea";
-import { deleteAssignment } from "@/lib/actions/assignment";
-import { useToast } from "@/components/ui/use-toast";
+} from "lucide-react"
+import { EventCardProps } from "@/types/event"
+import { EVENTS } from "@/text/events"
+import { deleteEvent, updateEvent } from "@/lib/actions/event"
+import moment from "moment"
+import { useToast } from "@/components/ui/use-toast"
 
-// Character limits for input fields
 const charLimits = {
   name: 20,
   topic: 20,
   zoomlink: 200,
   assignment: 200,
-};
+}
 
+/**
+ * A single event card component.
+ * @param {{
+ *  event_id: number;
+ *  name: string;
+ *  date: string;
+ *  topic: string;
+ *  zoomlink: string;
+ *  assignments: {id: number, content: string}[];
+ *  group_id: number;
+ *  admin: boolean;
+ * }} props
+ * @returns ReactElement
+ */
 export const EventCard: React.FC<EventCardProps> = ({
   event_id,
   name,
@@ -55,12 +69,12 @@ export const EventCard: React.FC<EventCardProps> = ({
   group_id,
   admin,
 }) => {
-  const { toast } = useToast();
-  const [eventName, setEventName] = useState(name);
-  const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD")); // Extract only the date
-  const [eventTime, setEventTime] = useState(moment(date).format("HH:mm")); // Extract only the time
-  const [eventTopic, setEventTopic] = useState(topic);
-  const [eventZoomlink, setEventZoomlink] = useState(zoomlink);
+  const { toast } = useToast()
+  const [eventName, setEventName] = useState(name)
+  const [eventDate, setEventDate] = useState(moment(date).format("YYYY-MM-DD"))
+  const [eventTime, setEventTime] = useState(moment(date).format("HH:mm"))
+  const [eventTopic, setEventTopic] = useState(topic)
+  const [eventZoomlink, setEventZoomlink] = useState(zoomlink)
   const [eventAssignments, setEventAssignments] = useState(
     assignments[0]
       ? assignments.map((assignment) => ({
@@ -68,8 +82,9 @@ export const EventCard: React.FC<EventCardProps> = ({
           content: assignment.content,
         }))
       : []
-  );
-  const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([]);
+  )
+  const [deleteAssignmentIds, setDeleteAssignmentIds] = useState<number[]>([])
+
   const formatDateTime = (date: Date) => {
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
@@ -78,15 +93,15 @@ export const EventCard: React.FC<EventCardProps> = ({
       hour: "numeric",
       minute: "2-digit",
       hour12: true,
-    };
-    return new Intl.DateTimeFormat("en-US", options).format(date);
-  };
+    }
+    return new Intl.DateTimeFormat("en-US", options).format(date)
+  }
 
   return (
-    <Card className="w-full sm:w-64 lg:w-80 overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="w-full sm:w-64 lg:w-72 flex flex-col h-[500px]">
       <CardHeader className="bg-primary text-primary-foreground p-6">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-bold">{name}</CardTitle>
+          <CardTitle className="text-xl font-bold truncate">{name}</CardTitle>
           {admin && (
             <Dialog>
               <DialogTrigger asChild>
@@ -101,14 +116,12 @@ export const EventCard: React.FC<EventCardProps> = ({
               <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle>{EVENTS.REMOVE}</DialogTitle>
-                  <DialogDescription>
-                    {EVENTS.REMOVE_DESCRIPTION}
-                  </DialogDescription>
+                  <DialogDescription>{EVENTS.REMOVE_DESCRIPTION}</DialogDescription>
                 </DialogHeader>
                 <form
                   className="space-y-4"
                   action={async () => {
-                    await deleteEvent(event_id);
+                    await deleteEvent(event_id)
                   }}
                 >
                   <DialogClose asChild>
@@ -128,43 +141,45 @@ export const EventCard: React.FC<EventCardProps> = ({
           {formatDateTime(new Date(date))}
         </div>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent className="p-6 flex-grow overflow-hidden">
         <h3 className="font-semibold text-lg mb-2">Topic</h3>
-        <p className="text-muted-foreground mb-4">{topic}</p>
+        <p className="text-muted-foreground mb-4 line-clamp-2">{topic}</p>
         <h3 className="font-semibold text-lg mb-2">Assignments</h3>
-        <ul className="space-y-2">
-          {assignments.map(
-            (assignment, index) =>
-              assignment && (
-                <li key={index} className="flex items-center">
-                  <CheckSquare className="w-5 h-5 text-primary mr-2" />
-                  <span>
-                    {assignment.content.startsWith("http") ? (
-                      <a
-                        href={assignment.content}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-500 hover:underline"
-                      >
-                        {`Assignment ${index + 1} Link`}
-                      </a>
-                    ) : (
-                      assignment.content
-                    )}
-                  </span>
-                </li>
-              )
-          )}
-        </ul>
+        <ScrollArea className="h-[170px] w-full rounded-md p-3">
+          <ul className="space-y-3 pb-5">
+            {assignments.map(
+              (assignment, index) =>
+                assignment && (
+                  <li key={index} className="flex items-center">
+                    <CheckSquare className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
+                    <span className="text-sm">
+                      {assignment.content.startsWith("http") ? (
+                        <a
+                          href={assignment.content}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          {`Assignment ${index + 1} Link`}
+                        </a>
+                      ) : (
+                        assignment.content
+                      )}
+                    </span>
+                  </li>
+                )
+            )}
+          </ul>
+        </ScrollArea>
       </CardContent>
       <CardFooter className="flex justify-between items-center p-6 bg-gray-50">
         <Link
-          className="text-base text-primary hover:underline inline-flex items-center"
+          className="text-sm text-primary hover:underline inline-flex items-center text-blue-500"
           href={zoomlink}
           target="_blank"
           rel="noopener noreferrer"
         >
-          {EVENTS.LINK} <ExternalLinkIcon className="ml-2 h-5 w-5" />
+          {EVENTS.ZOOMLINK} <ExternalLinkIcon className="ml-2 h-5 w-5" />
         </Link>
         {admin && (
           <Dialog>
@@ -173,19 +188,15 @@ export const EventCard: React.FC<EventCardProps> = ({
                 <Edit className="w-4 h-4 mr-2" /> {EVENTS.EDIT}
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-scroll">
+            <DialogContent className="sm:max-w-[550px] max-h-[95vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-bold">
-                  Edit Event
-                </DialogTitle>
+                <DialogTitle className="text-2xl font-bold">Edit Event</DialogTitle>
                 <DialogDescription>{EVENTS.EDIT_DESCRIPTION}</DialogDescription>
               </DialogHeader>
               <form
                 className="space-y-6"
                 action={async () => {
-                  const updatedDateTime = moment(
-                    `${eventDate}T${eventTime}`
-                  ).format();
+                  const updatedDateTime = moment(`${eventDate}T${eventTime}`).format()
                   await updateEvent({
                     name: eventName,
                     date: updatedDateTime,
@@ -197,8 +208,8 @@ export const EventCard: React.FC<EventCardProps> = ({
                     assignments: eventAssignments.filter(
                       (assignment) => !deleteAssignmentIds.includes(assignment.id)
                     ),
-                  });
-                  setDeleteAssignmentIds([]);
+                  })
+                  setDeleteAssignmentIds([])
                 }}
               >
                 <div className="space-y-4">
@@ -278,67 +289,69 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
-                    {eventAssignments.map((assignment, index) => (
-                      <div key={index} className="space-y-2">
-                        <Label
-                          htmlFor={`assign${index}`}
-                          className="text-sm font-medium"
-                        >
-                          {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
-                        </Label>
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            id={`assign${index}`}
-                            value={eventAssignments[index].content}
-                            onChange={(e) => {
-                              const newAssignments = [...eventAssignments];
-                              newAssignments[index].content = e.target.value;
-                              setEventAssignments(newAssignments);
-                            }}
-                            name={`assign${index}`}
-                            maxLength={charLimits.assignment}
-                            className={`w-full ${
-                              deleteAssignmentIds.includes(assignment.id)
-                                ? "opacity-50"
-                                : ""
-                            }`}
-                            disabled={deleteAssignmentIds.includes(assignment.id)}
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => {
-                              if (deleteAssignmentIds.includes(assignment.id)) {
-                                setDeleteAssignmentIds((ids) =>
-                                  ids.filter((id) => id !== assignment.id)
-                              );
-                            } else {
-                              setDeleteAssignmentIds((ids) => [
-                                ...ids,
-                                assignment.id,
-                              ]);
-                            }
-                            }}
-                            aria-label={
-                              deleteAssignmentIds.includes(assignment.id)
-                                ? "Undo delete assignment"
-                                : "Delete assignment"
-                            }
+                    <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                      {eventAssignments.map((assignment, index) => (
+                        <div key={index} className="space-y-2 mb-4">
+                          <Label
+                            htmlFor={`assign${index}`}
+                            className="text-sm font-medium"
                           >
-                            {deleteAssignmentIds.includes(assignment.id) ? (
-                              <Undo2 className="w-5 h-5 text-green-500" />
-                            ) : (
-                              <Trash2 className="w-5 h-5 text-red-500" />
-                            )}
-                          </Button>
+                            {EVENTS[`ASSIGNMENT_1` as keyof typeof EVENTS]}
+                          </Label>
+                          <div className="flex items-center space-x-2">
+                            <Input
+                              id={`assign${index}`}
+                              value={eventAssignments[index].content}
+                              onChange={(e) => {
+                                const newAssignments = [...eventAssignments]
+                                newAssignments[index].content = e.target.value
+                                setEventAssignments(newAssignments)
+                              }}
+                              name={`assign${index}`}
+                              maxLength={charLimits.assignment}
+                              className={`w-full ${
+                                deleteAssignmentIds.includes(assignment.id)
+                                  ? "opacity-50"
+                                  : ""
+                              }`}
+                              disabled={deleteAssignmentIds.includes(assignment.id)}
+                            />
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => {
+                                if (deleteAssignmentIds.includes(assignment.id)) {
+                                  setDeleteAssignmentIds((ids) =>
+                                    ids.filter((id) => id !== assignment.id)
+                                  )
+                                } else {
+                                  setDeleteAssignmentIds((ids) => [
+                                    ...ids,
+                                    assignment.id,
+                                  ])
+                                }
+                              }}
+                              aria-label={
+                                deleteAssignmentIds.includes(assignment.id)
+                                  ? "Undo delete assignment"
+                                  : "Delete assignment"
+                              }
+                            >
+                              {deleteAssignmentIds.includes(assignment.id) ? (
+                                <Undo2 className="w-5 h-5 text-green-500" />
+                              ) : (
+                                <Trash2 className="w-5 h-5 text-red-500" />
+                              )}
+                            </Button>
+                          </div>
+                          <p className="text-sm text-muted-foreground text-right">
+                            {eventAssignments[index]?.content.length || 0}/
+                            {charLimits.assignment}
+                          </p>
                         </div>
-                        <p className="text-sm text-muted-foreground text-right">
-                          {eventAssignments[index]?.content.length || 0}/
-                          {charLimits.assignment}
-                        </p>
-                      </div>
-                    ))}
+                      ))}
+                    </ScrollArea>
                   </div>
                 </div>
                 <DialogFooter>
@@ -354,5 +367,5 @@ export const EventCard: React.FC<EventCardProps> = ({
         )}
       </CardFooter>
     </Card>
-  );
-};
+  )
+}

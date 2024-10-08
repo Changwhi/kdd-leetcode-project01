@@ -67,15 +67,10 @@ export const addEvent = async ({
   group_id: number;
   assign: string[];
 }) => {
-  //TODO: Delete these assignments
-  const assign1 = "";
-  const assign2 = "";
-  const assign3 = "";
-  //TODO: Delete until this
   try {
     const response = await sql`
-      INSERT INTO event (name, date, topic, zoomlink, group_id, assign1, assign2, assign3)
-      VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id}, ${assign1}, ${assign2}, ${assign3})
+      INSERT INTO event (name, date, topic, zoomlink, group_id)
+      VALUES (${name}, ${date}, ${topic}, ${zoomlink}, ${group_id})
       RETURNING event_id;
     `;
     const eventId = response[0].event_id;

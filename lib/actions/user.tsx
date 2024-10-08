@@ -116,14 +116,29 @@ export const setDepositStatus = async ({
 }) => {
   try {
     console.log(user_id, group_id, status);
-    const response: ResponseType[] = await sql`
-UPDATE user_group
-SET deposit_status = ${status}
-WHERE user_id = ${user_id} and group_id = ${group_id};
+    await sql`
+      UPDATE user_group
+      SET deposit_status = ${status}
+      WHERE user_id = ${user_id} AND group_id = ${group_id};
     `;
-    return true;
+
+    let updatedCurrAmount = null;
+
+    if (status === "Received") {
+      const result = await sql`
+        UPDATE user_group
+        SET curr_amount = init_amount - (SELECT init_deduction FROM "group" WHERE group_id = ${group_id})
+        WHERE user_id = ${user_id} AND group_id = ${group_id}
+        RETURNING curr_amount;
+      `;
+
+      updatedCurrAmount = result[0]?.curr_amount;
+      console.log("Received - initialized deposit", updatedCurrAmount);
+    }
+
+    return updatedCurrAmount ?? true;
   } catch (error) {
-    console.log(error);
+    console.error("Error updating deposit status:", error);
     return false;
   }
 };
@@ -167,4 +182,4 @@ WHERE user_id = ${user_id} and group_id = ${group_id};
     console.log(error);
     return false;
   }
-}
+};

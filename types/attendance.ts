@@ -16,4 +16,5 @@ export interface AttendanceType {
   submitted: boolean;
   deposit_status: DepositStatus;
   group_id: number;
+  init_deduction: number;
 }

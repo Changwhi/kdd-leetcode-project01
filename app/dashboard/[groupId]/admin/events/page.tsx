@@ -6,6 +6,15 @@ import { retrieveEvents } from "@/lib/actions/event";
 import moment from "moment";
 import { CreateEventModal } from "@/components/admin/events/create-event-modal";
 
+/**
+ * Events page component for admin
+ *
+ * This component renders a list of events associated with the given group_id.
+ * It displays both upcoming events and past events in two separate sections.
+ * The component also includes a modal dialog for creating new events.
+ *
+ * @param params.groupId - a group_id as a string
+ */
 export default async function Events({
   params
 }: {
