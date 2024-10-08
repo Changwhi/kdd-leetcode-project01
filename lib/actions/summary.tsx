@@ -10,6 +10,8 @@ export const retrieveAllUsers = async ({ group_id }: { group_id: number }) => {
         ug.curr_amount,
         ug.deposit_status,
         ug.user_type,
+        g.init_deduction,
+        ug.init_amount,
         COALESCE(
           json_agg(
             json_build_object(
@@ -36,8 +38,10 @@ export const retrieveAllUsers = async ({ group_id }: { group_id: number }) => {
         attendance a ON u.user_id = a.user_id AND e.event_id = a.event_id
       LEFT JOIN 
         submission s ON u.user_id = s.user_id AND e.event_id = s.event_id
+      LEFT JOIN
+        "group" g ON g.group_id = ug.group_id
       GROUP BY 
-        u.user_id, u.name, u.email, ug.curr_amount, deposit_status, ug.user_type;
+        u.user_id, u.name, u.email, ug.curr_amount, deposit_status, ug.user_type, g.init_deduction , ug.init_amount;
     `;
 
     if (response) {
