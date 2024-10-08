@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { MoreHorizontal, Users, Mail, Filter, ArrowUpDown } from "lucide-react";
+import { useState, useMemo } from "react";
+import { MoreHorizontal, Users, Mail, Filter, ArrowUpDown, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,17 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 import {
   Table,
   TableBody,
@@ -65,7 +54,6 @@ export default function UserTable({
   usersInGroup: AttendanceType[];
   group_id: number;
 }) {
-
   const [users, setUsers] = useState<AttendanceType[]>(
     usersInGroup.map((user) => ({
       ...user,
@@ -92,6 +80,8 @@ export default function UserTable({
     order: "asc",
   });
 
+  const [showWarning, setShowWarning] = useState<number | null>(null);
+
   const handleDepositStatusChange = async (
     userId: number,
     groupId: number,
@@ -107,7 +97,15 @@ export default function UserTable({
       setUsers(
         users.map((user) =>
           user.user_id === userId
-            ? { ...user, deposit_status: newStatus }
+            ? {
+                ...user,
+                deposit_status: newStatus,
+                curr_amount:
+                  newStatus === "Received"
+                    ? Number(user.init_amount || 0) -
+                      Number(user.init_deduction || 0)
+                    : user.curr_amount,
+              }
             : user
         )
       );
@@ -115,14 +113,17 @@ export default function UserTable({
         title: "Success",
         description: "Deposit status updated successfully.",
         variant: "default",
+        duration: 3000,
       });
     } else {
       toast({
         title: "Error",
         description: "Failed to update deposit status.",
         variant: "destructive",
+        duration: 3000,
       });
     }
+    setShowWarning(null);
   };
 
   const handleUserTypeChange = async (
@@ -145,12 +146,14 @@ export default function UserTable({
         title: "Success",
         description: "User type updated successfully.",
         variant: "default",
+        duration: 3000,
       });
     } else {
       toast({
         title: "Error",
         description: "Failed to update user type.",
         variant: "destructive",
+        duration: 3000,
       });
     }
   };
@@ -166,12 +169,14 @@ export default function UserTable({
         title: "Success",
         description: "User kicked out successfully.",
         variant: "default",
+        duration: 3000,
       });
     } else {
       toast({
         title: "Error",
         description: "Failed to kick out user.",
         variant: "destructive",
+        duration: 3000,
       });
     }
   };
@@ -290,7 +295,6 @@ export default function UserTable({
                   className="font-bold hover:bg-transparent"
                 >
                   Name
-                  {/* <SortIcon field="name" /> */}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -301,7 +305,6 @@ export default function UserTable({
                   className="font-bold hover:bg-transparent"
                 >
                   Email
-                  {/* <SortIcon field="email" /> */}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -312,7 +315,6 @@ export default function UserTable({
                   className="font-bold hover:bg-transparent"
                 >
                   Deposit Status
-                  {/* <SortIcon field="deposit_status" /> */}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -323,7 +325,6 @@ export default function UserTable({
                   className="font-bold hover:bg-transparent"
                 >
                   Current Amount
-                  {/* <SortIcon field="curr_amount" /> */}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -334,7 +335,6 @@ export default function UserTable({
                   className="font-bold hover:bg-transparent"
                 >
                   User Type
-                  {/* <SortIcon field="user_type" /> */}
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
               </TableHead>
@@ -343,119 +343,131 @@ export default function UserTable({
           </TableHeader>
           <TableBody>
             {filteredAndSortedUsers.map((user) => (
-              <TableRow key={user.user_id}>
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>
-                        {user.name.slice(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span>{user.name}</span>
-                  </div>
-                </TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <StatusBadge status={user.deposit_status} />
-                </TableCell>
-                <TableCell>
-                  ${user.curr_amount === null ? 0 : user.curr_amount} CAD
-                </TableCell>
-                <TableCell>
-                  <UserTypeBadge userType={user.user_type} />
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <span className="sr-only">Open menu</span>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleDepositStatusChange(
-                            user.user_id,
-                            group_id,
-                            "Received"
-                          )
-                        }
-                      >
-                        Set as Received
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleDepositStatusChange(
-                            user.user_id,
-                            group_id,
-                            "Pending"
-                          )
-                        }
-                      >
-                        Set as Pending
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleDepositStatusChange(
-                            user.user_id,
-                            group_id,
-                            "Returned"
-                          )
-                        }
-                      >
-                        Set as Returned
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() =>
-                          handleUserTypeChange(
-                            user.user_id,
-                            group_id,
-                            user.user_type === 0 ? 1 : 0
-                          )
-                        }
-                      >
-                        Change to {user.user_type === 0 ? "User" : "Admin"}
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <DropdownMenuItem
-                            onSelect={(e) => e.preventDefault()}
+              <>
+                <TableRow key={user.user_id}>
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      <Avatar>
+                        <AvatarImage src={user.avatar} alt={user.name} />
+                        <AvatarFallback>
+                          {user.name.slice(0, 2).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span>{user.name}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <StatusBadge status={user.deposit_status} />
+                  </TableCell>
+                  <TableCell>
+                    ${user.curr_amount === null ? 0 : user.curr_amount} CAD
+                  </TableCell>
+                  <TableCell>
+                    <UserTypeBadge userType={user.user_type} />
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => setShowWarning(user.user_id)}
+                          disabled={user.deposit_status === "Received"}
+                        >
+                          Set as Received
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleDepositStatusChange(
+                              user.user_id,
+                              group_id,
+                              "Pending"
+                            )
+                          }
+                          disabled={user.deposit_status === "Pending"}
+                        >
+                          Set as Pending
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleDepositStatusChange(
+                              user.user_id,
+                              group_id,
+                              "Returned"
+                            )
+                          }
+                          disabled={user.deposit_status === "Returned"}
+                        >
+                          Set as Returned
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() =>
+                            handleUserTypeChange(
+                              user.user_id,
+                              group_id,
+                              user.user_type === 0 ? 1 : 0
+                            )
+                          }
+                        >
+                          Change to {user.user_type === 0 ? "User" : "Admin"}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleKickOut(user.user_id, group_id)}
+                        >
+                          Kick Out User
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+                {showWarning === user.user_id && (
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <div className="bg-amber-50 border border-amber-200 rounded-md p-4 my-2">
+                        <div className="flex items-center gap-2 text-amber-700 mb-2">
+                          <AlertTriangle className="h-5 w-5" />
+                          <span className="font-semibold">Warning: Deposit Status Change</span>
+                        </div>
+                        <p className="text-sm text-amber-700 mb-2">
+                          This action  will set the deposit status to "Received" for {user.name}.
+                          This will override the current deposit status and reset the deposit amount.
+                        </p>
+                        <p className="text-sm text-amber-700 mb-2">
+                          Current amount: ${user.curr_amount === null ? 0 : user.curr_amount} CAD
+                        </p>
+                        <p className="text-sm text-amber-700 mb-4">
+                          New amount: ${Number(user.init_amount || 0) - Number(user.init_deduction || 0)} CAD
+                        </p>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setShowWarning(null)}
                           >
-                            Kick Out User
-                          </DropdownMenuItem>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Are you absolutely sure?
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              This action cannot be undone. This will
-                              permanently remove the user from the system.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() =>
-                                handleKickOut(user.user_id, group_id)
-                              }
-                            >
-                              Confirm
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="default"
+                            size="sm"
+                            onClick={() => handleDepositStatusChange(user.user_id, group_id, "Received")}
+                          >
+                            Confirm
+                          </Button>
+                        </div>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             ))}
           </TableBody>
         </Table>
