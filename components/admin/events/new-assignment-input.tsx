@@ -18,6 +18,12 @@ export const NewAssignmentInput = ({
   newAssignments,
   setNewAssignments,
   currAssignment,
+}:
+{
+  index: number;
+  newAssignments: string[];
+  setNewAssignments: React.Dispatch<React.SetStateAction<string[]>>;
+  currAssignment: string;
 }) => {
   return (
     <div className="space-y-2">
