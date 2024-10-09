@@ -224,6 +224,7 @@ export const joinGroup = async ({
     const curr_amount = total_deposit - init_deduction;
 
     // Insert user into user_group with the calculated init_amount and curr_amount
+    // Currently curr_amount is set to $0
     const response = await sql`
       INSERT INTO user_group (user_id, group_id, user_type, init_amount, curr_amount)
       VALUES (
@@ -231,11 +232,11 @@ export const joinGroup = async ({
         ${group_id},
         1, 
         ${init_amount},
-        ${curr_amount}
+        0
       )
       RETURNING group_id
     `;
-
+    
     if (response.length > 0) {
       revalidatePath("/group");
       return "Joined group successfully.";
