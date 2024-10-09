@@ -48,6 +48,15 @@ export default function Header({ user }: any) {
         >
           {CONSTANTS.JOIN}
         </Link>
+        <Link
+          href="/settings"
+          className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
+            path == "/settings" && "text-primary font-bold"
+          }`}
+          prefetch={false}
+        >
+          {CONSTANTS.SETTTINGS}
+        </Link>
         {!user && (
           <button className="text-sm font-medium hover:underline underline-offset-4">
             <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
