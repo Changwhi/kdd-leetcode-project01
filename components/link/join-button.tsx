@@ -2,10 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { joinGroup } from "@/lib/actions/group";
 
-export default function JoinButton({ user, groupId }: { user: any, groupId: number }) {
+export default function JoinButton({
+  user,
+  groupId,
+  groupIdForLink,
+  onJoinSuccess,
+}: {
+  user: any;
+  groupId: number;
+  groupIdForLink: string;
+  onJoinSuccess: () => void;
+}) {
   const [isJoining, setIsJoining] = useState(false);
   const router = useRouter();
 
@@ -13,18 +23,20 @@ export default function JoinButton({ user, groupId }: { user: any, groupId: numb
     setIsJoining(true);
 
     if (!user) {
-      // Use router.push() for client-side navigation
-      router.push(`/api/auth/login?returnTo=${encodeURIComponent("/link")}`);
-      return null;
+      router.push(
+        `/api/auth/login?returnTo=${encodeURIComponent(`/link/${groupIdForLink}`)}`
+      );
+      return;
     } else {
       try {
-        const join = await joinGroup({ email: user.email, group_id: groupId});
+        const join = await joinGroup({ email: user.email, group_id: groupId });
         setIsJoining(false);
 
         if (!join) {
           alert("Error joining group");
         } else {
           alert("Welcome to the community!");
+          onJoinSuccess();
         }
       } catch (error) {
         setIsJoining(false);
