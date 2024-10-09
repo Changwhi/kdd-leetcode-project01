@@ -30,7 +30,6 @@ import {
   Calendar,
   CheckSquare,
   Edit,
-  Undo2,
   CirclePlus,
 } from "lucide-react";
 import { EventCardProps } from "@/types/event";
@@ -344,7 +343,6 @@ export const EventCard: React.FC<EventCardProps> = ({
                               ...prevArray,
                               "",
                             ]);
-                            console.log(newAssignments);
                           }}
                         >
                           <CirclePlus />
