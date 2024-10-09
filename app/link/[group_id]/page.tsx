@@ -1,14 +1,16 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import JoinButton from "@/components/link/join-button";
 import { getGroup, getMyGroups } from "@/lib/actions/group";
 import { getLoggedInUser } from "@/lib/actions/user";
+import { useParams } from "next/navigation";
 
 function decodeGroupId(encodedGroupId: string) {
-  return parseInt(Buffer.from(encodedGroupId, "base64").toString("utf-8"), 10);
+  const base64 = encodedGroupId.replace(/-/g, "+").replace(/_/g, "/");
+  return parseInt(Buffer.from(base64, "base64").toString("utf-8"), 10);
 }
+
 export default function JoinPage() {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -18,10 +20,8 @@ export default function JoinPage() {
 }
 
 function JoinPageContent() {
-  const searchParams = useSearchParams();
-  const encodedGroupId = searchParams.get("group_id") as string;
-  const groupId = decodeGroupId(encodedGroupId);
-
+  const { group_id } = useParams();
+  const groupId = decodeGroupId(group_id as string);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isMember, setIsMember] = useState<boolean>(false);
   const [group, setGroup] = useState<any>(null);
