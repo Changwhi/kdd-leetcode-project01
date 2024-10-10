@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash2, LogOut } from "lucide-react";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { getMyGroups } from "@/lib/actions/group";
+import { UserGroupCard } from "./userGroupCard";
 
 interface UserGroupListProps {
   email: string;
@@ -22,6 +21,8 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
   const { toast } = useToast();
   const [adminGroups, setAdminGroups] = useState([]);
   const [memberGroups, SetMemberGroups] = useState([]);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [actionType, setActionType] = useState<"quit" | "delete" | null>(null);
 
   useEffect(() => {
     const fetchUserGroups = async () => {
@@ -33,14 +34,30 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
     fetchUserGroups();
   }, []);
 
+  const handleConfirmAction = () => {
+    if (actionType === "quit" && selectedGroupId !== null) {
+      handleQuitGroup(selectedGroupId);
+    } else if (actionType === "delete" && selectedGroupId !== null) {
+      handleDeleteGroup(selectedGroupId);
+    }
+    setSelectedGroupId(null);
+    setActionType(null);
+  };
+
   const handleQuitGroup = (groupId: number) => {
     // Implement account deletion logic
     console.log(`Quit group with id: ${groupId}`);
+    toast({
+      description: `You have quit the group with ID: ${groupId}`,
+    });
   };
 
   const handleDeleteGroup = (groupId: number) => {
     // Implement account deletion logic
     console.log(`Delete group with id: ${groupId}`);
+    toast({
+      description: `You have deleted the group with ID: ${groupId}`,
+    });
   };
 
   return (
@@ -57,28 +74,15 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
             {SETTINGS_CONSTANTS.GROUP_ADMIN}
           </h1>
           <div className="space-y-4">
-            {adminGroups.map((group) => (
-              <Card key={group.id} className="flex items-center p-4">
-                <CardContent className="flex-grow p-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-lg">{group.name}</CardTitle>
-                      <CardDescription className="text-sm mt-1">
-                        {group.description}
-                      </CardDescription>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="self-end sm:self-center"
-                      onClick={() => handleDeleteGroup(group.id)}
-                      aria-label={`Quit ${group.name} group`}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+            {adminGroups.map((group, index) => (
+              <UserGroupCard
+                key={index}
+                setSelectedGroupId={setSelectedGroupId}
+                setActionType={setActionType}
+                thisGroup={group}
+                cardType="delete"
+                handleConfirmAction={handleConfirmAction}
+              />
             ))}
           </div>
         </div>
@@ -87,28 +91,15 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
             {SETTINGS_CONSTANTS.GROUP_MEMBER}
           </h1>
           <div className="space-y-4">
-            {memberGroups.map((group) => (
-              <Card key={group.id} className="flex items-center p-4">
-                <CardContent className="flex-grow p-0">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div>
-                      <CardTitle className="text-lg">{group.name}</CardTitle>
-                      <CardDescription className="text-sm mt-1">
-                        {group.description}
-                      </CardDescription>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="self-end sm:self-center"
-                      onClick={() => handleQuitGroup(group.id)}
-                      aria-label={`Quit ${group.name} group`}
-                    >
-                      <LogOut className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+            {memberGroups.map((group, index) => (
+              <UserGroupCard
+                key={index}
+                setSelectedGroupId={setSelectedGroupId}
+                setActionType={setActionType}
+                thisGroup={group}
+                cardType="quit"
+                handleConfirmAction={handleConfirmAction}
+              />
             ))}
           </div>
         </div>
