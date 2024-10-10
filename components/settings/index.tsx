@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,32 +23,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Trash2, Upload } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { retrieveUser } from "@/lib/actions/user";
 
-export const Settings = ({ group_id }: { group_id: number }) => {
-  const [name, setName] = useState("Soo Park");
-  const [photo, setPhoto] = useState("/placeholder.svg?height=100&width=100");
+export const Settings = () => {
+  const { user } = useUser();
+  const [name, setName] = useState("");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-
-  const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhoto(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+  useEffect(() => {
+    const fetchUserInfo = async (email) => {
+      const userInfo = await retrieveUser(email);
+      if(userInfo.length > 0) {
+        setName(userInfo[0].name)
+      }
+    };
+    if (user) {
+      fetchUserInfo(user?.email);
     }
+  }, [user]);
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   };
 
   const handleSaveChanges = () => {
     // Implement the logic to save changes to the backend
-    console.log("Saving changes:", { name, photo });
+    console.log("Saving changes:", { name });
   };
 
   const handleDeleteAccount = () => {
@@ -58,7 +60,7 @@ export const Settings = ({ group_id }: { group_id: number }) => {
     setIsDeleteDialogOpen(false);
   };
   return (
-    <Card className="w-full max-w-2xl">
+    <Card className="w-full max-w-lg">
       <CardHeader>
         <CardTitle>{SETTINGS_CONSTANTS.CARD_TITLE}</CardTitle>
         <CardDescription />
@@ -67,28 +69,6 @@ export const Settings = ({ group_id }: { group_id: number }) => {
         <div className="space-y-2">
           <Label htmlFor="name">{SETTINGS_CONSTANTS.SETTINGS_NAME}</Label>
           <Input id="name" value={name} onChange={handleNameChange} />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="photo">{SETTINGS_CONSTANTS.SETTINGS_PHOTO}</Label>
-          <div className="flex items-center space-x-4">
-            <Avatar className="w-20 h-20">
-              <AvatarImage src={photo} alt="Profile" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <Label htmlFor="photo-upload" className="cursor-pointer">
-              <div className="flex items-center space-x-2 bg-secondary text-secondary-foreground px-4 py-2 rounded-md">
-                <Upload className="w-4 h-4" />
-                <span>{SETTINGS_CONSTANTS.SETTINGS_UPLOAD}</span>
-              </div>
-              <Input
-                id="photo-upload"
-                type="file"
-                className="hidden"
-                accept="image/*"
-                onChange={handlePhotoChange}
-              />
-            </Label>
-          </div>
         </div>
       </CardContent>
       <CardFooter className="flex flex-col space-y-4">

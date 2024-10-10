@@ -12,11 +12,7 @@ import { getLoggedInUser } from "@/lib/actions/user";
  * @param {params} - An object containing a groupId property, which is the id of the group to fetch events and attendance for.
  * @returns A JSX element representing the page.
  */
-export default async function SettingPage({
-  params,
-}: {
-  params: { groupId: string };
-}) {
+export default async function SettingPage() {
   const currentUser = await getLoggedInUser();
   if (!currentUser) {
     redirect("/api/auth/login"); // Redirect to login if user is not logged in
@@ -36,7 +32,7 @@ export default async function SettingPage({
               <p className="text-muted-foreground mb-8">
                 {SETTINGS_CONSTANTS.SETTINGS_SUB_TITLE}
               </p>
-              <Settings group_id={Number(params.groupId)} />
+              <Settings />
             </div>
           </div>
         </section>
