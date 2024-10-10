@@ -1,8 +1,9 @@
 "use client";
-import { CONSTANTS } from "@/text/landing";
+import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React, { useState } from "react";
+import { CONSTANTS } from "@/text/landing";
+import HeaderDropDown from "./ui/header-drop-down";
 
 export default function Header({ user }: any) {
   const path = usePathname();
@@ -19,10 +20,10 @@ export default function Header({ user }: any) {
         <BookOpenIcon className="h-6 w-6" />
         <span className="sr-only">{CONSTANTS.HEADER_TITLE}</span>
       </Link>
-      <nav className="ml-auto flex gap-4 sm:gap-6">
+      <nav className=" ml-auto flex gap-4 sm:gap-6">
         <Link
           href="/"
-          className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
+          className={`content-center hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
             path == "/" && "text-primary font-bold"
           }`}
           prefetch={false}
@@ -31,7 +32,7 @@ export default function Header({ user }: any) {
         </Link>
         <Link
           href="/group"
-          className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
+          className={`content-center hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
             path == "/group" && "text-primary font-bold"
           }`}
           prefetch={false}
@@ -40,31 +41,20 @@ export default function Header({ user }: any) {
         </Link>
         <Link
           href="/join"
-          className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
+          className={`content-center hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
             path == "/join" && "text-primary font-bold"
           }`}
           prefetch={false}
         >
           {CONSTANTS.JOIN}
         </Link>
-        <Link
-          href="/account"
-          className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
-            path == "/account" && "text-primary font-bold"
-          }`}
-          prefetch={false}
-        >
-          {CONSTANTS.SETTTINGS}
-        </Link>
         {!user && (
-          <button className="text-sm font-medium hover:underline underline-offset-4">
+          <button className="content-center text-sm font-medium hover:underline underline-offset-4">
             <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
           </button>
         )}
         {user && (
-            <button className="text-sm font-medium hover:underline underline-offset-4">
-              <a href="/api/auth/logout">{CONSTANTS.LOGOUT}</a>
-            </button>
+          <HeaderDropDown user={user}/>
         )}
       </nav>
     </header>
