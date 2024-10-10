@@ -40,6 +40,30 @@ export const retrieveUser = async (email: string): Promise<UserType[]> => {
 };
 
 /**
+ * Update user name in the database by email
+ *
+ * @param email - User's email as a string
+ * @param newName - User's new name as a string
+ * @returns a success message or an error message
+ */
+export const updateUserName = async (
+  email: string,
+  newName: string
+): Promise<string> => {
+  try {
+    await sql`
+    UPDATE "user"
+    SET name = ${newName}
+    WHERE email = ${email};
+  `;
+    return "User name updated successfully.";
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    return "Failed to update user name.";
+  }
+};
+
+/**
  * Create a new user in the "user" table in the database
  *
  * @param name - User's name as a string
