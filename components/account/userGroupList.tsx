@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
-import { getMyGroups } from "@/lib/actions/group";
+import { deleteGroup, getMyGroups } from "@/lib/actions/group";
 import { UserGroupCard } from "./userGroupCard";
 import { deleteUserGroupById } from "@/lib/actions/usergroup";
 
@@ -34,7 +34,7 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
     setAdminGroups(myGroups.filter((group) => group.user_type === 0));
     SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
   };
-  
+
   const handleConfirmAction = () => {
     if (actionType === "quit" && selectedGroupId !== null) {
       handleQuitGroup(selectedGroupId);
@@ -60,12 +60,19 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
     }
   };
 
-  const handleDeleteGroup = (groupId: number) => {
-    // Implement account deletion logic
-    console.log(`Delete group with id: ${groupId}`);
-    toast({
-      description: `You have deleted the group with ID: ${groupId}`,
-    });
+  const handleDeleteGroup = async (groupId: number) => {
+    try {
+      await deleteGroup(groupId);
+      toast({
+        description: "You have deleted the group",
+      });
+      fetchUserGroups();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to delete the group. Please try again.",
+      });
+    }
   };
 
   return (

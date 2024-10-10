@@ -2,6 +2,9 @@
 import { MyGroup, otherGroup } from "@/types/group";
 import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
+import { deleteUserGroupByGroupId } from "./usergroup";
+import { deleteInstructionByGroupId } from "./instruction";
+import { deleteAllEventsInGroup } from "./event";
 
 /**
  * Retrieve all existing groups
@@ -247,3 +250,27 @@ export const joinGroup = async ({
   }
 };
 
+/**
+ * Delete group in database
+ *
+ * @param group_id - A group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteGroup = async (
+  group_id: number
+): Promise<string> => {
+  try {
+    await deleteUserGroupByGroupId(group_id);
+    await deleteInstructionByGroupId(group_id);
+    await deleteAllEventsInGroup(group_id);
+
+    await sql`
+    DELETE FROM "group" WHERE group_id = ${group_id}
+    `;
+    revalidatePath("/account")
+    return "Group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete group.";
+  }
+};

@@ -153,6 +153,26 @@ export const deleteUserGroupById = async (
 };
 
 /**
+ * Delete all user_group rows along with the given group_id in the database 
+ *
+ * @param group_id - A group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteUserGroupByGroupId = async (
+  group_id: number
+): Promise<string> => {
+  try {
+    await sql`
+    DELETE FROM user_group WHERE group_id = ${group_id}
+    `;
+    return "User_group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete user_group.";
+  }
+};
+
+/**
  * Retrieve a user type from the database
  *
  * @param group_id - Group Id as a number
