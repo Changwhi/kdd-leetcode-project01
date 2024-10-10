@@ -5,7 +5,7 @@ import {
 } from "@auth0/nextjs-auth0/edge";
 
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: ["/dashboard/:path*","/settings/:path*"]
 };
 
 export default withMiddlewareAuthRequired(async function middleware(
