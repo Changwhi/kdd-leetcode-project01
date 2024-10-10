@@ -12,6 +12,7 @@ import {
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { getMyGroups } from "@/lib/actions/group";
 import { UserGroupCard } from "./userGroupCard";
+import { deleteUserGroupById } from "@/lib/actions/usergroup";
 
 interface UserGroupListProps {
   email: string;
@@ -25,15 +26,15 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
   const [actionType, setActionType] = useState<"quit" | "delete" | null>(null);
 
   useEffect(() => {
-    const fetchUserGroups = async () => {
-      const myGroups = await getMyGroups({ email });
-      setAdminGroups(myGroups.filter((group) => group.user_type === 0));
-      SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
-    };
-
     fetchUserGroups();
   }, []);
 
+  const fetchUserGroups = async () => {
+    const myGroups = await getMyGroups({ email });
+    setAdminGroups(myGroups.filter((group) => group.user_type === 0));
+    SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
+  };
+  
   const handleConfirmAction = () => {
     if (actionType === "quit" && selectedGroupId !== null) {
       handleQuitGroup(selectedGroupId);
@@ -44,12 +45,19 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
     setActionType(null);
   };
 
-  const handleQuitGroup = (groupId: number) => {
-    // Implement account deletion logic
-    console.log(`Quit group with id: ${groupId}`);
-    toast({
-      description: `You have quit the group with ID: ${groupId}`,
-    });
+  const handleQuitGroup = async (userGroupId: number) => {
+    try {
+      await deleteUserGroupById(userGroupId);
+      toast({
+        description: "You have quit the group",
+      });
+      fetchUserGroups();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to quit the group. Please try again.",
+      });
+    }
   };
 
   const handleDeleteGroup = (groupId: number) => {

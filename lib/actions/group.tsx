@@ -45,11 +45,11 @@ export const getMyGroups = async ({ email }: { email: string }) => {
       return [];
     }
     const response: MyGroup[] = await sql`
-        SELECT user_type, "group".group_id, user_group.user_id, "group".name, "group".description, "user".email
+        SELECT user_type, user_group_id, "group".group_id, user_group.user_id, "group".name, "group".description, "user".email
         FROM user_group
         join "group" on user_group.group_id = "group".group_id
-		join "user" on "user".user_id = user_group.user_id
-		where "user".email = ${email};
+		    join "user" on "user".user_id = user_group.user_id
+		    where "user".email = ${email};
         `;
     if (response) {
       return response;

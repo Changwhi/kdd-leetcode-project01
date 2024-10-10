@@ -123,7 +123,27 @@ export const deleteUserGroup = async (
 ): Promise<string> => {
   try {
     const response: ResponseType[] = await sql`
-    DELETE FROM "user" WHERE user_id = ${user_id} AND group_id = ${group_id}
+    DELETE FROM user_group WHERE user_id = ${user_id} AND group_id = ${group_id}
+    `;
+    return "User_group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete user_group.";
+  }
+};
+
+/**
+ * Delete user_group row in database
+ *
+ * @param user_group_id - A user group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteUserGroupById = async (
+  user_group_id: number
+): Promise<string> => {
+  try {
+    await sql`
+    DELETE FROM user_group WHERE user_group_id = ${user_group_id}
     `;
     return "User_group deleted successfully.";
   } catch (error) {

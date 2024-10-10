@@ -36,6 +36,7 @@ export const UserGroupCard: React.FC<UserGroupCardProps> = ({
     description: string;
     label: string;
     buttonName: string;
+    id: number;
   } =
     cardType == "delete"
       ? {
@@ -45,6 +46,7 @@ export const UserGroupCard: React.FC<UserGroupCardProps> = ({
           description: `Are you sure you want to delete the group ${thisGroup.name}? This action cannot be undone.`,
           label: `Delete ${thisGroup.name} group`,
           buttonName: "Delete",
+          id: thisGroup.group_id
         }
       : {
           icon: <LogOut className="h-4 w-4" />,
@@ -53,6 +55,7 @@ export const UserGroupCard: React.FC<UserGroupCardProps> = ({
           description: `Are you sure you want to quit the group ${thisGroup.name}?`,
           label: `Quit ${thisGroup.name} group`,
           buttonName: "Quit",
+          id: thisGroup.user_group_id
         };
 
   return (
@@ -72,7 +75,7 @@ export const UserGroupCard: React.FC<UserGroupCardProps> = ({
                 size="icon"
                 className="self-end sm:self-center"
                 onClick={() => {
-                  setSelectedGroupId(thisGroup.group_id);
+                  setSelectedGroupId(actionConstants.id);
                   setActionType(actionConstants.promptAction); // Set action to quit
                 }}
                 aria-label={actionConstants.label}
