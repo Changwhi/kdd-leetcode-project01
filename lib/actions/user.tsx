@@ -111,10 +111,15 @@ export const deleteUser = async (email: string): Promise<string> => {
     await deleteUserGroupByEmail(email);
     await deleteAllSubmissionsByEmail(email);
     await deleteAllAssignmentsByEmail(email);
-    
+
     await sql`
     DELETE FROM "user" WHERE email =  ${email}
     `;
+
+    // Get Auth0 token and delete user from Auth0
+    const token = await getAuth0Token();
+    await deleteAuth0User(email, token);
+
     return "User deleted successfully.";
   } catch (error) {
     console.log(error);
@@ -215,5 +220,68 @@ WHERE user_id = ${user_id} and group_id = ${group_id};
   } catch (error) {
     console.log(error);
     return false;
+  }
+};
+
+
+/**
+ * Get auth0 token
+ */
+const getAuth0Token = async (): Promise<string> => {
+  try {
+    const response = await fetch(`${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        client_id: process.env.AUTH0_CLIENT_ID,
+        client_secret: process.env.AUTH0_CLIENT_SECRET,
+        audience: `${process.env.AUTH0_ISSUER_BASE_URL}/api/v2/`,
+        grant_type: "client_credentials",
+      }),
+    });
+    const data = await response.json();
+    return data.access_token;
+  } catch (error) {
+    console.error("Failed to get Auth0 token", error);
+    throw new Error("Failed to get Auth0 token");
+  }
+};
+
+/**
+ * Delete the user from Auth0
+ */
+const deleteAuth0User = async (email: string, token: string) => {
+  try {
+    const auth0Domain = process.env.AUTH0_ISSUER_BASE_URL;
+
+    // Fetch user's id
+    const response = await fetch(
+      `${auth0Domain}/api/v2/users-by-email?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    
+    const userData = await response.json();
+    const userId = userData[0]?.user_id;
+
+    // Delete user account
+    if (userId) {
+      await fetch(`${auth0Domain}/api/v2/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+  
+  } catch (error) {
+    console.error("Failed to delete Auth0 user", error);
+    throw new Error("Failed to delete Auth0 user");
   }
 };

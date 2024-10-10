@@ -27,7 +27,7 @@ import {
 import { Trash2 } from "lucide-react";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { deleteUser, updateUserName } from "@/lib/actions/user";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface ProfileProps {
   email: string;
@@ -37,6 +37,7 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
   const { toast } = useToast();
+  const router = useRouter(); 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +58,7 @@ export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
       await deleteUser(email);
       setIsDeleteDialogOpen(false);
       toast({ title: "Success", description: "Delete account successfully!" });
-      redirect("/");
+      router.push("/api/auth/logout");
     } catch (error) {
       toast({ title: "Error", description: "Failed to delete account. Please try again." });
     }
