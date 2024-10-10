@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import AccountNavBar from "@/components/account/account-nav";
 import { retrieveUser } from "@/lib/actions/user";
+import { UserGroupList } from "@/components/account/userGroupList";
 
 /**
  * This component renders a page for updating user's information
@@ -20,7 +21,7 @@ export default function AccountPage() {
   const [activeTab, setActiveTab] = useState<string>("profile");
   const tabs = [
     { name: "Profile", key: "profile" },
-    { name: "Groups", key: "Groups" },
+    { name: "Groups", key: "groups" },
   ];
 
   useEffect(() => {
@@ -56,6 +57,7 @@ export default function AccountPage() {
                   tabs={tabs}
                 />
                 {activeTab == "profile" && <Account email={user?.email} name={name} setName={setName}/>}
+                {activeTab == "groups" && <UserGroupList email={user?.email} />}
               </div>
             </div>
           </div>
