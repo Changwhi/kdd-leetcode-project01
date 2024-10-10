@@ -4,9 +4,10 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { Settings } from "@/components/settings";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import SettingNavBar from "@/components/settings/settings-nav";
+import { retrieveUser } from "@/lib/actions/user";
 
 /**
  * This component renders a page for updating user's information
@@ -15,11 +16,25 @@ import SettingNavBar from "@/components/settings/settings-nav";
  */
 export default function SettingPage() {
   const { user } = useUser();
-  const [activeTab, setActiveTab] = useState("profile");
+  const [name, setName] = useState<string>("");
+  const [activeTab, setActiveTab] = useState<string>("profile");
   const tabs = [
     { name: "Profile", key: "profile" },
     { name: "Groups", key: "Groups" },
   ];
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const fetchedUser = await retrieveUser(user?.email);
+      if (fetchedUser.length > 0) {
+        setName(fetchedUser[0].name);
+      }
+    };
+    
+    if (user) {
+      fetchUserInfo();
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
@@ -35,8 +50,12 @@ export default function SettingPage() {
                 {SETTINGS_CONSTANTS.SETTINGS_SUB_TITLE}
               </p>
               <div className="flex flex-row space-x-24">
-                <SettingNavBar activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs}/>
-                {activeTab == "profile" && <Settings />}
+                <SettingNavBar
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  tabs={tabs}
+                />
+                {activeTab == "profile" && <Settings email={user?.email} name={name} setName={setName}/>}
               </div>
             </div>
           </div>
