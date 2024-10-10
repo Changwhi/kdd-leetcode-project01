@@ -19,8 +19,8 @@ export const Assignment = ({ eventId }: { eventId: number }) => {
 
   return (
     <>
-      {eventId != -1 ? (
-        <div className="lg:h-[70vh] md:h-[45vh] overflow-y-auto">
+      {assignments.length > 0 ? (
+        <div className="lg:h-[80vh] md:h-[45vh] overflow-y-auto">
           {assignments.map((assignment) => (
             <AssignmentCard
               key={assignment.submission_id}
@@ -33,7 +33,7 @@ export const Assignment = ({ eventId }: { eventId: number }) => {
         </div>
       ) : (
         <div className="flex text-xl items-center justify-center h-[70vh]">
-          No event has been created yet.
+          No assignments have been submitted for this event.
         </div>
       )}
     </>
