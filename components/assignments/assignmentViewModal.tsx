@@ -49,7 +49,7 @@ export const AssignmentViewModal: React.FC<SubmitAssignmentModalProps> = ({
             options
           )})`}</div>
         </DialogHeader>
-        <div className="mt-4 p-3 border space-y-5 sm:max-w-[90vh] min-h-[60vh] overflow-y-auto">
+        <div className="mt-4 p-3 border space-y-5 min-h-[60vh] max-h-[70vh] overflow-y-auto">
           <pre className="whitespace-pre-wrap text-sm">
             {content}
           </pre>

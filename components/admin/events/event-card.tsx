@@ -313,7 +313,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                   </div>
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Assignments</h3>
-                    <ScrollArea className="h-[200px] w-full rounded-md border p-4">
+                    <div className="max-h-96 overflow-auto w-full rounded-md border p-3">
                       {eventAssignments.map((assignment, index) => (
                         <AssignmentInput
                           key={index}
@@ -350,7 +350,7 @@ export const EventCard: React.FC<EventCardProps> = ({
                           <CirclePlus />
                         </Button>
                       </div>
-                    </ScrollArea>
+                    </div>
                   </div>
                 </div>
                 <DialogFooter>
