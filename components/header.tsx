@@ -1,17 +1,16 @@
 "use client";
 import { CONSTANTS } from "@/text/landing";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import React, { useState } from "react";
 
 export default function Header({ user }: any) {
   const path = usePathname();
-  const route = useRouter();
 
   return (
     <header className="text-sm px-4 lg:px-6 h-14 flex items-center">
       <Link
-        href="#"
+        href="/"
         className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
           path == "/" && "text-primary font-bold"
         }`}
@@ -49,9 +48,9 @@ export default function Header({ user }: any) {
           {CONSTANTS.JOIN}
         </Link>
         <Link
-          href="/settings"
+          href="/account"
           className={`hover:font-semibold cursor-pointer hover:text-primary hover:-translate-y-1 hover:scale-125 hover:duration-300 transition-all ease-in-out ${
-            path == "/settings" && "text-primary font-bold"
+            path == "/account" && "text-primary font-bold"
           }`}
           prefetch={false}
         >

@@ -34,7 +34,7 @@ interface SettingsProps {
   setName: (name: string) => void;
 }
 
-export const Settings: React.FC<SettingsProps> = ({email, name, setName}) => {
+export const Account: React.FC<SettingsProps> = ({email, name, setName}) => {
   const { toast } = useToast();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 

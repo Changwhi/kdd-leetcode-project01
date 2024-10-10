@@ -2,11 +2,11 @@
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Settings } from "@/components/settings";
+import { Account } from "@/components/account";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import SettingNavBar from "@/components/settings/settings-nav";
+import AccountNavBar from "@/components/account/account-nav";
 import { retrieveUser } from "@/lib/actions/user";
 
 /**
@@ -14,7 +14,7 @@ import { retrieveUser } from "@/lib/actions/user";
  * @param {params} - An object containing a groupId property, which is the id of the group to fetch events and attendance for.
  * @returns A JSX element representing the page.
  */
-export default function SettingPage() {
+export default function AccountPage() {
   const { user } = useUser();
   const [name, setName] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("profile");
@@ -50,12 +50,12 @@ export default function SettingPage() {
                 {SETTINGS_CONSTANTS.SETTINGS_SUB_TITLE}
               </p>
               <div className="flex flex-row space-x-24">
-                <SettingNavBar
+                <AccountNavBar
                   activeTab={activeTab}
                   setActiveTab={setActiveTab}
                   tabs={tabs}
                 />
-                {activeTab == "profile" && <Settings email={user?.email} name={name} setName={setName}/>}
+                {activeTab == "profile" && <Account email={user?.email} name={name} setName={setName}/>}
               </div>
             </div>
           </div>

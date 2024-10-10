@@ -1,5 +1,5 @@
 "use client";
-export default function SettingNavBar({ activeTab, setActiveTab, tabs }) {
+export default function AccountNavBar({ activeTab, setActiveTab, tabs }) {
   return (
     <div className="w-28 p-4 border-r">
       <ul className="space-y-4">
