@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
-import { updateUserName } from "@/lib/actions/user";
+import { deleteUser, updateUserName } from "@/lib/actions/user";
+import { redirect } from "next/navigation";
 
 interface ProfileProps {
   email: string;
@@ -51,10 +52,15 @@ export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
     }
   };
 
-  const handleDeleteAccount = () => {
-    // Implement account deletion logic
-    console.log("Deleting account...");
-    setIsDeleteDialogOpen(false);
+  const handleDeleteAccount = async () => {
+    try {
+      await deleteUser(email);
+      setIsDeleteDialogOpen(false);
+      toast({ title: "Success", description: "Delete account successfully!" });
+      redirect("/");
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete account. Please try again." });
+    }
   };
 
   return (

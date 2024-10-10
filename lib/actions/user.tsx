@@ -3,6 +3,10 @@ import { sql } from "@/utils/db";
 import { UserType } from "@/types/user";
 import { ResponseType } from "@/types/response";
 import { getSession } from "@auth0/nextjs-auth0";
+import { deleteAllAttendanceByEmail, deleteAllPRByEmail } from "./attendance";
+import { deleteUserGroupByEmail } from "./usergroup";
+import { deleteAllSubmissionsByEmail } from "./submission";
+import { deleteAllAssignmentsByEmail } from "./assignment";
 
 /**
  * Retrieve all users data in database
@@ -97,12 +101,18 @@ export const createUser = async (
 /**
  * Delete the user in user table in database
  *
- * @param email - User's email as a string
+ * @param {string} email - User's email as a string
  * @returns a success message or an error message
  */
 export const deleteUser = async (email: string): Promise<string> => {
   try {
-    const response: ResponseType[] = await sql`
+    await deleteAllAttendanceByEmail(email);
+    await deleteAllPRByEmail(email);
+    await deleteUserGroupByEmail(email);
+    await deleteAllSubmissionsByEmail(email);
+    await deleteAllAssignmentsByEmail(email);
+    
+    await sql`
     DELETE FROM "user" WHERE email =  ${email}
     `;
     return "User deleted successfully.";
