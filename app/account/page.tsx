@@ -2,7 +2,7 @@
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Account } from "@/components/account";
+import { Profile } from "@/components/account/profile";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0/client";
@@ -11,8 +11,7 @@ import { retrieveUser } from "@/lib/actions/user";
 import { UserGroupList } from "@/components/account/userGroupList";
 
 /**
- * This component renders a page for updating user's information
- * @param {params} - An object containing a groupId property, which is the id of the group to fetch events and attendance for.
+ * This component renders a page for updating user information
  * @returns A JSX element representing the page.
  */
 export default function AccountPage() {
@@ -56,7 +55,7 @@ export default function AccountPage() {
                   setActiveTab={setActiveTab}
                   tabs={tabs}
                 />
-                {activeTab == "profile" && <Account email={user?.email} name={name} setName={setName}/>}
+                {activeTab == "profile" && <Profile email={user?.email} name={name} setName={setName}/>}
                 {activeTab == "groups" && <UserGroupList email={user?.email} />}
               </div>
             </div>

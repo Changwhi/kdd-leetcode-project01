@@ -28,13 +28,13 @@ import { Trash2 } from "lucide-react";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { updateUserName } from "@/lib/actions/user";
 
-interface SettingsProps {
+interface ProfileProps {
   email: string;
   name: string;
   setName: (name: string) => void;
 }
 
-export const Account: React.FC<SettingsProps> = ({email, name, setName}) => {
+export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
   const { toast } = useToast();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
 
