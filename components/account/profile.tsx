@@ -33,9 +33,10 @@ interface ProfileProps {
   email: string;
   name: string;
   setName: (name: string) => void;
+  setUserName: (userName: string) => void;
 }
 
-export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
+export const Profile: React.FC<ProfileProps> = ({email, name, setName, setUserName}) => {
   const { toast } = useToast();
   const router = useRouter(); 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
@@ -47,6 +48,7 @@ export const Profile: React.FC<ProfileProps> = ({email, name, setName}) => {
   const handleSaveChanges = async () => {
     try {
       await updateUserName(email, name);
+      setUserName(name);
       toast({ title: "Success", description: "User name updated successfully!" });
     } catch (error) {
       toast({ title: "Error", description: "Failed to update user name. Please try again." });

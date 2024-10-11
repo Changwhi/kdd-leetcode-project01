@@ -21,6 +21,7 @@ interface ExtendedUserProfile extends UserProfile {
 export default function AccountPage() {
   const { user } = useUser() as { user: ExtendedUserProfile | undefined };
   const [name, setName] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("profile");
   const tabs = [
     { name: "Profile", key: "profile" },
@@ -32,7 +33,7 @@ export default function AccountPage() {
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <Header user={user} name={name} />
+      <Header user={user} name={userName} />
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-20 border-y">
           <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
@@ -50,7 +51,7 @@ export default function AccountPage() {
                   tabs={tabs}
                 />
                 {activeTab == "profile" && (
-                  <Profile email={user?.email ?? ""} name={name} setName={setName} />
+                  <Profile email={user?.email ?? ""} name={name} setName={setName} setUserName={setUserName}/>
                 )}
                 {activeTab == "groups" && <UserGroupList email={user?.email ?? ""} />}
               </div>
