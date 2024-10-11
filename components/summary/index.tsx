@@ -27,7 +27,7 @@ export const Summary = async ({
   return (
     <EventProvider>
       <div className="flex flex-col-reverse lg:flex-row lg:justify-between min-h-full">
-        <main className="flex-grow p-4 md:p-6 bg-white md:max-w-[calc(100%-320px)] xl:max-w-[calc(100%-384px)] 2xl:max-w-[calc(100%-448px)]">
+        <main className="flex-grow pr-4 md:pr-6 bg-white min-w-[40vw]">
           <UpcommingEvents events={upcomingEvents} />
           <div className="overflow-x-auto mt-5">
             <SummaryTable usersInGroup={users} />

@@ -27,6 +27,7 @@ export interface UserGroupProps {
 export interface MyGroup {
   group_id: number;
   user_id: number;
+  user_group_id: number;
   name: string;
   description: string;
   max_participants: number;

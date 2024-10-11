@@ -163,3 +163,23 @@ export const deleteAllSubmissionsInEvent = async (eventId: number) => {
     return "Failed to delete submission.";
   }
 };
+
+/**
+ * Delete all submissions for the user.
+ *
+ * @param {string} user_email - The email of the user as a string
+ * @returns a success message or an error message
+ */
+export const deleteAllSubmissionsByEmail = async (
+  user_email: string,
+): Promise<string> => {
+  try {
+    await sql`
+      DELETE FROM "submission" WHERE user_id=(SELECT user_id FROM "user" WHERE email=${user_email})
+    `;
+    return "Submissions deleted successfully.";
+  } catch (error) {
+    console.error("Error deleting submissions:", error);
+    return "Failed to delete submissions.";
+  }
+};

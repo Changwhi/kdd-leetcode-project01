@@ -2,7 +2,12 @@
 import { sql } from "@/utils/db";
 import { UserType } from "@/types/user";
 import { ResponseType } from "@/types/response";
-import { getSession } from "@auth0/nextjs-auth0";
+import { getSession, updateSession } from "@auth0/nextjs-auth0";
+import { deleteAllAttendanceByEmail, deleteAllPRByEmail } from "./attendance";
+import { deleteUserGroupByEmail } from "./usergroup";
+import { deleteAllSubmissionsByEmail } from "./submission";
+import { deleteAllAssignmentsByEmail } from "./assignment";
+import { revalidatePath } from "next/cache";
 
 /**
  * Retrieve all users data in database
@@ -40,6 +45,33 @@ export const retrieveUser = async (email: string): Promise<UserType[]> => {
 };
 
 /**
+ * Update user name in the database by email
+ *
+ * @param email - User's email as a string
+ * @param newName - User's new name as a string
+ * @returns a success message or an error message
+ */
+export const updateUserName = async (
+  email: string,
+  newName: string
+): Promise<string> => {
+  try {
+    await sql`
+    UPDATE "user"
+    SET name = ${newName}
+    WHERE email = ${email};
+  `;
+
+    const token = await getAuth0Token();
+    await updateAuth0User(email, token, newName);
+    return "User name updated successfully.";
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    return "Failed to update user name.";
+  }
+};
+
+/**
  * Create a new user in the "user" table in the database
  *
  * @param name - User's name as a string
@@ -73,14 +105,25 @@ export const createUser = async (
 /**
  * Delete the user in user table in database
  *
- * @param email - User's email as a string
+ * @param {string} email - User's email as a string
  * @returns a success message or an error message
  */
 export const deleteUser = async (email: string): Promise<string> => {
   try {
-    const response: ResponseType[] = await sql`
+    await deleteAllAttendanceByEmail(email);
+    await deleteAllPRByEmail(email);
+    await deleteUserGroupByEmail(email);
+    await deleteAllSubmissionsByEmail(email);
+    await deleteAllAssignmentsByEmail(email);
+
+    await sql`
     DELETE FROM "user" WHERE email =  ${email}
     `;
+
+    // Get Auth0 token and delete user from Auth0
+    const token = await getAuth0Token();
+    await deleteAuth0User(email, token);
+
     return "User deleted successfully.";
   } catch (error) {
     console.log(error);
@@ -181,5 +224,116 @@ WHERE user_id = ${user_id} and group_id = ${group_id};
   } catch (error) {
     console.log(error);
     return false;
+  }
+};
+
+/**
+ * Get auth0 token
+ */
+const getAuth0Token = async (): Promise<string> => {
+  try {
+    const response = await fetch(
+      `${process.env.AUTH0_ISSUER_BASE_URL}/oauth/token`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          client_id: process.env.AUTH0_CLIENT_ID,
+          client_secret: process.env.AUTH0_CLIENT_SECRET,
+          audience: `${process.env.AUTH0_ISSUER_BASE_URL}/api/v2/`,
+          grant_type: "client_credentials",
+        }),
+      }
+    );
+    const data = await response.json();
+    return data.access_token;
+  } catch (error) {
+    console.error("Failed to get Auth0 token", error);
+    throw new Error("Failed to get Auth0 token");
+  }
+};
+
+/**
+ * Delete the user from Auth0
+ */
+const deleteAuth0User = async (email: string, token: string) => {
+  try {
+    const auth0Domain = process.env.AUTH0_ISSUER_BASE_URL;
+
+    // Fetch user's id
+    const response = await fetch(
+      `${auth0Domain}/api/v2/users-by-email?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const userData = await response.json();
+    const userId = userData[0]?.user_id;
+
+    // Delete user account
+    if (userId) {
+      await fetch(`${auth0Domain}/api/v2/users/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Failed to delete Auth0 user", error);
+    throw new Error("Failed to delete Auth0 user");
+  }
+};
+
+const updateAuth0User = async (
+  email: string,
+  token: string,
+  newName: string
+) => {
+  try {
+    const auth0Domain = process.env.AUTH0_ISSUER_BASE_URL;
+
+    // Fetch user's id
+    const response = await fetch(
+      `${auth0Domain}/api/v2/users-by-email?email=${email}`,
+      {
+        method: "GET",
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const userData = await response.json();
+    const userId = userData[0]?.user_id;
+
+    // Update user name
+    if (userId) {
+      await fetch(`${auth0Domain}/api/v2/users/${userId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ given_name: newName }),
+      });
+    }
+
+    const session = await getSession(); 
+    await updateSession({
+      ...session,
+      user: { ...session.user, given_name: newName },
+    });
+    revalidatePath("/account")
+  } catch (error) {
+    console.error("Failed to delete Auth0 user", error);
+    throw new Error("Failed to delete Auth0 user");
   }
 };

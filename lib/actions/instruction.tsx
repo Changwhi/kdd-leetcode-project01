@@ -1,7 +1,6 @@
 "use server";
 import { InstructionCardProps, InstructionType } from "@/types/instruction";
 import { sql } from "@/utils/db";
-import { revalidatePath } from "next/cache";
 
 export const createInstruction = async (formData: InstructionCardProps) => {
   try {
@@ -49,5 +48,25 @@ export const retrieveInstructionByGroupId = async (group_id: number) => {
   } catch (error) {
     console.log(error);
     return [];
+  }
+};
+
+/**
+ * Delete instruction along with the given group_id in the database
+ *
+ * @param group_id - A group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteInstructionByGroupId = async (
+  group_id: number
+): Promise<string> => {
+  try {
+    await sql`
+    DELETE FROM instruction WHERE group_id = ${group_id}
+    `;
+    return "Instruction deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete instruction.";
   }
 };

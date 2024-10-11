@@ -159,3 +159,18 @@ export const deleteEvent = async (event_id: number) => {
     console.log(error);
   }
 };
+
+export const deleteAllEventsInGroup = async (group_id: number) => {
+  try {
+    const eventIds = await sql`
+      SELECT event_id FROM event WHERE group_id = ${group_id}
+    `;
+
+    for (const event of eventIds) {
+      await deleteEvent(event.event_id);
+    }
+
+  } catch (error) {
+    console.error("Error deleting events:", error);
+  }
+};

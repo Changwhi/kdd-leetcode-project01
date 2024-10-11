@@ -113,6 +113,26 @@ export const deleteAttendance = async (
 };
 
 /**
+ * Delete all attendance for the user.
+ *
+ * @param {string} user_email - The email of the user as a string
+ * @returns a success message or an error message
+ */
+export const deleteAllAttendanceByEmail = async (
+  user_email: string,
+): Promise<string> => {
+  try {
+    await sql`
+      DELETE FROM attendance WHERE user_id=(SELECT user_id FROM "user" WHERE email=${user_email})
+    `;
+    return "Attendance deleted successfully.";
+  } catch (error) {
+    console.error("Error deleting attendance:", error);
+    return "Failed to delete attendance.";
+  }
+};
+
+/**
  * Deletes attendance for a specific user and event.
  *
  * @param {string} user_email - The ID of the user
@@ -283,7 +303,25 @@ export const deleteAllPRsInEvent = async (eventId: number) => {
   }
 };
 
-
+/**
+ * Delete all PRs for the user.
+ *
+ * @param {string} user_email - The email of the user as a string
+ * @returns a success message or an error message
+ */
+export const deleteAllPRByEmail = async (
+  user_email: string,
+): Promise<string> => {
+  try {
+    await sql`
+      DELETE FROM pr WHERE user_id=(SELECT user_id FROM "user" WHERE email=${user_email})
+    `;
+    return "PRs deleted successfully.";
+  } catch (error) {
+    console.error("Error deleting prs:", error);
+    return "Failed to delete PRs.";
+  }
+};
 
 /**
  * Force attendance status for a user in a specific event.

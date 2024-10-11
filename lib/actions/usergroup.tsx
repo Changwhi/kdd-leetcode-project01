@@ -123,7 +123,67 @@ export const deleteUserGroup = async (
 ): Promise<string> => {
   try {
     const response: ResponseType[] = await sql`
-    DELETE FROM "user" WHERE user_id = ${user_id} AND group_id = ${group_id}
+    DELETE FROM user_group WHERE user_id = ${user_id} AND group_id = ${group_id}
+    `;
+    return "User_group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete user_group.";
+  }
+};
+
+/**
+ * Delete user_group row in database
+ *
+ * @param user_group_id - A user group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteUserGroupById = async (
+  user_group_id: number
+): Promise<string> => {
+  try {
+    await sql`
+    DELETE FROM user_group WHERE user_group_id = ${user_group_id}
+    `;
+    return "User_group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete user_group.";
+  }
+};
+
+/**
+ * Delete all User_group for the user.
+ *
+ * @param {string} user_email - The email of the user as a string
+ * @returns a success message or an error message
+ */
+export const deleteUserGroupByEmail = async (
+  user_email: string,
+): Promise<string> => {
+  try {
+    await sql`
+      DELETE FROM user_group WHERE user_id=(SELECT user_id FROM "user" WHERE email=${user_email})
+    `;
+    return "User_group deleted successfully.";
+  } catch (error) {
+    console.error("Error deleting User_group:", error);
+    return "Failed to delete User_group.";
+  }
+};
+
+/**
+ * Delete all user_group rows along with the given group_id in the database 
+ *
+ * @param group_id - A group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteUserGroupByGroupId = async (
+  group_id: number
+): Promise<string> => {
+  try {
+    await sql`
+    DELETE FROM user_group WHERE group_id = ${group_id}
     `;
     return "User_group deleted successfully.";
   } catch (error) {
