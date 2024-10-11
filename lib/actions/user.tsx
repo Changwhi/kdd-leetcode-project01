@@ -326,12 +326,16 @@ const updateAuth0User = async (
       });
     }
 
-    const session = await getSession(); 
-    await updateSession({
-      ...session,
-      user: { ...session.user, given_name: newName },
-    });
-    revalidatePath("/account")
+    const session = await getSession();
+    if (session) {
+      await updateSession({
+        ...session,
+        user: { ...session.user, given_name: newName },
+      });
+    } else {
+      console.log("No session found");
+    }
+    revalidatePath("/account");
   } catch (error) {
     console.error("Failed to delete Auth0 user", error);
     throw new Error("Failed to delete Auth0 user");
