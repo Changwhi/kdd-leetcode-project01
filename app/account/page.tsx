@@ -2,7 +2,7 @@
 
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { Profile } from "@/components/account/profile";
+import  Profile  from "@/components/account/profile";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { useEffect, useState } from "react";
 import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
