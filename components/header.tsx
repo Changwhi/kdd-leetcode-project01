@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { CONSTANTS } from "@/text/landing";
 import HeaderDropDown from "./ui/header-drop-down";
 
-export default function Header({ user }: any) {
+export default function Header({ user, name }: { user: any; name?: string }) {
   const path = usePathname();
 
   return (
@@ -53,9 +53,7 @@ export default function Header({ user }: any) {
             <a href="/api/auth/login">{CONSTANTS.LOGIN}</a>
           </button>
         )}
-        {user && (
-          <HeaderDropDown user={user}/>
-        )}
+        {user && <HeaderDropDown user={user} name={name} />}
       </nav>
     </header>
   );

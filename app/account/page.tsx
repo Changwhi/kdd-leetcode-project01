@@ -32,7 +32,7 @@ export default function AccountPage() {
 
   return (
     <div className="flex flex-col min-h-[100dvh]">
-      <Header user={user} />
+      <Header user={user} name={name} />
       <main className="flex-1">
         <section className="w-full py-12 md:py-24 lg:py-20 border-y">
           <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
@@ -50,9 +50,9 @@ export default function AccountPage() {
                   tabs={tabs}
                 />
                 {activeTab == "profile" && (
-                  <Profile email={user?.email} name={name} setName={setName} />
+                  <Profile email={user?.email ?? ""} name={name} setName={setName} />
                 )}
-                {activeTab == "groups" && <UserGroupList email={user?.email} />}
+                {activeTab == "groups" && <UserGroupList email={user?.email ?? ""} />}
               </div>
             </div>
           </div>

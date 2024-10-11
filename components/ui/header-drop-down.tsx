@@ -12,7 +12,7 @@ import {
 import { LogOut, Settings } from "lucide-react";
 import Link from "next/link";
 
-export default function HeaderDropDown({ user }: any) {
+export default function HeaderDropDown({ user, name }: any) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +32,9 @@ export default function HeaderDropDown({ user }: any) {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">{user.given_name ? user.given_name : user.nickname}</p>
+            <p className="text-sm font-medium leading-none">
+              {name ? name : user.given_name ? user.given_name : user.nickname}{" "}
+            </p>
             <p className="text-xs leading-none text-muted-foreground">
               {user.email}
             </p>
