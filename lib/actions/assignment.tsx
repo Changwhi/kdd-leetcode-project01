@@ -89,3 +89,23 @@ export const deleteAllAssignmentsInEvent = async (eventId: number) => {
     return "Failed to delete assignments.";
   }
 };
+
+/**
+ * Delete all assignments for the user.
+ *
+ * @param {string} user_email - The email of the user as a string
+ * @returns a success message or an error message
+ */
+export const deleteAllAssignmentsByEmail = async (
+  user_email: string,
+): Promise<string> => {
+  try {
+    await sql`
+      DELETE FROM "assignment" WHERE user_id=(SELECT user_id FROM "user" WHERE email=${user_email})
+    `;
+    return "Assignments deleted successfully.";
+  } catch (error) {
+    console.error("Error deleting assignments:", error);
+    return "Failed to delete assignments.";
+  }
+};

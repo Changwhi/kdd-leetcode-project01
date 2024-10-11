@@ -2,6 +2,9 @@
 import { MyGroup, otherGroup } from "@/types/group";
 import { sql } from "@/utils/db";
 import { revalidatePath } from "next/cache";
+import { deleteUserGroupByGroupId } from "./usergroup";
+import { deleteInstructionByGroupId } from "./instruction";
+import { deleteAllEventsInGroup } from "./event";
 
 /**
  * Retrieve all existing groups
@@ -45,11 +48,11 @@ export const getMyGroups = async ({ email }: { email: string }) => {
       return [];
     }
     const response: MyGroup[] = await sql`
-        SELECT user_type, "group".group_id, user_group.user_id, "group".name, "group".description, "user".email
+        SELECT user_type, user_group_id, "group".group_id, user_group.user_id, "group".name, "group".description, "user".email
         FROM user_group
         join "group" on user_group.group_id = "group".group_id
-		join "user" on "user".user_id = user_group.user_id
-		where "user".email = ${email};
+		    join "user" on "user".user_id = user_group.user_id
+		    where "user".email = ${email};
         `;
     if (response) {
       return response;
@@ -247,3 +250,27 @@ export const joinGroup = async ({
   }
 };
 
+/**
+ * Delete group in database
+ *
+ * @param group_id - A group ID as a number
+ * @returns a success message or an error message
+ */
+export const deleteGroup = async (
+  group_id: number
+): Promise<string> => {
+  try {
+    await deleteUserGroupByGroupId(group_id);
+    await deleteInstructionByGroupId(group_id);
+    await deleteAllEventsInGroup(group_id);
+
+    await sql`
+    DELETE FROM "group" WHERE group_id = ${group_id}
+    `;
+    revalidatePath("/account")
+    return "Group deleted successfully.";
+  } catch (error) {
+    console.log(error);
+    return "Failed to delete group.";
+  }
+};

@@ -6,6 +6,7 @@ export const CONSTANTS = {
   FOR_HOSTS: "For Hosts",
   FOR_PARTICIPANTS: "For Participants",
   JOIN: "Join",
+  SETTTINGS: "Settings",
   ABOUT_US: "About Us (coming soon)",
   MAIN_TITLE: "Streamline Your Study Meetups",
   MAIN_DESCRIPTION:

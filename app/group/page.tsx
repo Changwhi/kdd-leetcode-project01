@@ -32,7 +32,7 @@ export default async function Group() {
       <div className="flex flex-col min-h-[100dvh]">
         <Header user={currentUser} />
         <main className="flex-1">
-          <section className="w-full py-12 md:py-24 lg:py-32 border-y">
+          <section className="w-full py-12 lg:py-20 border-y">
             <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
               <div className="container mx-auto px-4 sm:px-36 ">
                 <div className="flex items-center justify-between mb-4">

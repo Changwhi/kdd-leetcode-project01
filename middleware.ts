@@ -5,7 +5,7 @@ import {
 } from "@auth0/nextjs-auth0/edge";
 
 export const config = {
-  matcher: "/dashboard/:path*",
+  matcher: ["/dashboard/:path*", "/account"]
 };
 
 export default withMiddlewareAuthRequired(async function middleware(
@@ -14,6 +14,11 @@ export default withMiddlewareAuthRequired(async function middleware(
 ) {
   const url = req.nextUrl;
   const res = NextResponse.next();
+
+  // Allow access to the /account route
+  if (url.pathname === '/account') {
+    return NextResponse.next();
+  }
 
   // Get user info
   const session = await getSession(req, res);

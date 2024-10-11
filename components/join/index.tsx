@@ -31,7 +31,7 @@ export const JoinComponent: React.FC<JoinComponentProps> = ({ user, otherGroups 
   }, [otherGroups, searchTerm])
 
   return (
-    <section className="w-full py-12 md:py-24 lg:py-32 border-y">
+    <section className="w-full py-12 md:py-24 lg:py-20 border-y">
       <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
         <div className="container mx-auto px-4 sm:px-36 ">
           <div>
