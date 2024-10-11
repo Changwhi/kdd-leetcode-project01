@@ -33,7 +33,6 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
       console.log("Failed to fetch user groups");
       return;
     }
-    console.log(myGroups);
     setAdminGroups(myGroups.filter((group) => group.user_type === 0));
     SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
   };
