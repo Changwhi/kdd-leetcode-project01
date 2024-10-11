@@ -5,8 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { CONSTANTS } from "@/text/landing";
-import { getSession, withPageAuthRequired } from "@auth0/nextjs-auth0";
-import { createUser, retrieveUser } from "@/lib/actions/user";
+import { getSession } from "@auth0/nextjs-auth0";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 
