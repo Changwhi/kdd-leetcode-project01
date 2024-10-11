@@ -19,8 +19,8 @@ export const SETTINGS_CONSTANTS = {
   DANGER_DESCRIPTION:
     "Actions in danger zone can't be undone. Please proceed with caution.",
   PROFILE_SETTINGS: "Profile Settings",
-  NO_ADMIN_GROUPS: "You are not an admin of any groups.",
-  NO_MEMBER_GROUPS: "You are not a member of any groups.",
+  NO_ADMIN_GROUPS: "There are no groups linked to your account.",
+  NO_MEMBER_GROUPS: "There are no groups linked to your account.",
   SETTINGS_DELETE_GROUP: "Delete Group",
   SETTINGS_QUIT_GROUP: "Leave Group",
   CONFIRM_DELETE_TITLE: "Delete Group",
