@@ -5,35 +5,29 @@ import Footer from "@/components/footer";
 import { Profile } from "@/components/account/profile";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { useEffect, useState } from "react";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUser, UserProfile } from "@auth0/nextjs-auth0/client";
 import AccountNavBar from "@/components/account/account-nav";
-import { retrieveUser } from "@/lib/actions/user";
 import { UserGroupList } from "@/components/account/userGroupList";
+
+interface ExtendedUserProfile extends UserProfile {
+  given_name?: string;
+  nickname?: string;
+}
 
 /**
  * This component renders a page for updating user information
  * @returns A JSX element representing the page.
  */
 export default function AccountPage() {
-  const { user } = useUser();
+  const { user } = useUser() as { user: ExtendedUserProfile | undefined };
   const [name, setName] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string>("profile");
   const tabs = [
     { name: "Profile", key: "profile" },
     { name: "Groups", key: "groups" },
   ];
-
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      const fetchedUser = await retrieveUser(user?.email);
-      if (fetchedUser.length > 0) {
-        setName(fetchedUser[0].name);
-      }
-    };
-    
-    if (user) {
-      fetchUserInfo();
-    }
+    setName(user?.given_name ?? user?.nickname ?? "");
   }, [user]);
 
   return (
@@ -55,7 +49,9 @@ export default function AccountPage() {
                   setActiveTab={setActiveTab}
                   tabs={tabs}
                 />
-                {activeTab == "profile" && <Profile email={user?.email} name={name} setName={setName}/>}
+                {activeTab == "profile" && (
+                  <Profile email={user?.email} name={name} setName={setName} />
+                )}
                 {activeTab == "groups" && <UserGroupList email={user?.email} />}
               </div>
             </div>
