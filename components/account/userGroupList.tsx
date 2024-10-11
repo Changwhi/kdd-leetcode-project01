@@ -27,15 +27,21 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [actionType, setActionType] = useState<"quit" | "delete" | null>(null);
 
+  const fetchUserGroups = async () => {
+    const myGroups = await getMyGroups({ email });
+    if (!myGroups) {
+      console.log("Failed to fetch user groups");
+      return;
+    }
+    console.log(myGroups);
+    setAdminGroups(myGroups.filter((group) => group.user_type === 0));
+    SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
+  };
+
   useEffect(() => {
     fetchUserGroups();
   }, []);
 
-  const fetchUserGroups = async () => {
-    const myGroups = await getMyGroups({ email });
-    setAdminGroups(myGroups.filter((group) => group.user_type === 0));
-    SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
-  };
 
   const handleConfirmAction = () => {
     if (actionType === "quit" && selectedGroupId !== null) {
