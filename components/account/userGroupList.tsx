@@ -13,6 +13,7 @@ import { SETTINGS_CONSTANTS } from "@/text/settings";
 import { deleteGroup, getMyGroups } from "@/lib/actions/group";
 import { UserGroupCard } from "./userGroupCard";
 import { deleteUserGroupById } from "@/lib/actions/usergroup";
+import { MyGroup } from "@/types/group";
 
 interface UserGroupListProps {
   email: string;
@@ -20,8 +21,9 @@ interface UserGroupListProps {
 
 export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
   const { toast } = useToast();
-  const [adminGroups, setAdminGroups] = useState([]);
-  const [memberGroups, SetMemberGroups] = useState([]);
+  const [adminGroups, setAdminGroups] = useState<MyGroup[]>([]);
+  const [memberGroups, SetMemberGroups] = useState<MyGroup[]>([]);
+
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [actionType, setActionType] = useState<"quit" | "delete" | null>(null);
 
