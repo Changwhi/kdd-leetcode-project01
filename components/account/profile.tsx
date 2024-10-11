@@ -127,8 +127,8 @@ export default function Profile({ email, name, setName, setUserName }: ProfilePr
 
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-destructive">
-            <Trash2 className="h-5 w-5" />
+          <CardTitle className="flex text-lg items-center gap-2 text-destructive">
+            <Trash2 className="h-4 w-4" />
             {SETTINGS_CONSTANTS.DANGER_ZONE}
           </CardTitle>
           <CardDescription>{SETTINGS_CONSTANTS.DANGER_DESCRIPTION}</CardDescription>

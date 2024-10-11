@@ -7,7 +7,7 @@ export const SETTINGS_CONSTANTS = {
   SETTINGS_DELETE_ACCOUNT: "Delete Account",
   ALERT_TITLE: "Are you sure you want to delete your account?",
   ALERT_DESCRIPTION:
-    "This action cannot be undone. This will permanently delete your account and remove your data from our servers.",
+    "This will immediately log you out of your account and you will not be able to log in again.",
   ALERT_CANCEL: "Cancel",
   MANAGEMENT_GROUPS: "Management Groups",
   MANAGEMENT_GROUPS_DESCRIPTION:
@@ -17,7 +17,7 @@ export const SETTINGS_CONSTANTS = {
   PROFILE_DESCRIPTION: "Manage your account details and preferences.",
   DANGER_ZONE: "Danger Zone",
   DANGER_DESCRIPTION:
-    "Actions here can't be undone. Please proceed with caution.",
+    "Actions in danger zone can't be undone. Please proceed with caution.",
   PROFILE_SETTINGS: "Profile Settings",
   NO_ADMIN_GROUPS: "You are not an admin of any groups.",
   NO_MEMBER_GROUPS: "You are not a member of any groups.",
