@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Card,
@@ -10,38 +10,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SETTINGS_CONSTANTS } from "@/text/settings";
-import { deleteGroup, getMyGroups } from "@/lib/actions/group";
+import { deleteGroup } from "@/lib/actions/group";
 import { UserGroupCard } from "./userGroupCard";
 import { deleteUserGroupById } from "@/lib/actions/usergroup";
 import { MyGroup } from "@/types/group";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface UserGroupListProps {
-  email: string;
+  fetchUserGroups: () => void;
+  adminGroups: MyGroup[];
+  memberGroups: MyGroup[];
 }
 
-export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
+export const UserGroupList: React.FC<UserGroupListProps> = ({
+  fetchUserGroups,
+  adminGroups,
+  memberGroups,
+}) => {
   const { toast } = useToast();
-  const [adminGroups, setAdminGroups] = useState<MyGroup[]>([]);
-  const [memberGroups, SetMemberGroups] = useState<MyGroup[]>([]);
 
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
   const [actionType, setActionType] = useState<"quit" | "delete" | null>(null);
-
-  const fetchUserGroups = async () => {
-    const myGroups = await getMyGroups({ email });
-    if (!myGroups) {
-      console.log("Failed to fetch user groups");
-      return;
-    }
-    console.log(myGroups);
-    setAdminGroups(myGroups.filter((group) => group.user_type === 0));
-    SetMemberGroups(myGroups.filter((group) => group.user_type === 1));
-  };
-
-  useEffect(() => {
-    fetchUserGroups();
-  }, []);
-
 
   const handleConfirmAction = () => {
     if (actionType === "quit" && selectedGroupId !== null) {
@@ -83,6 +74,14 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
     }
   };
 
+  const LoadingSkeleton = () => (
+    <div className="space-y-4">
+      <Skeleton className="h-[100px] w-full" />
+      <Skeleton className="h-[100px] w-full" />
+      <Skeleton className="h-[100px] w-full" />
+    </div>
+  );
+
   return (
     <Card className="w-full max-w-2xl">
       <CardHeader>
@@ -93,38 +92,56 @@ export const UserGroupList: React.FC<UserGroupListProps> = ({ email }) => {
       </CardHeader>
       <CardContent>
         <div className="container mx-auto p-4 max-w-2xl">
-          <h1 className="text-xl font-bold mb-6">
+          <h2 className="text-xl font-bold mb-6">
             {SETTINGS_CONSTANTS.GROUP_ADMIN}
-          </h1>
-          <div className="space-y-4">
-            {adminGroups.map((group, index) => (
-              <UserGroupCard
-                key={index}
-                setSelectedGroupId={setSelectedGroupId}
-                setActionType={setActionType}
-                thisGroup={group}
-                cardType="delete"
-                handleConfirmAction={handleConfirmAction}
-              />
-            ))}
-          </div>
+          </h2>
+          {adminGroups.length > 0 ? (
+            <div className="space-y-4">
+              {adminGroups.map((group, index) => (
+                <UserGroupCard
+                  key={index}
+                  setSelectedGroupId={setSelectedGroupId}
+                  setActionType={setActionType}
+                  thisGroup={group}
+                  cardType="delete"
+                  handleConfirmAction={handleConfirmAction}
+                />
+              ))}
+            </div>
+          ) : (
+            <Alert>
+              <InfoIcon className="h-4 w-4" />
+              <AlertDescription>
+                {SETTINGS_CONSTANTS.NO_ADMIN_GROUPS}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
         <div className="container mx-auto p-4 max-w-2xl">
-          <h1 className="text-xl font-bold mb-6">
+          <h2 className="text-xl font-bold mb-6">
             {SETTINGS_CONSTANTS.GROUP_MEMBER}
-          </h1>
-          <div className="space-y-4">
-            {memberGroups.map((group, index) => (
-              <UserGroupCard
-                key={index}
-                setSelectedGroupId={setSelectedGroupId}
-                setActionType={setActionType}
-                thisGroup={group}
-                cardType="quit"
-                handleConfirmAction={handleConfirmAction}
-              />
-            ))}
-          </div>
+          </h2>
+          {memberGroups.length > 0 ? (
+            <div className="space-y-4">
+              {memberGroups.map((group, index) => (
+                <UserGroupCard
+                  key={index}
+                  setSelectedGroupId={setSelectedGroupId}
+                  setActionType={setActionType}
+                  thisGroup={group}
+                  cardType="quit"
+                  handleConfirmAction={handleConfirmAction}
+                />
+              ))}
+            </div>
+          ) : (
+            <Alert>
+              <InfoIcon className="h-4 w-4" />
+              <AlertDescription>
+                {SETTINGS_CONSTANTS.NO_MEMBER_GROUPS}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </CardContent>
     </Card>

@@ -4,6 +4,7 @@ import { UserGroupProps, UserGroupType } from "@/types/group";
 import { ResponseType } from "@/types/response";
 import { UserRoleType } from "@/types/user";
 import { getSession } from "@auth0/nextjs-auth0";
+import { revalidatePath } from "next/cache";
 
 /**
  * Returns all users in a given group
