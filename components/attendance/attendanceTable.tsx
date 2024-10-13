@@ -90,25 +90,24 @@ export const AttendanceTable = ({
     fetchAttendance();
   }, [event_id, group_id, fetchAttendance]);
 
-  useEffect(() => {
-    const filtered = members.filter(
-      (member) =>
-        member.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        (attendanceFilter === "all" ||
-          (attendanceFilter === "attended" && member.attended === 1) ||
-          (attendanceFilter === "late" && member.attended === 2) ||
-          (attendanceFilter === "absent" &&
-            (member.attended === 0 || member.attended === null))) &&
-        (questionFilter === "all" ||
-          (questionFilter === "submitted" && member.submission_id !== null) ||
-          (questionFilter === "notSubmitted" &&
-            member.submission_id === null)) &&
-        (prFilter === "all" ||
-          (prFilter === "submitted" && member.submitted) ||
-          (prFilter === "notSubmitted" && !member.submitted))
-    );
-    setFilteredMembers(filtered);
-  }, [searchTerm, members, attendanceFilter, questionFilter, prFilter]);
+useEffect(() => {
+  const filtered = members.filter((member) =>
+    (member.name?.toLowerCase() || "").includes(searchTerm?.toLowerCase() || "") &&
+    (attendanceFilter === "all" ||
+      (attendanceFilter === "attended" && member.attended === 1) ||
+      (attendanceFilter === "late" && member.attended === 2) ||
+      (attendanceFilter === "absent" &&
+        (member.attended === 0 || member.attended === null))) &&
+    (questionFilter === "all" ||
+      (questionFilter === "submitted" && member.submission_id !== null) ||
+      (questionFilter === "notSubmitted" && member.submission_id === null)) &&
+    (prFilter === "all" ||
+      (prFilter === "submitted" && member.submitted) ||
+      (prFilter === "notSubmitted" && !member.submitted))
+  );
+  setFilteredMembers(filtered);
+}, [searchTerm, members, attendanceFilter, questionFilter, prFilter]);
+
 
   const handleAction = async (action: string, user_id: number) => {
     if (!event_id) {
