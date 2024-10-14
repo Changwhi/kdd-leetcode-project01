@@ -12,16 +12,22 @@ import { DayModifiers } from "react-day-picker";
 export const CalendarTool = ({ eventdates }: { eventdates: Date[] }) => {
   const { selectedDate, setSelectedDate } = useEventContext();
 
-  // Create a modifiers object where each date in the dummy array is marked
+  // Detect the user's time zone
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+  // Convert event dates to the user's local time zone
+  const localEventDates = eventdates.map((date) =>
+    new Date(date.toLocaleString("en-US", { timeZone: userTimeZone }))
+  );
+
   const modifiers: DayModifiers = {
-    highlighted: eventdates as any,
+    highlighted: localEventDates as any,
   };
 
-  // Style for highlighted dates
   const modifiersStyles = {
     highlighted: {
       background: "#6d9ec9",
-      borderRadius: "50%", 
+      borderRadius: "50%",
     },
   };
 

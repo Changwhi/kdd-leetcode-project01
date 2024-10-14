@@ -1,36 +1,28 @@
-"use server";
+"use server"
 
-import { UpcommingEvents } from "./upcommingEvents";
-import moment from "moment-timezone";
-import { retrieveEvents } from "@/lib/actions/event";
-import { retrieveAllUsers } from "@/lib/actions/summary";
-import { SelectedEvent } from "./selectedEvent";
-import { CalendarTool } from "./calendar";
-import { EventProvider } from "@/lib/context/selectedEventContext";
-import SummaryTable from "./summaryTable";
-import InvitationButton from "./invitationButton";
+import { UpcommingEvents } from "./upcommingEvents"
+import moment from "moment"
+import { retrieveEvents } from "@/lib/actions/event"
+import { retrieveAllUsers } from "@/lib/actions/summary"
+import { SelectedEvent } from "./selectedEvent"
+import { CalendarTool } from "./calendar"
+import { EventProvider } from "@/lib/context/selectedEventContext"
+import SummaryTable from "./summaryTable"
+import InvitationButton from "./invitationButton"
 
 export const Summary = async ({
   group_id,
   admin,
 }: {
-  group_id: number;
-  admin: boolean;
+  group_id: number
+  admin: boolean
 }) => {
-  const users = await retrieveAllUsers({ group_id });
-  const events = await retrieveEvents(group_id);
-
-  // Convert event dates to the user's local time zone
-  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const eventsWithLocalTime = events.map((event) => ({
-    ...event,
-    date: moment.utc(event.date).tz(userTimeZone).format(),
-  }));
-
-  const eventdates = eventsWithLocalTime.map((event) => new Date(event.date));
-  const upcomingEvents = eventsWithLocalTime.filter((event) =>
+  const users = await retrieveAllUsers({ group_id })
+  const events = await retrieveEvents(group_id)
+  const eventdates = events.map((event) => new Date(event.date))
+  const upcomingEvents = events.filter((event) =>
     moment(event.date).isAfter(moment())
-  );
+  )
 
   return (
     <EventProvider>
@@ -44,7 +36,7 @@ export const Summary = async ({
         <aside className="w-full lg:w-80 bg-slate-50 p-6 rounded-xl lg:flex-shrink-0">
           <CalendarTool eventdates={eventdates} />
           <SelectedEvent
-            givenEvents={eventsWithLocalTime}
+            givenEvents={events}
             group_id={group_id}
             admin={admin}
           />
@@ -52,5 +44,5 @@ export const Summary = async ({
         </aside>
       </div>
     </EventProvider>
-  );
-};
+  )
+}
