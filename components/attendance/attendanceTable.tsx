@@ -44,6 +44,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMemo } from "react";
 
 /**
  * AttendanceTable component
@@ -90,24 +91,27 @@ export const AttendanceTable = ({
     fetchAttendance();
   }, [event_id, group_id, fetchAttendance]);
 
-useEffect(() => {
-  const filtered = members.filter((member) =>
-    (member.name?.toLowerCase() || "").includes(searchTerm?.toLowerCase() || "") &&
-    (attendanceFilter === "all" ||
-      (attendanceFilter === "attended" && member.attended === 1) ||
-      (attendanceFilter === "late" && member.attended === 2) ||
-      (attendanceFilter === "absent" &&
-        (member.attended === 0 || member.attended === null))) &&
-    (questionFilter === "all" ||
-      (questionFilter === "submitted" && member.submission_id !== null) ||
-      (questionFilter === "notSubmitted" && member.submission_id === null)) &&
-    (prFilter === "all" ||
-      (prFilter === "submitted" && member.submitted) ||
-      (prFilter === "notSubmitted" && !member.submitted))
-  );
-  setFilteredMembers(filtered);
-}, [searchTerm, members, attendanceFilter, questionFilter, prFilter]);
-
+  useEffect(() => {
+    const filtered = members.filter(
+      (member) =>
+        (member.name?.toLowerCase() || "").includes(
+          searchTerm?.toLowerCase() || ""
+        ) &&
+        (attendanceFilter === "all" ||
+          (attendanceFilter === "attended" && member.attended === 1) ||
+          (attendanceFilter === "late" && member.attended === 2) ||
+          (attendanceFilter === "absent" &&
+            (member.attended === 0 || member.attended === null))) &&
+        (questionFilter === "all" ||
+          (questionFilter === "submitted" && member.submission_id !== null) ||
+          (questionFilter === "notSubmitted" &&
+            member.submission_id === null)) &&
+        (prFilter === "all" ||
+          (prFilter === "submitted" && member.submitted) ||
+          (prFilter === "notSubmitted" && !member.submitted))
+    );
+    setFilteredMembers(filtered);
+  }, [searchTerm, members, attendanceFilter, questionFilter, prFilter]);
 
   const handleAction = async (action: string, user_id: number) => {
     if (!event_id) {
@@ -232,19 +236,33 @@ useEffect(() => {
     setSortConfig({ key, direction });
   };
 
-  useEffect(() => {
-    if (sortConfig !== null) {
-      const sortedMembers = [...filteredMembers].sort((a, b) => {
-        if (a[sortConfig.key] < b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? -1 : 1;
-        }
-        if (a[sortConfig.key] > b[sortConfig.key]) {
-          return sortConfig.direction === "ascending" ? 1 : -1;
-        }
-        return 0;
-      });
-      setFilteredMembers(sortedMembers);
-    }
+  // useEffect(() => {
+  //   if (sortConfig !== null) {
+  //     const sortedMembers = [...filteredMembers].sort((a, b) => {
+  //       if (a[sortConfig.key] < b[sortConfig.key]) {
+  //         return sortConfig.direction === "ascending" ? -1 : 1;
+  //       }
+  //       if (a[sortConfig.key] > b[sortConfig.key]) {
+  //         return sortConfig.direction === "ascending" ? 1 : -1;
+  //       }
+  //       return 0;
+  //     });
+  //     setFilteredMembers(sortedMembers);
+  //   }
+  // }, [sortConfig, filteredMembers]);
+
+  const sortedMembers = useMemo(() => {
+    if (!sortConfig) return filteredMembers;
+
+    return [...filteredMembers].sort((a, b) => {
+      if (a[sortConfig.key] < b[sortConfig.key]) {
+        return sortConfig.direction === "ascending" ? -1 : 1;
+      }
+      if (a[sortConfig.key] > b[sortConfig.key]) {
+        return sortConfig.direction === "ascending" ? 1 : -1;
+      }
+      return 0;
+    });
   }, [sortConfig, filteredMembers]);
 
   const SortIcon = ({ columnKey }: { columnKey: keyof AttendanceType }) => {
@@ -258,16 +276,15 @@ useEffect(() => {
     return null;
   };
 
- const StatusIcon = ({ status }: { status: boolean | number | null }) => {
-  if (status === null) {
-    return <HelpCircle className="w-4 h-4 text-gray-500" />; // Question mark icon for not checked
-  }
-  if (status === 1) return <Check className="w-4 h-4 text-green-500" />;
-  if (status === 2) return <HelpCircle className="w-4 h-4 text-yellow-500" />;
-  if (status === 0) return <X className="w-4 h-4 text-red-500" />;
-  return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
-};
-
+  const StatusIcon = ({ status }: { status: boolean | number | null }) => {
+    if (status === null) {
+      return <HelpCircle className="w-4 h-4 text-gray-500" />; // Question mark icon for not checked
+    }
+    if (status === 1) return <Check className="w-4 h-4 text-green-500" />;
+    if (status === 2) return <HelpCircle className="w-4 h-4 text-yellow-500" />;
+    if (status === 0) return <X className="w-4 h-4 text-red-500" />;
+    return <X className="w-4 h-4 text-gray-500" />; // Use gray for unknown status
+  };
 
   const PRStatusIcon = ({ submitted }: { submitted: boolean | null }) => {
     if (submitted === null)
@@ -351,10 +368,9 @@ useEffect(() => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredMembers.map((info) => (
+          {sortedMembers.map((info) => (
             <TableRow key={info.user_group_id}>
               <TableCell className="font-medium">{info.name}</TableCell>
-
               <TableCell>
                 <div className="flex items-center gap-2">
                   <StatusIcon status={info.attended} />
@@ -367,7 +383,6 @@ useEffect(() => {
                     : ATTENDANCE.ABSENT}
                 </div>
               </TableCell>
-
               <TableCell>
                 <div className="flex items-center gap-2">
                   <StatusIcon status={info.submission_id !== null} />
