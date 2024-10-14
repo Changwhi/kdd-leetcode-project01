@@ -19,7 +19,6 @@ export const Summary = async ({
 }) => {
   const users = await retrieveAllUsers({ group_id })
   const events = await retrieveEvents(group_id)
-  const eventdates = events.map((event) => new Date(event.date))
   const upcomingEvents = events.filter((event) =>
     moment(event.date).isAfter(moment())
   )
@@ -34,7 +33,7 @@ export const Summary = async ({
           </div>
         </main>
         <aside className="w-full lg:w-80 bg-slate-50 p-6 rounded-xl lg:flex-shrink-0">
-          <CalendarTool eventdates={eventdates} />
+          <CalendarTool group_id={group_id} />
           <SelectedEvent
             givenEvents={events}
             group_id={group_id}
