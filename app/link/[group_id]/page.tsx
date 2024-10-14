@@ -19,12 +19,21 @@ export default function JoinPage() {
   );
 }
 
+/**
+ * This component renders the content for the join page. It displays
+ * the group name, a welcome message, and a button to join the group.
+ * If the user is already a member, the button is disabled and a message
+ * is displayed to indicate that they are already a member.
+ *
+ * @returns The join page content component.
+ */
 function JoinPageContent() {
   const { group_id } = useParams();
   const groupId = decodeGroupId(group_id as string);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isMember, setIsMember] = useState<boolean>(false);
-  const [group, setGroup] = useState<any>(null);
+  const [group, setGroup] = useState<any | null>(null);
+  const [groupNotFound, setGroupNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -40,16 +49,29 @@ function JoinPageContent() {
       }
 
       const fetchedGroup = await getGroup({ group_id: groupId });
-      setGroup(fetchedGroup);
+      if (fetchedGroup) {
+        setGroup(fetchedGroup);
+      } else {
+        setGroupNotFound(true); // If the group is not found, update the state
+      }
     }
 
     fetchData();
   }, [groupId]);
 
+  if (groupNotFound) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
+        <h1 className="text-3xl font-bold">Wrong Invitation</h1>
+        <p className="text-xl mt-4">The group you are trying to join does not exist.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
       <main className="max-w-2xl mx-auto text-center">
-        {group ? <h1 className="text-6xl font-bold mb-6">{group.name}</h1> : ""}
+        {group && <h1 className="text-6xl font-bold mb-6">{group.name}</h1>}
         <h1 className="text-2xl font-bold mb-6">Join Our Community</h1>
         <p className="text-xl mb-8">
           Welcome to our vibrant community! We&apos;re excited to have you join
