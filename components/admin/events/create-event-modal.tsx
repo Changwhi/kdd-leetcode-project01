@@ -249,7 +249,7 @@ export function CreateEventModal({ groupId }: { groupId: number }) {
             </TabsContent>
             <TabsContent value="assignments">
               <Card>
-                <CardContent className="space-y-4 pt-4">
+                <CardContent className="space-y-2 pt-4  max-h-96 overflow-y-auto">
                   {formData.assign.map((item, index) => (
                     <div key={index} className="space-y-2">
                       <Label htmlFor={`assign${index + 1}`}>
