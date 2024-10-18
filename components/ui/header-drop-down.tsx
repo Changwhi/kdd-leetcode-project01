@@ -42,7 +42,7 @@ export default function HeaderDropDown({ user, name }: any) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <Link href="/account" className="flex flex-row">
+          <Link href="/account">
             <DropdownMenuItem>
               <Settings className="mr-2 h-4 w-4" />
               <span>Settings</span>
@@ -50,12 +50,14 @@ export default function HeaderDropDown({ user, name }: any) {
           </Link>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <a href="/api/auth/logout" className="flex flex-row">
-          <DropdownMenuItem>
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Log out</span>
-          </DropdownMenuItem>
-        </a>
+        <DropdownMenuGroup>
+          <a href="/api/auth/logout">
+            <DropdownMenuItem>
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </a>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );
