@@ -271,11 +271,14 @@ export default function SummaryTable({
           </DialogTrigger>
           <DialogContent className="max-w-full overflow-y-auto">
             <DialogHeader>
-              <DialogTitle>Full Screen View</DialogTitle>
-              <DialogDescription>
-                {" "}
-                This is a full-screen view of the attendance summary.
-              </DialogDescription>
+              <DialogTitle>
+                {SUMMARY.TABLE_TITLE} - {usersInGroup.length}{" "}
+                {usersInGroup.length === 1 ? "member" : "members"}
+                <span className="pl-2">
+                  (Total Deduction: ${totaldeduction})
+                </span>
+              </DialogTitle>
+              <DialogDescription></DialogDescription>
             </DialogHeader>
             <TableContent />
           </DialogContent>
