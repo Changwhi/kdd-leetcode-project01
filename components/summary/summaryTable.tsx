@@ -22,7 +22,7 @@ import {
 import { ArrowUpDown, Maximize2 } from "lucide-react";
 import { Event, User } from "@/types/summary";
 import { SUMMARY } from "@/text/summary";
-import { CheckToolTip, ExclamationToolTip, XToolTip  } from "./icons/toolTip";
+import { CheckToolTip, ExclamationToolTip, XToolTip } from "./icons/toolTip";
 
 type SortConfig = {
   key: string;
@@ -38,6 +38,20 @@ export default function SummaryTable({
   const [users, setUsers] = useState<User[]>(usersInGroup);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const totaldeduction = useMemo(() => {
+    if (!users || users.length === 0) return 0;
+
+    const { init_amount: initDeposit, init_deduction: initDeduction } =
+      users[0];
+    return users.reduce((deduction, user) => {
+      if (user.user_type === 1) {
+        const currDeposit = Math.max(user.curr_amount, 0);
+        const currDeduction = initDeposit - initDeduction - currDeposit;
+        return deduction + currDeduction;
+      }
+      return deduction;
+    }, 0);
+  }, [users]);
 
   const filteredUsers = useMemo(() => {
     return users.filter((user) =>
@@ -67,8 +81,10 @@ export default function SummaryTable({
             ? aValue - bValue
             : bValue - aValue;
         } else {
-          const aValue = a.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
-          const bValue = b.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
+          const aValue =
+            a.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
+          const bValue =
+            b.events[sortConfig.eventIndex!][sortConfig.key as keyof Event];
           if (sortConfig.key === "pullRequest") {
             return sortConfig.direction === "ascending"
               ? Number(aValue) - Number(bValue)
@@ -117,13 +133,13 @@ export default function SummaryTable({
 
   const renderEventHeader = (eventIndex: number) => (
     <>
-      <TableHead className="p-0 h-10">
+      <TableHead className="p-0 h-10 border-l-2 border-gray">
         {renderSortButton("PR", "pullRequest", eventIndex)}
       </TableHead>
       <TableHead className="p-0 h-10">
         {renderSortButton("Attend", "attendance", eventIndex)}
       </TableHead>
-      <TableHead className="p-0 h-10 border-r-2 border-gray">
+      <TableHead className="p-0 h-10">
         {renderSortButton("Asgmt", "assignment", eventIndex)}
       </TableHead>
     </>
@@ -142,7 +158,7 @@ export default function SummaryTable({
 
   const renderEventData = (event: Event) => (
     <>
-      <TableCell className="h-10 py-0">
+      <TableCell className="h-10 py-0 border-l-2 border-gray">
         {event.pullRequest ? SUBMISSION_STATUS[1] : SUBMISSION_STATUS[0]}
       </TableCell>
       <TableCell className="h-10 py-0">
@@ -152,7 +168,7 @@ export default function SummaryTable({
           ? ATTENDANCE_STATUS[1]
           : ATTENDANCE_STATUS[2]}
       </TableCell>
-      <TableCell className="h-10 py-0 border-r-2 border-gray">
+      <TableCell className="h-10 py-0">
         {event.assignments ? SUBMISSION_STATUS[1] : SUBMISSION_STATUS[0]}
       </TableCell>
     </>
@@ -170,9 +186,9 @@ export default function SummaryTable({
             <TableHead
               key={`event-header-${index}`}
               colSpan={3}
-              className="text-center border-r-2 h-10"
+              className="text-center border-l-2 h-10"
             >
-            {event.event_name}
+              {event.event_name}
             </TableHead>
           ))}
         </TableRow>
@@ -191,27 +207,47 @@ export default function SummaryTable({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {sortedUsers.map((user) => (
-          <TableRow key={user.user_id}>
-            <TableCell className="h-10 py-0">
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span className="truncate">{user.name}</span>
-              </div>
-            </TableCell>
-            <TableCell className="h-10 py-0 border-r-2 border-gray">
-              ${user.curr_amount === null || user.curr_amount < 0 ? 0 : user.curr_amount} CAD
-            </TableCell>
-            {user.events.map((event, index) => (
-              <React.Fragment key={`${user.user_id}-event-${index}`}>
-                {renderEventData(event)}
-              </React.Fragment>
-            ))}
-          </TableRow>
-        ))}
+        {sortedUsers
+          .filter((user) => user.user_type == 0)
+          .map((user) => (
+            <TableRow key={user.user_id}>
+              <TableCell className="h-10 py-0">
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{user.name}</span>
+                </div>
+              </TableCell>
+              <TableCell className="h-10 py-0 border-r-2 border-gray">
+                Admin
+              </TableCell>
+            </TableRow>
+          ))}
+        {sortedUsers
+          .filter((user) => user.user_type == 1)
+          .map((user) => (
+            <TableRow key={user.user_id}>
+              <TableCell className="h-10 py-0">
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={user.avatar} alt={user.name} />
+                    <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <span className="truncate">{user.name}</span>
+                </div>
+              </TableCell>
+              <TableCell className="h-10 py-0 border-r-2 border-gray">
+                ${Math.max(user.curr_amount ?? 0, 0)} CAD
+              </TableCell>
+              {user.events.map((event, index) => (
+                <React.Fragment key={`${user.user_id}-event-${index}`}>
+                  {renderEventData(event)}
+                </React.Fragment>
+              ))}
+            </TableRow>
+          ))}
       </TableBody>
     </Table>
   );
@@ -220,10 +256,13 @@ export default function SummaryTable({
     <div className="container mx-auto pt-5 pb-10 bg-slate-50 rounded-xl w-full">
       <div className="flex justify-between items-center mb-4">
         <Dialog>
-        <DialogHeader>
-            <h1 className="text-base font-bold md:m-2 lg:m-4">{SUMMARY.TABLE_TITLE} - {usersInGroup.length} {usersInGroup.length ===1 ?"member":"members"}</h1>
-
-        </DialogHeader>
+          <DialogHeader>
+            <h1 className="text-base font-bold md:m-2 lg:m-4">
+              {SUMMARY.TABLE_TITLE} - {usersInGroup.length}{" "}
+              {usersInGroup.length === 1 ? "member" : "members"}
+              <span className="pl-2">(Total Deduction: ${totaldeduction})</span>
+            </h1>
+          </DialogHeader>
           <DialogTrigger asChild>
             <Button variant="outline">
               <Maximize2 className="mr-2 h-4 w-4" />

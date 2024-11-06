@@ -15,4 +15,7 @@ export interface User {
   events: Event[];  // List of events related to this user
   avatar: string;
   curr_amount: number;
+  init_deduction: number;
+  init_amount: number;
+  user_type: number;
 }
