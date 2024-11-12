@@ -8,7 +8,7 @@ export function KeyFeatures() {
       description:
         "Quickly set up a new study group with customizable settings, including title, description, private mode (accessible only with an invitation link), and a deposit system. You can adjust the deposit amount and deduction based on your preferences.",
       video_link:
-        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
+        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXNkdzVraHR1cmhzNHYwN2F3ZzBiZ2Fkem4zaWU3bWk3N2ZpZ2dvNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NPxVVStLfgKaSXq69J/giphy.gif",
     },
     {
       id: 1,
@@ -16,7 +16,7 @@ export function KeyFeatures() {
       description:
         "Easily share group rules and instruction using markdown language for clear communication with all members.",
       video_link:
-        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
+        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExMjRkejNkeTkweWFmZnh1dm9uYmVuYmx1NGRzMDJyY3Fib2JuN203diZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wgmSpdSpqaHd7PIFot/giphy.gif",
     },
     {
         id: 2,
@@ -24,7 +24,7 @@ export function KeyFeatures() {
         description:
           "Transparently keep track of group members' assignments, participation, and deposit status. All members can monitor their status, which is managed by the group admin.",
         video_link:
-          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
+          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExc2x5Y2pxazB4ZHltZjk3cDh5bG9jenN2cmtodTZnYXBnZGx1ampvMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pRVvprDwJY6sYP17kH/giphy.gif",
       },
     {
       id: 3,
@@ -40,7 +40,7 @@ export function KeyFeatures() {
         description:
           "Submit your assignments for each event to ensure your participation is tracked and assessed.",
         video_link:
-          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHZrNjRxMzMzdXMxd3BlbGY0aHBtYTc2dDI5MW5ocjVveGdwdWJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pim1eL3RGSckLNk0va/giphy.gif",
+          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnA4NHM1MjU0cTB1dTF5NjB2cGxvd3N3eWEwNTl4N2xtY2ViMDExeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Wj20OfPpPgdHkvfBFw/giphy.gif",
       },
       {
         id: 5,
