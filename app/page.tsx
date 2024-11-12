@@ -8,6 +8,7 @@ import { CONSTANTS } from "@/text/landing";
 import { getSession } from "@auth0/nextjs-auth0";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import { KeyFeatures } from "@/components/landing/keyFeatures";
 
 export default async function Home() {
   const session = await getSession();
@@ -56,7 +57,7 @@ export default async function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
+        <section className="w-full py-12 md:py-12 lg:py-24">
           <div className="container space-y-12 px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
@@ -71,56 +72,7 @@ export default async function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid items-start gap-8 sm:max-w-4xl sm:grid-cols-2 md:gap-12 lg:max-w-5xl lg:grid-cols-3">
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_CREATE}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_CREATE_DESC}
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_MANAGE}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_MANAGE_DESC}
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_DEPOSIT}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_DEPOSIT_DESC}
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_NOTIFICATIONS}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_NOTIFICATIONS_DESC}
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_REPORTING}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_REPORTING_DESC}
-                </p>
-              </div>
-              <div className="grid gap-1">
-                <h3 className="text-lg font-bold">
-                  {CONSTANTS.FEATURE_INTEGRATIONS}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {CONSTANTS.FEATURE_INTEGRATIONS_DESC}
-                </p>
-              </div>
-            </div>
+            <KeyFeatures />
           </div>
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
@@ -149,7 +101,7 @@ export default async function Home() {
           </div>
         </section>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   );
 }

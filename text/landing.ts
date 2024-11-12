@@ -10,14 +10,14 @@ export const CONSTANTS = {
   ABOUT_US: "About Us (coming soon)",
   MAIN_TITLE: "Streamline Your Study Meetups",
   MAIN_DESCRIPTION:
-    "Easily create and manage study groups, and help participants stay accountable with our deposit system.",
+    "Easily create and manage study groups, encouraging each other to learn and grow—all in one place.",
   CREATE_GROUP: "Create a Group (Coming Soon)",
   CHECKOUT_GROUP: "Explore My Groups",
-  JOIN_GROUP: "Find New Groups to Joins",
+  JOIN_GROUP: "Find New Groups to Join",
   KEY_FEATURES: "Key Features",
   SECTION_TITLE: "Manage Your Study Meetups with Ease",
   SECTION_DESCRIPTION:
-    "Our platform provides all the tools you need to create and manage your study groups, and help participants stay accountable.",
+    "Our platform provides all the tools you need to create and manage your study groups.",
   FEATURE_CREATE: "Create Study Groups",
   FEATURE_CREATE_DESC:
     "Easily set up new study groups with customizable settings and invite participants.",

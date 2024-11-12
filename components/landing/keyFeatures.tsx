@@ -4,36 +4,52 @@ export function KeyFeatures() {
   const features = [
     {
       id: 0,
-      title: "1. Create a Study Group",
+      title: "1. Create New Study Group with Deposit System",
       description:
-        "Easily set up a new study group with customizable settings and a private mode that only allows access to those with invitation link.",
+        "Quickly set up a new study group with customizable settings, including title, description, private mode (accessible only with an invitation link), and a deposit system. You can adjust the deposit amount and deduction based on your preferences.",
       video_link:
         "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
     },
     {
       id: 1,
-      title: "1. Create A Study Group",
+      title: "2. Share Group Rules",
       description:
-        "Easily set up a new study group with customizable settings and a private mode that only allows access to those with invitation link.",
+        "Easily share group rules and instruction using markdown language for clear communication with all members.",
       video_link:
         "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
     },
     {
-      id: 2,
-      title: "1. Create A Study Group",
-      description:
-        "Easily set up a new study group with customizable settings and a private mode that only allows access to those with invitation link.",
-      video_link:
-        "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
-    },
+        id: 2,
+        title: "3. Manage and Track Participation",
+        description:
+          "Transparently keep track of group members' assignments, participation, and deposit status. All members can monitor their status, which is managed by the group admin.",
+        video_link:
+          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
+      },
     {
       id: 3,
-      title: "1. Create A Study Group",
+      title: "4. Schedule New Events - Admin",
       description:
-        "Easily set up a new study group with customizable settings and a private mode that only allows access to those with invitation link.",
+        "As an admin, schedule new group study sessions with details on topics, assignments, and Zoom links for online meetings.",
       video_link:
         "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYzBrcTVoMjl6NHFxMjAweXA4M2theGZrNGg2dGFhY3Jma3psOWlleSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/soVAoyg1E4UgTpVYBl/giphy.gif",
     },
+    {
+        id: 4,
+        title: "5. Submit Assignments - Group Member",
+        description:
+          "Submit your assignments for each event to ensure your participation is tracked and assessed.",
+        video_link:
+          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExeHZrNjRxMzMzdXMxd3BlbGY0aHBtYTc2dDI5MW5ocjVveGdwdWJpayZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pim1eL3RGSckLNk0va/giphy.gif",
+      },
+      {
+        id: 5,
+        title: "6. Explore others Assignments",
+        description:
+          "Gain insights by sharing your assignments and browsing others' work to learn from fellow group members.",
+        video_link:
+          "https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmdpZjEzMHhkN3JseXE0Mmoxem5qNGMxcXB6eGQ2eHA0MnRtd2hqYSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5REags7lnyRPF6cVAP/giphy.gif",
+      },
   ];
 
   return (
