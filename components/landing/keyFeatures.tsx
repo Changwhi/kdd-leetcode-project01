@@ -54,7 +54,7 @@ export function KeyFeatures() {
 
   return (
     <div>
-        {features.map(feature => <Feature title={feature.title} description={feature.description} video_link={feature.video_link} flip={feature.id % 2 === 0 ? true : false} />)}
+        {features.map(feature => <Feature key={feature.id} title={feature.title} description={feature.description} video_link={feature.video_link} flip={feature.id % 2 === 0 ? true : false} />)}
     </div>
   );
 }
