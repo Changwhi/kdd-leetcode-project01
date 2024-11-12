@@ -85,18 +85,13 @@ export default async function Home() {
                 {CONSTANTS.JOIN_COMMUNITY_DESC}
               </p>
             </div>
-            <div className="mx-auto mt-6 max-w-md rounded-lg bg-background p-4 shadow md:max-w-lg md:px-6">
-              <form>
-                <div className="grid gap-2 sm:flex sm:items-center sm:justify-center sm:gap-0">
-                  <Input
-                    type="email"
-                    placeholder={CONSTANTS.JOIN_COMMUNITY_EMAIL_PLACEHOLDER}
-                  />
-                  <Button className="w-full sm:ml-2 sm:w-auto">
-                    {CONSTANTS.JOIN_COMMUNITY_GET_STARTED}
-                  </Button>
-                </div>
-              </form>
+
+            <div className="grid gap-2 sm:flex sm:items-center sm:justify-center sm:gap-0">
+              <Button className="w-full sm:ml-2 sm:w-auto">
+                <a href="/api/auth/login">
+                  {CONSTANTS.JOIN_COMMUNITY_GET_STARTED}
+                </a>
+              </Button>
             </div>
           </div>
         </section>

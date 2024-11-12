@@ -40,7 +40,7 @@ export const CONSTANTS = {
   JOIN_COMMUNITY_DESC:
     "Whether you're a host looking to create a new study group or a participant seeking to join one, our platform has you covered.",
   JOIN_COMMUNITY_EMAIL_PLACEHOLDER: "Enter your email",
-  JOIN_COMMUNITY_GET_STARTED: "Get Started",
+  JOIN_COMMUNITY_GET_STARTED: "Log in to get started",
   TERMS_AND_CONDITIONS: "Terms & Conditions",
   FOOTER_COPYRIGHT: "© 2024 Study Meetup. All rights reserved.",
   FOOTER_TERMS: "Terms of Service",
