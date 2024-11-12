@@ -236,24 +236,6 @@ export function CreateGroupButton({ email }: { email: string }) {
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="prDeduction">
-                          {GROUP.PR_DEDUCTION}
-                        </Label>
-                        <div className="relative">
-                          <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                          <Input
-                            id="prDeduction"
-                            name="prDeduction"
-                            type="number"
-                            value={formData.prDeduction}
-                            onChange={handleInputChange}
-                            placeholder="e.g. 10"
-                            className="pl-10"
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
                         <Label htmlFor="attendanceDeduction">
                           {GROUP.ATTENDANCE_DEDUCTION}
                         </Label>
@@ -264,6 +246,24 @@ export function CreateGroupButton({ email }: { email: string }) {
                             name="attendanceDeduction"
                             type="number"
                             value={formData.attendanceDeduction}
+                            onChange={handleInputChange}
+                            placeholder="e.g. 10"
+                            className="pl-10"
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="prDeduction">
+                          {GROUP.PR_DEDUCTION}
+                        </Label>
+                        <div className="relative">
+                          <DollarSign className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                          <Input
+                            id="prDeduction"
+                            name="prDeduction"
+                            type="number"
+                            value={formData.prDeduction}
                             onChange={handleInputChange}
                             placeholder="e.g. 10"
                             className="pl-10"
