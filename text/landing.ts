@@ -10,14 +10,14 @@ export const CONSTANTS = {
   ABOUT_US: "About Us (coming soon)",
   MAIN_TITLE: "Streamline Your Study Meetups",
   MAIN_DESCRIPTION:
-    "Easily create and manage study groups, and help participants stay accountable with our deposit system.",
+    "Easily create and manage study groups, encouraging each other to learn and grow—all in one place.",
   CREATE_GROUP: "Create a Group (Coming Soon)",
   CHECKOUT_GROUP: "Explore My Groups",
-  JOIN_GROUP: "Find New Groups to Joins",
+  JOIN_GROUP: "Find New Groups to Join",
   KEY_FEATURES: "Key Features",
   SECTION_TITLE: "Manage Your Study Meetups with Ease",
   SECTION_DESCRIPTION:
-    "Our platform provides all the tools you need to create and manage your study groups, and help participants stay accountable.",
+    "Our platform provides all the tools you need to create and manage your study groups.",
   FEATURE_CREATE: "Create Study Groups",
   FEATURE_CREATE_DESC:
     "Easily set up new study groups with customizable settings and invite participants.",
@@ -40,7 +40,7 @@ export const CONSTANTS = {
   JOIN_COMMUNITY_DESC:
     "Whether you're a host looking to create a new study group or a participant seeking to join one, our platform has you covered.",
   JOIN_COMMUNITY_EMAIL_PLACEHOLDER: "Enter your email",
-  JOIN_COMMUNITY_GET_STARTED: "Get Started",
+  JOIN_COMMUNITY_GET_STARTED: "Log in to get started",
   TERMS_AND_CONDITIONS: "Terms & Conditions",
   FOOTER_COPYRIGHT: "© 2024 Study Meetup. All rights reserved.",
   FOOTER_TERMS: "Terms of Service",
