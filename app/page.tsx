@@ -72,8 +72,8 @@ export default async function Home() {
                 </p>
               </div>
             </div>
-            <KeyFeatures />
           </div>
+          <KeyFeatures />
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32 bg-muted">
           <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
