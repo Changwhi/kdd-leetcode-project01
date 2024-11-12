@@ -37,8 +37,8 @@ export function KeyFeatures() {
   ];
 
   return (
-    <div className="container space-y-12 px-4 md:px-6">
-        {features.map(feature => <Feature title={feature.title} description={feature.description} video_link={feature.video_link} filp={feature.id % 2 === 0 ? true : false} />)}
+    <div>
+        {features.map(feature => <Feature title={feature.title} description={feature.description} video_link={feature.video_link} flip={feature.id % 2 === 0 ? true : false} />)}
     </div>
   );
 }
