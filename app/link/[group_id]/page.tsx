@@ -119,7 +119,7 @@ function MemberComponent({ group }: { group: any }) {
     <>
       <h1 className="text-6xl font-bold mb-6">{group.name}</h1>
       <h1 className="text-xl mb-6">
-        You are already a member of {group.name}. Let's explore study group
+        You are already a member of {group.name}. Let&apos;s explore study group
         dashboard and study together!
       </h1>
       <Link
