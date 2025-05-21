@@ -9,8 +9,10 @@ import { useParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
 function decodeGroupId(encodedGroupId: string) {
-  const base64 = encodedGroupId.replace(/-/g, "+").replace(/_/g, "/");
-  return parseInt(Buffer.from(base64, "base64").toString("utf-8"), 10);
+  const decoded = Buffer.from(encodedGroupId, "hex").toString("utf8");
+  const encoding_code = process.env.NEXT_PUBLIC_ENCODING_CODE || "";
+  const groupId = decoded.replace(encoding_code, "");
+  return parseInt(groupId, 10);
 }
 
 export default function JoinPage() {
