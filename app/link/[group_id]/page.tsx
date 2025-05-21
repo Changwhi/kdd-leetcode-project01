@@ -1,14 +1,18 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
 import JoinButton from "@/components/link/join-button";
 import { getGroup, getMyGroups } from "@/lib/actions/group";
 import { getLoggedInUser } from "@/lib/actions/user";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
 function decodeGroupId(encodedGroupId: string) {
-  const base64 = encodedGroupId.replace(/-/g, "+").replace(/_/g, "/");
-  return parseInt(Buffer.from(base64, "base64").toString("utf-8"), 10);
+  const decoded = Buffer.from(encodedGroupId, "hex").toString("utf8");
+  const encoding_code = process.env.NEXT_PUBLIC_ENCODING_CODE || "";
+  const groupId = decoded.replace(encoding_code, "");
+  return parseInt(groupId, 10);
 }
 
 export default function JoinPage() {
@@ -28,15 +32,16 @@ export default function JoinPage() {
  * @returns The join page content component.
  */
 function JoinPageContent() {
-  const { group_id } = useParams();
-  const groupId = decodeGroupId(group_id as string);
+  const { group_id: encodedGroupId } = useParams();
+  const groupId = decodeGroupId(encodedGroupId as string);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isMember, setIsMember] = useState<boolean>(false);
   const [group, setGroup] = useState<any | null>(null);
-  const [groupNotFound, setGroupNotFound] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       const user = await getLoggedInUser();
       setCurrentUser(user);
 
@@ -49,52 +54,93 @@ function JoinPageContent() {
       }
 
       const fetchedGroup = await getGroup({ group_id: groupId });
-      if (fetchedGroup) {
-        setGroup(fetchedGroup);
-      } else {
-        setGroupNotFound(true); // If the group is not found, update the state
-      }
+      setGroup(fetchedGroup);
+      setIsLoading(false);
     }
 
     fetchData();
   }, [groupId]);
 
-  if (groupNotFound) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
-        <h1 className="text-3xl font-bold">Wrong Invitation</h1>
-        <p className="text-xl mt-4">The group you are trying to join does not exist.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
       <main className="max-w-2xl mx-auto text-center">
-        {group && <h1 className="text-6xl font-bold mb-6">{group.name}</h1>}
-        <h1 className="text-2xl font-bold mb-6">Join Our Community</h1>
-        <p className="text-xl mb-8">
-          Welcome to our vibrant community! We&apos;re excited to have you join
-          us on this journey. Our platform offers a space for collaboration,
-          learning, and growth. Whether you&apos;re a seasoned professional or
-          just starting out, there&apos;s a place for you here.
-        </p>
-        {isMember ? (
-          <button
-            className="px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed"
-            disabled
-          >
-            You are already a member
-          </button>
+        {isLoading ? (
+          <Loader2 className="h-20 w-20 animate-spin" />
+        ) : !!group ? (
+          isMember ? (
+            <MemberComponent group={group} />
+          ) : (
+            <NewerComponent
+              encodedGroupdID={encodedGroupId as String}
+              group={group}
+              currentUser={currentUser}
+              setIsMember={setIsMember}
+            />
+          )
         ) : (
-          <JoinButton
-            user={currentUser}
-            groupId={groupId}
-            groupIdForLink={group_id as string}
-            onJoinSuccess={() => setIsMember(true)}
-          />
+          <WrongInvitationComponent />
         )}
       </main>
+    </div>
+  );
+}
+
+function NewerComponent({
+  encodedGroupdID,
+  group,
+  currentUser,
+  setIsMember,
+}: {
+  encodedGroupdID: String;
+  group: any;
+  currentUser: any;
+  setIsMember: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  return (
+    <>
+      <h1 className="text-6xl font-bold mb-6">{group.name}</h1>
+      <h1 className="text-2xl font-bold mb-6">Join Our Community</h1>
+      <p className="text-xl mb-8">
+        Welcome to our vibrant community! We&apos;re excited to have you join us
+        on this journey. Our platform offers a space for collaboration,
+        learning, and growth. Whether you&apos;re a seasoned professional or
+        just starting out, there&apos;s a place for you here.
+      </p>
+      <JoinButton
+        user={currentUser}
+        groupId={group.group_id}
+        groupIdForLink={encodedGroupdID as string}
+        onJoinSuccess={() => setIsMember(true)}
+      />
+    </>
+  );
+}
+
+function MemberComponent({ group }: { group: any }) {
+  return (
+    <>
+      <h1 className="text-6xl font-bold mb-6">{group.name}</h1>
+      <h1 className="text-xl mb-6">
+        You are already a member of {group.name}. Let&apos;s explore study group
+        dashboard and study together!
+      </h1>
+      <Link
+        className="px-4 py-2 bg-gray-400 text-white rounded"
+        href={`/dashboard/${group.group_id}`}
+      >
+        Go to dashboard
+      </Link>
+    </>
+  );
+}
+
+function WrongInvitationComponent() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-background text-foreground">
+      <h1 className="text-3xl font-bold">Wrong Invitation</h1>
+      <p className="text-xl mt-4">
+        The group you are trying to join does not exist.
+      </p>
     </div>
   );
 }

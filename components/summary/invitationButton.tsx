@@ -15,11 +15,11 @@ import { toast } from "@/components/ui/use-toast";
 import { Copy, Link } from "lucide-react";
 
 function encodeGroupId(groupId: number) {
-  return Buffer.from(groupId.toString())
-    .toString("base64")
-    .replace(/\+/g, "-") 
-    .replace(/\//g, "_")
-    .replace(/=+$/, ""); 
+  const code = Buffer.from(
+    process.env.NEXT_PUBLIC_ENCODING_CODE + groupId.toString(),
+    "utf8"
+  ).toString("hex");
+  return code;
 }
 
 export default function InvitationButton({ group_id }: { group_id: number }) {
